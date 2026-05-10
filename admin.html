@@ -5,11 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>관리자 대시보드 — 소시네엄마표영어</title>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
-    <script src="/__env.js" onerror="window.__SUPABASE_URL='';window.__SUPABASE_ANON_KEY='';"></script>
-    <script src="/lib/supabase.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
-
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Segoe UI', sans-serif; background: #FBF6EF; min-height: 100vh; }
@@ -148,12 +143,6 @@
             </div>
         </div>
 
-        <!-- Day별 완료 차트 -->
-        <div class="card">
-            <div class="card-title">📅 Day별 완료 현황</div>
-            <canvas id="completionsChart" height="80"></canvas>
-        </div>
-
         <!-- 신청자 테이블 -->
         <div class="card">
             <div class="card-title">👥 신청자 목록</div>
@@ -177,7 +166,6 @@
 
 <script>
 const ADMIN_PW_HASH = '324cc2001745e165a7caf3d79b00918e087e2b0885b682294b441b6cee92de8e';
-let chartInstance = null;
 
 async function hashPassword(pw) {
     const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(pw));
@@ -185,78 +173,23 @@ async function hashPassword(pw) {
 }
 
 async function checkLogin() {
-    const pw = document.getElementById('pwInput').value;
+    const pw   = document.getElementById('pwInput').value;
     const hash = await hashPassword(pw);
     if (hash === ADMIN_PW_HASH) {
-        document.getElementById('loginWrap').style.display = 'none';
-        document.getElementById('dashboard').style.display = 'block';
+        document.getElementById('loginWrap').style.display  = 'none';
+        document.getElementById('dashboard').style.display  = 'block';
         loadDashboard();
     } else {
         document.getElementById('loginErr').textContent = '비밀번호가 틀렸습니다';
     }
 }
 
-async function loadDashboard() {
-    if (!window.__supabase) {
-        alert('Supabase가 연결되지 않았습니다.');
-        return;
-    }
-
-    const [signupsRes, completionsRes] = await Promise.all([
-        window.__supabase.from('signups').select('*').order('created_at', { ascending: false }),
-        window.__supabase.from('completions').select('*')
-    ]);
-
-    const signups     = signupsRes.data     || [];
-    const completions = completionsRes.data || [];
-
-    // 오늘 날짜 기준 완료 수
-    const today = new Date().toISOString().slice(0, 10);
-    const todayCount = completions.filter(c => c.completed_at.slice(0, 10) === today).length;
-
-    document.getElementById('totalSignups').textContent     = signups.length;
-    document.getElementById('todayCompletions').textContent = todayCount;
-    document.getElementById('totalCompletions').textContent = completions.length;
-
-    // Day별 완료 차트
-    const counts = Array(14).fill(0);
-    completions.forEach(c => { if (c.plan_day >= 1 && c.plan_day <= 14) counts[c.plan_day - 1]++; });
-
-    if (chartInstance) chartInstance.destroy();
-    chartInstance = new Chart(document.getElementById('completionsChart'), {
-        type: 'bar',
-        data: {
-            labels: Array.from({ length: 14 }, (_, i) => `Day ${i + 1}`),
-            datasets: [{
-                label: '완료 수',
-                data: counts,
-                backgroundColor: 'rgba(255, 140, 0, 0.75)',
-                borderColor: '#FF8C00',
-                borderWidth: 2,
-                borderRadius: 8,
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: { legend: { display: false } },
-            scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
-        }
-    });
-
-    // 신청자 테이블
-    const tbody = document.getElementById('signupsBody');
-    if (signups.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="4" class="empty">아직 신청자가 없어요 🌱</td></tr>';
-    } else {
-        tbody.innerHTML = signups.map((s, i) => `
-            <tr>
-                <td><span class="badge">${signups.length - i}</span></td>
-                <td>${s.name}</td>
-                <td>${s.phone || '—'}</td>
-                <td>${new Date(s.created_at).toLocaleDateString('ko-KR', { year:'numeric', month:'2-digit', day:'2-digit' })}</td>
-            </tr>
-        `).join('');
-    }
+function loadDashboard() {
+    document.getElementById('totalSignups').textContent     = '—';
+    document.getElementById('todayCompletions').textContent = '—';
+    document.getElementById('totalCompletions').textContent = '—';
+    document.getElementById('signupsBody').innerHTML =
+        '<tr><td colspan="4" class="empty">소식 신청은 이메일로 수집됩니다 📬</td></tr>';
 }
 </script>
 

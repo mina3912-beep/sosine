@@ -449,6 +449,79 @@
         .reset-btn { background: none; border: 1.5px solid #E0D5C8; border-radius: 20px; padding: 7px 18px; font-size: .8rem; color: #C8A97E; cursor: pointer; transition: border-color .2s, color .2s; font-family: 'yg-jalnan', sans-serif; }
         .reset-btn:hover { border-color: #FF8C00; color: #FF8C00; }
 
+        /* ── Name Bar (상단 고정) ── */
+        .name-bar {
+            background: #fff;
+            border-bottom: 2px solid #E8D5B7;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .name-bar-inner {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            max-width: 860px;
+            width: 100%;
+        }
+        .name-bar-label {
+            font-size: .85rem;
+            font-weight: 700;
+            color: #8B6F5E;
+            white-space: nowrap;
+        }
+        .name-bar-form {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+        }
+        .name-bar-input {
+            flex: 1;
+            max-width: 200px;
+            border: 1.5px solid #E0D5C8;
+            border-radius: 10px;
+            padding: 8px 12px;
+            font-size: .9rem;
+            font-family: 'yg-jalnan', sans-serif;
+            outline: none;
+        }
+        .name-bar-input:focus { border-color: #FF8C00; }
+        .name-bar-btn {
+            padding: 8px 16px;
+            border-radius: 10px;
+            border: none;
+            background: linear-gradient(135deg, #FF8C00, #FFB347);
+            color: #fff;
+            font-size: .85rem;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: 'yg-jalnan', sans-serif;
+            white-space: nowrap;
+        }
+        .name-bar-done {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+        }
+        .name-bar-name {
+            font-size: .92rem;
+            font-weight: 700;
+            color: #FF8C00;
+        }
+        .name-bar-change {
+            background: none;
+            border: 1.5px solid #E8D5B7;
+            border-radius: 8px;
+            padding: 5px 12px;
+            font-size: .78rem;
+            color: #8B6F5E;
+            cursor: pointer;
+            font-family: 'yg-jalnan', sans-serif;
+        }
+        .name-bar-change:hover { border-color: #FF8C00; color: #FF8C00; }
+
         @media (max-width: 560px) {
             .hero-title { font-size: 1.9rem; }
             .hero { padding: 40px 20px 76px; }
@@ -542,6 +615,23 @@
     </style>
 </head>
 <body>
+
+<!-- ── 상단 이름 바 ── -->
+<div class="name-bar">
+    <div class="name-bar-inner">
+        <span class="name-bar-label">👤 내 이름</span>
+        <div class="name-bar-form" id="nameBarForm">
+            <input class="name-bar-input" id="nameBarInput" type="text"
+                placeholder="이름을 입력하세요" maxlength="10"
+                onkeydown="if(event.key==='Enter') nameBarSubmit()">
+            <button class="name-bar-btn" onclick="nameBarSubmit()">확인 ✓</button>
+        </div>
+        <div class="name-bar-done" id="nameBarDone" style="display:none">
+            <span class="name-bar-name" id="nameBarName"></span>
+            <button class="name-bar-change" onclick="nameBarSwitch()">이름 변경</button>
+        </div>
+    </div>
+</div>
 
 <!-- ── Hero Banner ── -->
 <div class="hero">
@@ -858,6 +948,36 @@ let currentUser = '';
 /* ── 사용자 프로필 ── */
 function userKey(k) { return `ep_${currentUser}_${k}`; }
 
+function nameBarSubmit() {
+    const name = document.getElementById('nameBarInput').value.trim();
+    if (!name) { document.getElementById('nameBarInput').focus(); return; }
+    const users = JSON.parse(localStorage.getItem('ep_users') || '[]');
+    if (!users.includes(name)) {
+        users.push(name);
+        localStorage.setItem('ep_users', JSON.stringify(users));
+    }
+    selectUser(name);
+}
+
+function nameBarSwitch() {
+    document.getElementById('nameBarDone').style.display = 'none';
+    document.getElementById('nameBarForm').style.display = 'flex';
+    document.getElementById('nameBarInput').value = currentUser;
+    setTimeout(() => document.getElementById('nameBarInput').focus(), 50);
+}
+
+function updateNameBar(name) {
+    if (name) {
+        document.getElementById('nameBarForm').style.display = 'none';
+        document.getElementById('nameBarDone').style.display = 'flex';
+        document.getElementById('nameBarName').textContent = name + ' 님 👋';
+    } else {
+        document.getElementById('nameBarForm').style.display = 'flex';
+        document.getElementById('nameBarDone').style.display = 'none';
+        document.getElementById('nameBarInput').value = '';
+    }
+}
+
 function heroStartName() {
     const name = document.getElementById('heroNameInput').value.trim();
     if (!name) { document.getElementById('heroNameInput').focus(); return; }
@@ -918,6 +1038,8 @@ function selectUser(name) {
     loadUserData();
     render();
     showHeroDone(name);
+    updateRegisterSection(name);
+    updateNameBar(name);
 }
 
 function registerName() {
@@ -931,11 +1053,59 @@ function registerName() {
     selectUser(name);
 }
 
-function switchUser() { showHeroForm(); }
+function doRegister() {
+    const name = document.getElementById('registerNameInput').value.trim();
+    if (!name) { document.getElementById('registerNameInput').focus(); return; }
+    const users = JSON.parse(localStorage.getItem('ep_users') || '[]');
+    if (!users.includes(name)) {
+        users.push(name);
+        localStorage.setItem('ep_users', JSON.stringify(users));
+    }
+    selectUser(name);
+}
 
-function updateHeroUser() {
-    document.getElementById('heroUserName').textContent = `${currentUser}의 2주 플랜 🌟`;
-    document.getElementById('heroUser').style.display = 'flex';
+function updateRegisterSection(name) {
+    const form      = document.getElementById('registerForm');
+    const input     = document.getElementById('registerNameInput');
+    const chips     = document.getElementById('registerChips');
+    const emoji     = form.querySelector('.register-emoji');
+    const title     = form.querySelector('.register-title');
+    const sub       = form.querySelector('.register-sub');
+    const btn       = form.querySelector('.register-btn');
+
+    form.style.display = 'block';
+    document.getElementById('registerDone').style.display = 'none';
+
+    if (name) {
+        emoji.textContent   = '🌟';
+        title.textContent   = name + ' 님, 환영해요!';
+        sub.innerHTML       = '이름을 변경하려면 아래에 입력하세요';
+        input.value         = name;
+        input.placeholder   = '새 이름 입력';
+        btn.textContent     = '변경하기 ✓';
+        chips.innerHTML     = '';
+    } else {
+        emoji.textContent   = '👋';
+        title.textContent   = '안녕하세요! 이름을 알려주세요';
+        sub.innerHTML       = '이름을 등록하면 2주 동안<br>내 학습 기록이 저장돼요';
+        input.value         = '';
+        input.placeholder   = '이름 입력 (예: 소시엄마)';
+        btn.textContent     = '시작하기 🚀';
+        const users = JSON.parse(localStorage.getItem('ep_users') || '[]');
+        chips.innerHTML = '';
+        users.forEach(u => {
+            const c = document.createElement('button');
+            c.className = 'register-chip';
+            c.textContent = u;
+            c.onclick = () => selectUser(u);
+            chips.appendChild(c);
+        });
+    }
+}
+
+function switchUser() {
+    showHeroForm();
+    updateRegisterSection(null);
 }
 
 /* ── Storage ── */
@@ -1412,8 +1582,12 @@ if (!currentUser) {
     done = new Set();
     custom = {};
     startDate = new Date(); startDate.setHours(0, 0, 0, 0);
+    updateRegisterSection(null);
+    updateNameBar(null);
 } else {
     showHeroDone(currentUser);
+    updateRegisterSection(currentUser);
+    updateNameBar(currentUser);
 }
 render();
 preloadImages();
