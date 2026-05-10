@@ -688,35 +688,6 @@
 <div class="toast" id="toast"></div>
 
 <script>
-/* ── Supabase 지연 로딩 (페이지 로드 시 외부 연결 없음) ── */
-let _sbLoadPromise = null;
-async function initSupabase() {
-    if (window.__supabase) return window.__supabase;
-    if (!_sbLoadPromise) {
-        _sbLoadPromise = new Promise(resolve => {
-            const envScript = document.createElement('script');
-            envScript.src = '/__env.js';
-            envScript.onload = envScript.onerror = () => {
-                const cdnScript = document.createElement('script');
-                cdnScript.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js';
-                cdnScript.onload = () => {
-                    const url = window.__SUPABASE_URL || '';
-                    const key = window.__SUPABASE_ANON_KEY || '';
-                    try {
-                        window.__supabase = (url && key && window.supabase)
-                            ? window.supabase.createClient(url, key) : null;
-                    } catch(e) { window.__supabase = null; }
-                    resolve(window.__supabase);
-                };
-                cdnScript.onerror = () => resolve(null);
-                document.head.appendChild(cdnScript);
-            };
-            document.head.appendChild(envScript);
-        });
-    }
-    return _sbLoadPromise;
-}
-
 /* ── Default schedule ── */
 const OL = 'https://covers.openlibrary.org/b/id/';
 const DEFAULTS = [
@@ -778,57 +749,8 @@ function load() {
     done   = new Set(JSON.parse(localStorage.getItem('ep_done')   || '[]'));
     custom = JSON.parse(localStorage.getItem('ep_custom') || '{}');
 }
-function saveDone()   { localStorage.setItem('ep_done',   JSON.stringify([...done])); syncToSupabase(); }
-function saveCustom() { localStorage.setItem('ep_custom', JSON.stringify(custom));   syncToSupabase(); }
-
-/* ── Supabase Sync ── */
-const PLAN_ID = 'sosine';
-
-function buildPayload() {
-    return {
-        user_id:        PLAN_ID,
-        start_date:     startDate.toISOString(),
-        done_days:      [...done],
-        custom_content: custom,
-        updated_at:     new Date().toISOString()
-    };
-}
-
-async function syncToSupabase() {
-    const sb = await initSupabase();
-    if (!sb) return;
-    try {
-        const { error } = await sb.from('plans').upsert(buildPayload());
-        if (error) console.warn('[Supabase] 저장 실패:', error.message);
-    } catch (e) {
-        console.warn('[Supabase] 저장 오류:', e.message);
-    }
-}
-
-async function syncFromSupabase() {
-    const sb = await initSupabase();
-    if (!sb) return;
-    try {
-        const { data, error } = await sb
-            .from('plans').select('*').eq('user_id', PLAN_ID).single();
-        if (error || !data) return;
-
-        const sd = new Date(data.start_date);
-        sd.setHours(0,0,0,0);
-        startDate = sd;
-        localStorage.setItem('ep_start', startDate.toISOString());
-
-        done = new Set(data.done_days || []);
-        localStorage.setItem('ep_done', JSON.stringify([...done]));
-
-        custom = data.custom_content || {};
-        localStorage.setItem('ep_custom', JSON.stringify(custom));
-
-        render();
-    } catch (e) {
-        console.warn('[Supabase] 불러오기 오류:', e.message);
-    }
-}
+function saveDone()   { localStorage.setItem('ep_done',   JSON.stringify([...done])); }
+function saveCustom() { localStorage.setItem('ep_custom', JSON.stringify(custom)); }
 
 /* ── Data ── */
 function getData(d) {
@@ -1059,31 +981,10 @@ function openModal(d) {
 function closeModal()    { document.getElementById('overlay').classList.remove('open'); }
 function overlayClick(e) { if (e.target === document.getElementById('overlay')) closeModal(); }
 function toggleFromModal() { if (activeDay) { toggleDay(activeDay); openModal(activeDay); } }
-async function toggleDay(d) {
+function toggleDay(d) {
     const completing = !done.has(d);
     completing ? done.add(d) : done.delete(d);
     saveDone(); render();
-    await logCompletion(d, completing);
-}
-
-async function logCompletion(planDay, completing) {
-    const sb = await initSupabase();
-    if (!sb) return;
-    try {
-        if (completing) {
-            await sb.from('completions').upsert({
-                user_id:  PLAN_ID,
-                plan_day: planDay
-            });
-        } else {
-            await sb.from('completions')
-                .delete()
-                .eq('user_id', PLAN_ID)
-                .eq('plan_day', planDay);
-        }
-    } catch (e) {
-        console.warn('[Supabase] 완료 기록 실패:', e.message);
-    }
 }
 
 /* ── Edit Panel ── */
@@ -1225,7 +1126,7 @@ function resetPlan() {
     localStorage.removeItem('ep_start');
     localStorage.removeItem('ep_done');
     done = new Set();
-    load(); render(); syncToSupabase();
+    load(); render();
 }
 
 /* ── Toast ── */
@@ -1260,14 +1161,10 @@ function preloadImages() {
 }
 
 /* ── Signup ── */
-async function submitSignup() {
+function submitSignup() {
     const email = document.getElementById('signupEmail').value.trim();
     if (!email) { showToast('이메일을 입력해주세요'); return; }
-    showToast('연결 중...');
-    const sb = await initSupabase();
-    if (!sb) { showToast('연결 오류'); return; }
-    const { error } = await sb.from('signups').insert({ email });
-    if (error) { showToast('신청 실패: ' + error.message); return; }
+    window.location.href = 'mailto:mina3912@naver.com?subject=소식 신청&body=신청 이메일: ' + encodeURIComponent(email);
     showToast('신청 완료! 감사합니다 💕');
     document.getElementById('signupEmail').value = '';
 }
