@@ -146,20 +146,36 @@
 
         .day-tile {
             background: #fff; border-radius: 14px;
-            padding: 10px 6px 8px; text-align: center; cursor: pointer;
+            padding: 0; text-align: center; cursor: pointer;
             transition: transform .15s, box-shadow .15s;
             box-shadow: 0 2px 8px rgba(200,169,126,.14);
             border: 2px solid #EAD9C5; user-select: none;
+            overflow: hidden;
         }
         .day-tile:hover { transform: translateY(-2px); box-shadow: 0 7px 18px rgba(200,169,126,.28); }
         .day-tile.today  { border-color: #C8A97E; background: #FFF5E8; }
         .day-tile.done   { border-color: #81C784; background: #F1F8E9; }
         .day-tile.future { opacity: .5; }
         .day-tile.custom-set { box-shadow: 0 3px 10px rgba(255,140,0,.22); }
+
+        /* 책 표지 이미지 영역 (tile 상단 full-width) */
+        .tile-cover {
+            width: 100%; height: 80px;
+            overflow: hidden; background: #e8ddd2;
+            position: relative;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.8rem; color: #c9b8a8;
+        }
+        .tile-cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .tile-vid-badge {
+            position: absolute; bottom: 4px; right: 4px;
+            font-size: .65rem; background: rgba(0,0,0,.65); color: #fff;
+            border-radius: 4px; padding: 1px 4px; line-height: 1.4;
+        }
+        .tile-body { padding: 6px 6px 8px; }
         .tile-label { font-size: .6rem; color: #C8A97E; font-weight: 600; }
         .tile-num   { font-size: 1.25rem; font-weight: 900; color: #3D2B1F; margin: 2px 0; }
         .day-tile.today .tile-num { color: #FF8C00; }
-        .tile-icons { font-size: .9rem; margin: 3px 0; }
         .tile-check { font-size: 1.1rem; }
         .tile-btn {
             margin-top: 6px; width: 100%; padding: 3px 0; border: none;
@@ -408,12 +424,61 @@
             .qm-icon { font-size: 1.5rem; }
             .today-cards { grid-template-columns: 1fr; }
             .week-grid { gap: 5px; }
-            .day-tile { padding: 8px 3px 6px; }
+            .day-tile { padding: 0; }
+            .tile-cover { height: 56px; }
+            .tile-body { padding: 4px 3px 6px; }
             .tile-num { font-size: 1rem; }
             .tile-btn { font-size: .54rem; }
             .field-row { flex-direction: column; }
             .field-group.emoji-group { flex: 1; }
         }
+        /* ── 이름 등록 모달 ── */
+        .name-overlay {
+            display: none; position: fixed; inset: 0;
+            background: rgba(0,0,0,.52); z-index: 300;
+            align-items: center; justify-content: center;
+        }
+        .name-overlay.open { display: flex; }
+        .name-modal {
+            background: #fff; border-radius: 28px;
+            padding: 36px 28px 28px; max-width: 360px; width: 92%;
+            box-shadow: 0 24px 64px rgba(0,0,0,.22); text-align: center;
+            animation: popIn .2s ease;
+        }
+        .name-modal-emoji { font-size: 3rem; margin-bottom: 12px; }
+        .name-modal-title { font-size: 1.4rem; font-weight: 900; color: #3D2B1F; margin-bottom: 6px; font-family: 'yg-jalnan', sans-serif; }
+        .name-modal-sub { font-size: .88rem; color: #aaa; margin-bottom: 18px; line-height: 1.6; }
+        .existing-users { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 14px; }
+        .user-chip {
+            padding: 8px 18px; border-radius: 20px; border: 2px solid #E8D5B7;
+            background: #FFF5E8; color: #FF8C00; font-size: .88rem; font-weight: 700;
+            cursor: pointer; transition: all .15s; font-family: 'yg-jalnan', sans-serif;
+        }
+        .user-chip:hover { background: #FF8C00; color: #fff; border-color: #FF8C00; }
+        .name-input {
+            width: 100%; border: 2px solid #E8D5B7; border-radius: 12px;
+            padding: 13px 16px; font-size: 1rem; outline: none; text-align: center;
+            margin-bottom: 12px; font-family: 'yg-jalnan', sans-serif; transition: border-color .2s;
+        }
+        .name-input:focus { border-color: #FF8C00; }
+        .name-start-btn {
+            width: 100%; padding: 14px; border-radius: 14px; border: none;
+            background: linear-gradient(135deg, #FF8C00, #FFB347);
+            color: #fff; font-size: 1rem; font-weight: 800; cursor: pointer;
+            font-family: 'yg-jalnan', sans-serif;
+        }
+        .name-start-btn:hover { opacity: .88; }
+        /* hero 사용자 배지 */
+        .hero-user {
+            margin-top: 8px; font-size: .85rem; color: rgba(255,255,255,.92);
+            display: none; align-items: center; justify-content: center; gap: 8px;
+        }
+        .hero-switch-btn {
+            background: rgba(255,255,255,.22); border: none; border-radius: 10px;
+            padding: 3px 10px; color: rgba(255,255,255,.9); font-size: .75rem;
+            cursor: pointer; font-weight: 700;
+        }
+        .hero-switch-btn:hover { background: rgba(255,255,255,.38); }
     </style>
 </head>
 <body>
@@ -428,7 +493,24 @@
         <div class="hero-title">소시네엄마표영어</div>
     </div>
     <div class="hero-sub">매일 영어 그림책 + 영상으로<br>친해지는 2주 플랜 🎯</div>
+    <div class="hero-user" id="heroUser">
+        <span id="heroUserName"></span>
+        <button class="hero-switch-btn" onclick="switchUser()">변경</button>
+    </div>
     <div class="hero-wave"></div>
+</div>
+
+<!-- 이름 등록 모달 -->
+<div class="name-overlay" id="nameOverlay">
+    <div class="name-modal">
+        <div class="name-modal-emoji">👋</div>
+        <div class="name-modal-title" id="nameModalTitle">처음 오셨군요!</div>
+        <div class="name-modal-sub" id="nameModalSub">이름을 입력하면 2주 동안<br>내 진도를 기억해줘요</div>
+        <div class="existing-users" id="existingUsers"></div>
+        <input class="name-input" id="nameInput" placeholder="이름 입력" maxlength="10"
+            onkeydown="if(event.key==='Enter') registerName()">
+        <button class="name-start-btn" onclick="registerName()">시작하기 🚀</button>
+    </div>
 </div>
 
 <!-- ── Quick Menu ── -->
@@ -671,17 +753,73 @@ const STARS = ['🌱','🌿','⭐','🌟','💫','🏅','🥉','🥈','🥇','�
 let startDate, done, custom;
 let activeDay = null;
 let editDay   = 1;
+let currentUser = '';
+
+/* ── 사용자 프로필 ── */
+function userKey(k) { return `ep_${currentUser}_${k}`; }
+
+function showNameModal() {
+    const users = JSON.parse(localStorage.getItem('ep_users') || '[]');
+    const existingEl = document.getElementById('existingUsers');
+    existingEl.innerHTML = '';
+    if (users.length > 0) {
+        document.getElementById('nameModalTitle').textContent = '누구세요? 👀';
+        document.getElementById('nameModalSub').textContent = '이름을 선택하거나 새로 입력해주세요';
+        users.forEach(u => {
+            const btn = document.createElement('button');
+            btn.className = 'user-chip';
+            btn.textContent = u;
+            btn.onclick = () => selectUser(u);
+            existingEl.appendChild(btn);
+        });
+    }
+    document.getElementById('nameInput').value = '';
+    document.getElementById('nameOverlay').classList.add('open');
+}
+
+function selectUser(name) {
+    currentUser = name;
+    localStorage.setItem('ep_currentUser', name);
+    document.getElementById('nameOverlay').classList.remove('open');
+    loadUserData();
+    render();
+    updateHeroUser();
+}
+
+function registerName() {
+    const name = document.getElementById('nameInput').value.trim();
+    if (!name) { document.getElementById('nameInput').focus(); return; }
+    const users = JSON.parse(localStorage.getItem('ep_users') || '[]');
+    if (!users.includes(name)) {
+        users.push(name);
+        localStorage.setItem('ep_users', JSON.stringify(users));
+    }
+    selectUser(name);
+}
+
+function switchUser() { showNameModal(); }
+
+function updateHeroUser() {
+    document.getElementById('heroUserName').textContent = `${currentUser}의 2주 플랜 🌟`;
+    document.getElementById('heroUser').style.display = 'flex';
+}
 
 /* ── Storage ── */
-function load() {
-    const s = localStorage.getItem('ep_start');
+function loadUserData() {
+    const s = localStorage.getItem(userKey('start'));
     startDate = s ? new Date(s) : (() => { const d = new Date(); d.setHours(0,0,0,0); return d; })();
-    if (!s) localStorage.setItem('ep_start', startDate.toISOString());
-    done   = new Set(JSON.parse(localStorage.getItem('ep_done')   || '[]'));
-    custom = JSON.parse(localStorage.getItem('ep_custom') || '{}');
+    if (!s) localStorage.setItem(userKey('start'), startDate.toISOString());
+    done   = new Set(JSON.parse(localStorage.getItem(userKey('done'))   || '[]'));
+    custom = JSON.parse(localStorage.getItem(userKey('custom')) || '{}');
 }
-function saveDone()   { localStorage.setItem('ep_done',   JSON.stringify([...done])); }
-function saveCustom() { localStorage.setItem('ep_custom', JSON.stringify(custom)); }
+
+function load() {
+    currentUser = localStorage.getItem('ep_currentUser') || '';
+    if (!currentUser) return;
+    loadUserData();
+}
+function saveDone()   { localStorage.setItem(userKey('done'),   JSON.stringify([...done])); }
+function saveCustom() { localStorage.setItem(userKey('custom'), JSON.stringify(custom)); }
 
 /* ── Data ── */
 function getData(d) {
@@ -743,7 +881,7 @@ function thumbHtml(url, type, coverUrl) {
     if (id) {
         return `<div class="thumb-wrap">
             <img src="${thumbUrl(id)}" alt="썸네일"
-                onerror="this.style.display='none';document.getElementById('${uid}').style.display='flex'">
+                onerror="tileImgError(this,'${uid}')">
             <div id="${uid}" class="${fbCls}" style="display:none">${noImgInner}</div>
         </div>`;
     }
@@ -825,9 +963,9 @@ function render() {
 
 function renderGrid(id, from, to, td) {
     const el = document.getElementById(id);
-    el.innerHTML = '';
+    let html = '';
     for (let d = from; d <= to; d++) {
-        const s       = getData(d);
+        const s        = getData(d);
         const isToday  = d === td;
         const isDone   = done.has(d);
         const isFuture = d > td;
@@ -837,20 +975,28 @@ function renderGrid(id, from, to, td) {
             isDone   ? 'done'       : '',
             isFuture ? 'future'     : '',
             isCust   ? 'custom-set' : ''
-        ].join(' ');
-        el.innerHTML += `
+        ].filter(Boolean).join(' ');
+        const tileYtId = getYtId(s.vid.url);
+        const coverHtml = s.book.cover
+            ? `<img src="${s.book.cover}" alt="책표지">`
+            : '📚';
+        const vidBadge = tileYtId ? `<div class="tile-vid-badge">🎬</div>` : '';
+        html += `
             <div class="${cls}" onclick="openModal(${d})">
-                <div class="tile-label">Day</div>
-                <div class="tile-num">${d}</div>
-                <div class="tile-icons">${s.book.emoji}${s.vid.emoji}</div>
-                <div class="tile-check">${isDone ? '✅' : isToday ? '⭐' : '○'}</div>
-                <div class="tile-custom-dot"></div>
-                <button class="tile-btn" onclick="event.stopPropagation();toggleDay(${d})">
-                    ${isDone ? '완료됨!' : '완료 체크'}
-                </button>
+                <div class="tile-cover">${coverHtml}${vidBadge}</div>
+                <div class="tile-body">
+                    <div class="tile-label">Day</div>
+                    <div class="tile-num">${d}</div>
+                    <div class="tile-check">${isDone ? '✅' : isToday ? '⭐' : '○'}</div>
+                    <div class="tile-custom-dot"></div>
+                    <button class="tile-btn" onclick="event.stopPropagation();toggleDay(${d})">
+                        ${isDone ? '완료됨!' : '완료 체크'}
+                    </button>
+                </div>
             </div>
         `;
     }
+    el.innerHTML = html;
 }
 
 /* ── View Modal ── */
@@ -873,7 +1019,7 @@ function openModal(d) {
                     : bookId
                         ? `<img src="${thumbUrl(bookId)}" fetchpriority="high" alt="썸네일"
                             onload="this.parentElement.classList.add('img-ready')"
-                            onerror="this.parentElement.classList.add('img-ready');this.parentElement.innerHTML='<div class=\\"mc-no-thumb book-mc-no-img\\"><div class=no-img-icon>📚</div><div class=no-img-txt>이미지 없음</div></div>'">`
+                            onerror="modalImgError(this,'mcthumb_b${d}',true)">`
                         : `<div class="mc-no-thumb book-mc-no-img"><div class="no-img-icon">📚</div><div class="no-img-txt">이미지 없음</div></div>`}
             </div>
             <div class="mc-body">
@@ -890,7 +1036,7 @@ function openModal(d) {
                 ${vidId
                     ? `<img src="${thumbUrl(vidId)}" fetchpriority="high" alt="썸네일"
                         onload="this.parentElement.classList.add('img-ready')"
-                        onerror="this.parentElement.classList.add('img-ready');this.parentElement.innerHTML='<div class=mc-no-thumb>🎬</div>'">`
+                        onerror="modalImgError(this,'mcthumb_v${d}',false)">`
                     : `<div class="mc-no-thumb">🎬</div>`}
             </div>
             <div class="mc-body">
@@ -1054,10 +1200,10 @@ function resetAllCustom() {
 
 function resetPlan() {
     if (!confirm('플랜을 처음부터 다시 시작할까요? 완료 기록이 모두 지워집니다.')) return;
-    localStorage.removeItem('ep_start');
-    localStorage.removeItem('ep_done');
+    localStorage.removeItem(userKey('start'));
+    localStorage.removeItem(userKey('done'));
     done = new Set();
-    load(); render();
+    loadUserData(); render();
 }
 
 /* ── Toast ── */
@@ -1100,7 +1246,44 @@ function submitSignup() {
     document.getElementById('signupEmail').value = '';
 }
 
-load(); render(); preloadImages();
+function tileImgError(img, noImgId) {
+    img.style.display = 'none';
+    const el = document.getElementById(noImgId);
+    if (el) el.style.display = 'flex';
+}
+
+function modalImgError(img, wrapId, isBook) {
+    const wrap = document.getElementById(wrapId);
+    if (wrap) wrap.classList.add('img-ready');
+    img.style.display = 'none';
+    const fb = document.createElement('div');
+    fb.className = isBook ? 'mc-no-thumb book-mc-no-img' : 'mc-no-thumb';
+    if (isBook) {
+        const icon = document.createElement('div');
+        icon.className = 'no-img-icon';
+        icon.textContent = '📚';
+        const txt = document.createElement('div');
+        txt.className = 'no-img-txt';
+        txt.textContent = '이미지 없음';
+        fb.appendChild(icon);
+        fb.appendChild(txt);
+    } else {
+        fb.textContent = '🎬';
+    }
+    if (img.parentElement) img.parentElement.appendChild(fb);
+}
+
+load();
+if (!currentUser) {
+    done = new Set();
+    custom = {};
+    startDate = new Date(); startDate.setHours(0, 0, 0, 0);
+    showNameModal();
+} else {
+    updateHeroUser();
+}
+render();
+preloadImages();
 </script>
 </body>
 </html>
