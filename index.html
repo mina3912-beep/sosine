@@ -5,13 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>소시네엄마표영어</title>
 
-    <!-- Supabase CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
-    <!-- 환경변수 주입 (Vercel 빌드 시 자동 생성, 없어도 앱 동작) -->
-    <script src="/__env.js" onerror="window.__SUPABASE_URL='';window.__SUPABASE_ANON_KEY='';"></script>
-    <!-- Supabase 클라이언트 -->
-    <script src="/lib/supabase.js"></script>
-
     <style>
         @font-face {
             font-family: 'yg-jalnan';
@@ -380,11 +373,11 @@
         }
         .signup-title { font-size: 1.2rem; font-weight: 900; color: #3D2B1F; margin-bottom: 6px; }
         .signup-sub { font-size: .85rem; color: #8B6F5E; margin-bottom: 18px; line-height: 1.6; }
-        .signup-row { display: flex; gap: 10px; margin-bottom: 10px; }
         .signup-input {
-            flex: 1; border: 1.5px solid #E0E0E0; border-radius: 12px;
-            padding: 11px 14px; font-size: .9rem; outline: none;
+            display: block; width: 100%; border: 1.5px solid #E0E0E0; border-radius: 12px;
+            padding: 11px 14px; font-size: .9rem; outline: none; margin-bottom: 10px;
             transition: border-color .2s; font-family: 'yg-jalnan', sans-serif;
+            box-sizing: border-box;
         }
         .signup-input:focus { border-color: #FF8C00; }
         .signup-btn {
@@ -479,10 +472,8 @@
     <div class="signup-box">
         <div class="signup-title">📬 소식 받기</div>
         <div class="signup-sub">새 플랜 업데이트 소식을<br>제일 먼저 받아보세요!</div>
-        <div class="signup-row">
-            <input class="signup-input" id="signupName" type="text" placeholder="이름">
-            <input class="signup-input" id="signupPhone" type="tel" placeholder="연락처">
-        </div>
+        <input class="signup-input" id="signupName" type="text" placeholder="이름">
+        <input class="signup-input" id="signupPhone" type="tel" placeholder="연락처">
         <button class="signup-btn" onclick="submitSignup()">신청하기 ✉️</button>
     </div>
 
@@ -620,6 +611,35 @@
 <div class="toast" id="toast"></div>
 
 <script>
+/* ── Supabase 지연 로딩 (페이지 로드 시 외부 연결 없음) ── */
+let _sbLoadPromise = null;
+async function initSupabase() {
+    if (window.__supabase) return window.__supabase;
+    if (!_sbLoadPromise) {
+        _sbLoadPromise = new Promise(resolve => {
+            const envScript = document.createElement('script');
+            envScript.src = '/__env.js';
+            envScript.onload = envScript.onerror = () => {
+                const cdnScript = document.createElement('script');
+                cdnScript.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js';
+                cdnScript.onload = () => {
+                    const url = window.__SUPABASE_URL || '';
+                    const key = window.__SUPABASE_ANON_KEY || '';
+                    try {
+                        window.__supabase = (url && key && window.supabase)
+                            ? window.supabase.createClient(url, key) : null;
+                    } catch(e) { window.__supabase = null; }
+                    resolve(window.__supabase);
+                };
+                cdnScript.onerror = () => resolve(null);
+                document.head.appendChild(cdnScript);
+            };
+            document.head.appendChild(envScript);
+        });
+    }
+    return _sbLoadPromise;
+}
+
 /* ── Default schedule ── */
 const OL = 'https://covers.openlibrary.org/b/id/';
 const DEFAULTS = [
@@ -698,9 +718,10 @@ function buildPayload() {
 }
 
 async function syncToSupabase() {
-    if (!window.__supabase) return;
+    const sb = await initSupabase();
+    if (!sb) return;
     try {
-        const { error } = await window.__supabase.from('plans').upsert(buildPayload());
+        const { error } = await sb.from('plans').upsert(buildPayload());
         if (error) console.warn('[Supabase] 저장 실패:', error.message);
     } catch (e) {
         console.warn('[Supabase] 저장 오류:', e.message);
@@ -708,9 +729,10 @@ async function syncToSupabase() {
 }
 
 async function syncFromSupabase() {
-    if (!window.__supabase) return;
+    const sb = await initSupabase();
+    if (!sb) return;
     try {
-        const { data, error } = await window.__supabase
+        const { data, error } = await sb
             .from('plans').select('*').eq('user_id', PLAN_ID).single();
         if (error || !data) return;
 
@@ -726,7 +748,6 @@ async function syncFromSupabase() {
         localStorage.setItem('ep_custom', JSON.stringify(custom));
 
         render();
-        console.log('[Supabase] ✅ 데이터 불러오기 완료');
     } catch (e) {
         console.warn('[Supabase] 불러오기 오류:', e.message);
     }
@@ -969,15 +990,16 @@ async function toggleDay(d) {
 }
 
 async function logCompletion(planDay, completing) {
-    if (!window.__supabase) return;
+    const sb = await initSupabase();
+    if (!sb) return;
     try {
         if (completing) {
-            await window.__supabase.from('completions').upsert({
+            await sb.from('completions').upsert({
                 user_id:  PLAN_ID,
                 plan_day: planDay
             });
         } else {
-            await window.__supabase.from('completions')
+            await sb.from('completions')
                 .delete()
                 .eq('user_id', PLAN_ID)
                 .eq('plan_day', planDay);
@@ -1165,8 +1187,10 @@ async function submitSignup() {
     const name  = document.getElementById('signupName').value.trim();
     const phone = document.getElementById('signupPhone').value.trim();
     if (!name) { showToast('이름을 입력해주세요'); return; }
-    if (!window.__supabase) { showToast('연결 오류'); return; }
-    const { error } = await window.__supabase.from('signups').insert({ name, phone });
+    showToast('연결 중...');
+    const sb = await initSupabase();
+    if (!sb) { showToast('연결 오류'); return; }
+    const { error } = await sb.from('signups').insert({ name, phone });
     if (error) { showToast('신청 실패: ' + error.message); return; }
     showToast('신청 완료! 감사합니다 💕');
     document.getElementById('signupName').value  = '';
