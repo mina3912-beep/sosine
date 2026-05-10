@@ -472,8 +472,7 @@
     <div class="signup-box">
         <div class="signup-title">📬 소식 받기</div>
         <div class="signup-sub">새 플랜 업데이트 소식을<br>제일 먼저 받아보세요!</div>
-        <input class="signup-input" id="signupName" type="text" placeholder="이름">
-        <input class="signup-input" id="signupPhone" type="tel" placeholder="연락처">
+        <input class="signup-input" id="signupEmail" type="email" placeholder="이메일 주소">
         <button class="signup-btn" onclick="submitSignup()">신청하기 ✉️</button>
     </div>
 
@@ -1184,17 +1183,15 @@ function preloadImages() {
 
 /* ── Signup ── */
 async function submitSignup() {
-    const name  = document.getElementById('signupName').value.trim();
-    const phone = document.getElementById('signupPhone').value.trim();
-    if (!name) { showToast('이름을 입력해주세요'); return; }
+    const email = document.getElementById('signupEmail').value.trim();
+    if (!email) { showToast('이메일을 입력해주세요'); return; }
     showToast('연결 중...');
     const sb = await initSupabase();
     if (!sb) { showToast('연결 오류'); return; }
-    const { error } = await sb.from('signups').insert({ name, phone });
+    const { error } = await sb.from('signups').insert({ email });
     if (error) { showToast('신청 실패: ' + error.message); return; }
     showToast('신청 완료! 감사합니다 💕');
-    document.getElementById('signupName').value  = '';
-    document.getElementById('signupPhone').value = '';
+    document.getElementById('signupEmail').value = '';
 }
 
 load(); render(); preloadImages();
