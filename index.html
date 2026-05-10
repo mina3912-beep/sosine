@@ -400,6 +400,38 @@
         .reset-btn { background: none; border: 1.5px solid #E0D5C8; border-radius: 20px; padding: 7px 18px; font-size: .8rem; color: #C8A97E; cursor: pointer; transition: border-color .2s, color .2s; font-family: 'yg-jalnan', sans-serif; }
         .reset-btn:hover { border-color: #FF8C00; color: #FF8C00; }
 
+        /* ── 등록 모달 ── */
+        .reg-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,.55);
+            display: flex; align-items: center; justify-content: center;
+            z-index: 9999;
+        }
+        .reg-box {
+            background: #fff; border-radius: 28px; padding: 36px 28px 28px;
+            width: 320px; max-width: 90vw;
+            box-shadow: 0 12px 40px rgba(0,0,0,.18);
+            border: 2px solid #E8D5B7; text-align: center;
+        }
+        .reg-emoji  { font-size: 2.6rem; margin-bottom: 8px; }
+        .reg-title  { font-size: 1.15rem; font-weight: 900; color: #3D2B1F; margin-bottom: 4px; }
+        .reg-sub    { font-size: .82rem; color: #aaa; margin-bottom: 22px; line-height: 1.5; }
+        .reg-label  { font-size: .78rem; font-weight: 800; color: #8B6F5E; text-align: left; margin-bottom: 5px; }
+        .reg-input  {
+            width: 100%; border: 1.5px solid #E0E0E0; border-radius: 12px;
+            padding: 11px 14px; font-size: .95rem; outline: none; margin-bottom: 14px;
+            font-family: inherit; transition: border-color .2s;
+        }
+        .reg-input:focus { border-color: #FF8C00; }
+        .reg-btn {
+            width: 100%; padding: 13px; border-radius: 14px; border: none;
+            background: linear-gradient(135deg, #FF8C00, #FFB347);
+            color: #fff; font-size: 1rem; font-weight: 900;
+            cursor: pointer; font-family: 'yg-jalnan', sans-serif;
+            transition: opacity .2s;
+        }
+        .reg-btn:hover { opacity: .88; }
+        .reg-err { color: #e53935; font-size: .8rem; margin-top: 8px; min-height: 18px; }
+
         @media (max-width: 560px) {
             .hero-title { font-size: 1.9rem; }
             .hero { padding: 40px 20px 76px; }
@@ -417,6 +449,23 @@
     </style>
 </head>
 <body>
+
+<!-- ── 등록 모달 ── -->
+<div class="reg-overlay" id="regOverlay" style="display:none">
+    <div class="reg-box">
+        <div class="reg-emoji">👶</div>
+        <div class="reg-title">처음 오셨군요!</div>
+        <div class="reg-sub">이름과 아이 나이를 알려주시면<br>맞춤 플랜을 시작할 수 있어요 🎯</div>
+        <div class="reg-label">이름</div>
+        <input class="reg-input" id="regName" type="text" placeholder="이름을 입력해주세요"
+            onkeydown="if(event.key==='Enter') document.getElementById('regAge').focus()">
+        <div class="reg-label">아이 나이 (만 나이)</div>
+        <input class="reg-input" id="regAge" type="number" min="1" max="12" placeholder="예: 5"
+            onkeydown="if(event.key==='Enter') submitRegister()">
+        <button class="reg-btn" onclick="submitRegister()">시작하기 ✨</button>
+        <div class="reg-err" id="regErr"></div>
+    </div>
+</div>
 
 <!-- ── Hero Banner ── -->
 <div class="hero">
@@ -1160,6 +1209,39 @@ function preloadImages() {
     });
 }
 
+/* ── 사용자 등록 ── */
+function checkRegistration() {
+    if (!localStorage.getItem('ep_user_id')) {
+        document.getElementById('regOverlay').style.display = 'flex';
+        setTimeout(() => document.getElementById('regName').focus(), 100);
+    }
+}
+
+async function submitRegister() {
+    const name = document.getElementById('regName').value.trim();
+    const age  = parseInt(document.getElementById('regAge').value);
+    const err  = document.getElementById('regErr');
+
+    if (!name)          { err.textContent = '이름을 입력해주세요'; return; }
+    if (!age || age < 1 || age > 12) { err.textContent = '아이 나이를 확인해주세요 (1~12)'; return; }
+    err.textContent = '';
+
+    if (window.__supabase) {
+        const { data, error } = await window.__supabase
+            .from('users')
+            .insert({ name, child_age: age })
+            .select('id')
+            .single();
+        if (error) { err.textContent = '저장 오류: ' + error.message; return; }
+        localStorage.setItem('ep_user_id', data.id);
+    } else {
+        localStorage.setItem('ep_user_id', 'local-' + Date.now());
+    }
+
+    localStorage.setItem('ep_user_name', name);
+    document.getElementById('regOverlay').style.display = 'none';
+}
+
 /* ── Signup ── */
 async function submitSignup() {
     const name  = document.getElementById('signupName').value.trim();
@@ -1173,7 +1255,7 @@ async function submitSignup() {
     document.getElementById('signupPhone').value = '';
 }
 
-load(); render(); preloadImages(); syncFromSupabase();
+load(); render(); preloadImages(); syncFromSupabase(); checkRegistration();
 </script>
 </body>
 </html>
