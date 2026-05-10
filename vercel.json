@@ -1,0 +1,6 @@
+{
+  "buildCommand": "node scripts/build-env.js",
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}

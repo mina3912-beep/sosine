@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>소시네엄마표영어</title>
+
+    <!-- Supabase CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+    <!-- 환경변수 주입 (Vercel 빌드 시 자동 생성, 없어도 앱 동작) -->
+    <script src="/__env.js" onerror="window.__SUPABASE_URL='';window.__SUPABASE_ANON_KEY='';"></script>
+    <!-- Supabase 클라이언트 -->
+    <script src="/lib/supabase.js"></script>
+
+    <style>
+        @font-face {
+            font-family: 'yg-jalnan';
+            src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'yg-jalnan', 'Segoe UI', sans-serif;
+            background: #FBF6EF;
+            min-height: 100vh;
+        }
+
+        /* ── Hero Banner ── */
+        .hero {
+            background: linear-gradient(135deg, #FF8C00 0%, #FFB347 65%, #FFC875 100%);
+            padding: 48px 24px 84px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-blob1 {
+            position: absolute; top: -50px; right: -50px;
+            width: 220px; height: 220px;
+            background: rgba(255,255,255,.13); border-radius: 50%;
+        }
+        .hero-blob2 {
+            position: absolute; bottom: 40px; left: -40px;
+            width: 140px; height: 140px;
+            background: rgba(255,255,255,.1); border-radius: 50%;
+        }
+        .hero-blob3 {
+            position: absolute; top: 20px; left: 30%;
+            width: 80px; height: 80px;
+            background: rgba(255,255,255,.08); border-radius: 50%;
+        }
+        .hero-deco { font-size: 2rem; margin-bottom: 10px; letter-spacing: 8px; position: relative; z-index: 1; }
+        .hero-title {
+            font-size: 2.6rem; color: #fff; position: relative; z-index: 1;
+            text-shadow: 2px 4px 0 rgba(150,70,0,.22);
+            line-height: 1.2;
+        }
+        .hero-sub {
+            font-size: .9rem; color: rgba(255,255,255,.93);
+            margin-top: 12px; line-height: 1.7; position: relative; z-index: 1;
+        }
+        .hero-wave {
+            position: absolute; bottom: 0; left: 0; right: 0;
+            height: 52px; background: #FBF6EF;
+            border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+        }
+
+        /* ── Quick Menu ── */
+        .quick-menu-wrap {
+            max-width: 860px; margin: -30px auto 0;
+            padding: 0 20px; position: relative; z-index: 10;
+        }
+        .quick-menu { display: flex; gap: 12px; }
+        .qm-btn {
+            flex: 1; background: #fff;
+            border: 2px solid #E8D5B7; border-radius: 22px;
+            padding: 18px 8px 14px; text-align: center;
+            cursor: pointer;
+            box-shadow: 0 6px 22px rgba(200,169,126,.24);
+            transition: transform .15s, box-shadow .15s;
+            font-family: 'yg-jalnan', sans-serif;
+        }
+        .qm-btn:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(200,169,126,.38); }
+        .qm-icon { font-size: 1.8rem; display: block; margin-bottom: 6px; }
+        .qm-label { font-size: .68rem; color: #8B6F5E; font-weight: 700; }
+
+        /* ── Container ── */
+        .container { max-width: 860px; margin: 0 auto; padding: 30px 16px 16px; }
+
+        /* ── Today ── */
+        .today-box {
+            background: #fff; border-radius: 24px;
+            padding: 22px 20px 18px; margin-bottom: 14px;
+            box-shadow: 0 6px 24px rgba(200,169,126,.18);
+            border: 2px solid #E8D5B7;
+        }
+        .today-tag { font-size: .72rem; font-weight: 800; color: #FF8C00; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 4px; }
+        .today-heading { font-size: 1.4rem; font-weight: 900; color: #3D2B1F; margin-bottom: 14px; }
+        .today-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+        .big-card {
+            border-radius: 18px; padding: 0;
+            text-decoration: none; display: block; color: #fff;
+            transition: transform .2s, box-shadow .2s; overflow: hidden;
+        }
+        .big-card:hover { transform: translateY(-4px); box-shadow: 0 14px 28px rgba(0,0,0,.18); }
+        .big-card .thumb-wrap {
+            width: 100%; aspect-ratio: 16/9; overflow: hidden; position: relative;
+        }
+        .big-card .thumb-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .big-card .thumb-wrap .no-thumb {
+            width: 100%; height: 100%; display: flex; align-items: center;
+            justify-content: center; font-size: 2.8rem;
+        }
+        .big-card.book-card .no-thumb { background: linear-gradient(135deg, #FF8C00, #FFB347); }
+        .big-card.vid-card  .no-thumb { background: linear-gradient(135deg, #4ECDC4, #45B7D1); }
+        .big-card .card-info { padding: 13px 15px 15px; }
+        .big-card.book-card .card-info { background: linear-gradient(135deg, #FF8C00, #FFB347); }
+        .big-card.vid-card  .card-info { background: linear-gradient(135deg, #4ECDC4, #45B7D1); }
+        .big-card .type-label { font-size: .72rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; opacity: .85; margin-bottom: 4px; }
+        .big-card .card-name { font-size: .92rem; font-weight: 800; line-height: 1.3; }
+        .big-card .card-meta { font-size: .75rem; opacity: .85; margin-top: 3px; }
+        .big-card .watch-btn { display: inline-flex; align-items: center; gap: 5px; margin-top: 10px; background: rgba(255,255,255,.28); border-radius: 20px; padding: 5px 13px; font-size: .8rem; font-weight: 700; }
+
+        /* ── Progress ── */
+        .progress-box {
+            background: #fff; border-radius: 20px;
+            padding: 16px 20px; margin-bottom: 14px;
+            box-shadow: 0 4px 16px rgba(200,169,126,.14);
+            border: 2px solid #E8D5B7;
+            display: flex; align-items: center; gap: 16px;
+        }
+        .progress-stars { font-size: 1.6rem; flex-shrink: 0; }
+        .progress-info { flex: 1; }
+        .progress-text { font-size: .88rem; font-weight: 700; color: #3D2B1F; margin-bottom: 7px; }
+        .progress-bar { height: 10px; background: #F0E8DC; border-radius: 5px; overflow: hidden; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, #C8A97E, #FF8C00); border-radius: 5px; transition: width .6s ease; }
+        .progress-pct { font-size: 1.1rem; font-weight: 900; color: #FF8C00; flex-shrink: 0; }
+
+        /* ── Week grid ── */
+        .week-section { margin-bottom: 18px; }
+        .week-label { font-size: .9rem; font-weight: 800; color: #8B6F5E; margin-bottom: 10px; padding-left: 2px; }
+        .week-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
+
+        .day-tile {
+            background: #fff; border-radius: 14px;
+            padding: 10px 6px 8px; text-align: center; cursor: pointer;
+            transition: transform .15s, box-shadow .15s;
+            box-shadow: 0 2px 8px rgba(200,169,126,.14);
+            border: 2px solid #EAD9C5; user-select: none;
+        }
+        .day-tile:hover { transform: translateY(-2px); box-shadow: 0 7px 18px rgba(200,169,126,.28); }
+        .day-tile.today  { border-color: #C8A97E; background: #FFF5E8; }
+        .day-tile.done   { border-color: #81C784; background: #F1F8E9; }
+        .day-tile.future { opacity: .5; }
+        .day-tile.custom-set { box-shadow: 0 3px 10px rgba(255,140,0,.22); }
+        .tile-label { font-size: .6rem; color: #C8A97E; font-weight: 600; }
+        .tile-num   { font-size: 1.25rem; font-weight: 900; color: #3D2B1F; margin: 2px 0; }
+        .day-tile.today .tile-num { color: #FF8C00; }
+        .tile-icons { font-size: .9rem; margin: 3px 0; }
+        .tile-check { font-size: 1.1rem; }
+        .tile-btn {
+            margin-top: 6px; width: 100%; padding: 3px 0; border: none;
+            border-radius: 8px; font-size: .6rem; font-weight: 700;
+            cursor: pointer; background: #F8F1E8; color: #C8A97E; transition: background .2s;
+            font-family: 'yg-jalnan', sans-serif;
+        }
+        .tile-btn:hover { background: #FFE8CC; color: #FF8C00; }
+        .day-tile.done .tile-btn { background: #C8E6C9; color: #2E7D32; }
+        .tile-custom-dot { display: none; width: 6px; height: 6px; background: #FF8C00; border-radius: 50%; margin: 2px auto 0; }
+        .day-tile.custom-set .tile-custom-dot { display: block; }
+
+        /* ── No-image book placeholder ── */
+        .book-no-img {
+            background: #f0ece7 !important;
+            flex-direction: column; gap: 5px;
+        }
+        .book-no-img .no-img-icon { font-size: 2.2rem; }
+        .book-no-img .no-img-txt  { font-size: .68rem; font-weight: 700; color: #bbb; letter-spacing: .3px; }
+        .mc-no-thumb.book-mc-no-img {
+            background: #f0ece7 !important;
+            flex-direction: column; gap: 5px;
+        }
+        .book-mc-no-img .no-img-icon { font-size: 2rem; }
+        .book-mc-no-img .no-img-txt  { font-size: .65rem; font-weight: 700; color: #bbb; }
+
+        /* ── View Modal ── */
+        .overlay {
+            display: none; position: fixed; inset: 0;
+            background: rgba(0,0,0,.48); z-index: 200;
+            align-items: center; justify-content: center;
+        }
+        .overlay.open { display: flex; }
+        .modal {
+            background: #fff; border-radius: 24px;
+            padding: 28px 24px 22px; max-width: 440px; width: 92%;
+            box-shadow: 0 24px 64px rgba(0,0,0,.22); animation: popIn .2s ease;
+        }
+        @keyframes popIn { from { transform: scale(.92); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .modal-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+        .modal-title { font-size: 1.25rem; font-weight: 900; color: #333; }
+        .modal-close { background: #F0F0F0; border: none; border-radius: 50%; width: 34px; height: 34px; font-size: 1.1rem; cursor: pointer; }
+        .modal-cards { display: flex; flex-direction: column; gap: 11px; }
+        .modal-card {
+            border-radius: 16px; text-decoration: none;
+            overflow: hidden; color: #fff; transition: transform .15s;
+        }
+        .modal-card:hover { transform: scale(1.02); }
+        .modal-card .mc-thumb {
+            width: 100%; aspect-ratio: 16/9; overflow: hidden; position: relative;
+            background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.4s infinite;
+        }
+        .modal-card .mc-thumb.img-ready { background: none; animation: none; }
+        @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+        .modal-card .mc-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; opacity: 0; transition: opacity .25s; }
+        .modal-card .mc-thumb.img-ready img { opacity: 1; }
+        .modal-card .mc-thumb .mc-no-thumb { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; }
+        .modal-card.book-card .mc-no-thumb { background: linear-gradient(135deg, #FF8C00, #FFB347); }
+        .modal-card.vid-card  .mc-no-thumb { background: linear-gradient(135deg, #4ECDC4, #45B7D1); }
+        .mc-body { padding: 14px 16px; display: flex; align-items: center; gap: 12px; }
+        .modal-card.book-card .mc-body { background: linear-gradient(135deg, #FF8C00, #FFB347); }
+        .modal-card.vid-card  .mc-body { background: linear-gradient(135deg, #4ECDC4, #45B7D1); }
+        .mc-emoji { font-size: 1.8rem; flex-shrink: 0; }
+        .mc-info .mc-type  { font-size: .7rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; opacity: .85; margin-bottom: 3px; }
+        .mc-info .mc-title { font-size: .95rem; font-weight: 800; }
+        .mc-info .mc-sub   { font-size: .75rem; opacity: .85; margin-top: 2px; }
+        .modal-done-btn {
+            margin-top: 14px; width: 100%; padding: 13px; border-radius: 14px;
+            border: none; font-size: .95rem; font-weight: 800; cursor: pointer;
+            background: linear-gradient(135deg, #81C784, #4CAF50); color: #fff; transition: transform .15s;
+        }
+        .modal-done-btn:hover { transform: scale(1.02); }
+        .modal-done-btn.already { background: linear-gradient(135deg, #C8E6C9, #A5D6A7); color: #2E7D32; }
+
+        /* ── Shimmer (modal thumb loading) ── */
+        .modal-card .mc-thumb {
+            background: linear-gradient(90deg, #f5ede3 25%, #ede0d0 50%, #f5ede3 75%);
+        }
+
+        /* ── Edit Overlay ── */
+        .edit-overlay {
+            display: none; position: fixed; inset: 0;
+            background: rgba(0,0,0,.55); z-index: 300;
+            align-items: flex-start; justify-content: center;
+            overflow-y: auto; padding: 20px 16px;
+        }
+        .edit-overlay.open { display: flex; }
+        .edit-panel {
+            background: #fff; border-radius: 26px; width: 100%; max-width: 580px;
+            box-shadow: 0 24px 64px rgba(0,0,0,.25); animation: popIn .2s ease;
+            overflow: hidden; margin: auto;
+        }
+
+        /* Edit header */
+        .edit-header { background: linear-gradient(135deg, #FF8C00, #FFB347); padding: 20px 22px 16px; color: #fff; }
+        .edit-header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .edit-header-title { font-size: 1.05rem; font-weight: 900; }
+        .edit-close-btn { background: rgba(255,255,255,.25); border: none; border-radius: 50%; width: 34px; height: 34px; font-size: 1rem; color: #fff; cursor: pointer; }
+        .day-nav { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+        .nav-btn {
+            background: rgba(255,255,255,.2); border: none; border-radius: 12px;
+            padding: 7px 14px; color: #fff; font-size: .82rem; font-weight: 800;
+            cursor: pointer; transition: background .2s; flex-shrink: 0;
+        }
+        .nav-btn:hover { background: rgba(255,255,255,.35); }
+        .nav-btn:disabled { opacity: .3; cursor: default; }
+        .day-dots { display: flex; gap: 4px; flex-wrap: wrap; justify-content: center; flex: 1; }
+        .day-dot {
+            width: 24px; height: 24px; border-radius: 50%;
+            background: rgba(255,255,255,.2); border: none; color: #fff;
+            font-size: .65rem; font-weight: 800; cursor: pointer; transition: background .15s;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .day-dot:hover  { background: rgba(255,255,255,.38); }
+        .day-dot.active { background: #fff; color: #FF8C00; }
+        .day-dot.has-custom { outline: 2px solid rgba(255,255,255,.7); }
+
+        /* Edit body */
+        .edit-body { padding: 18px 20px; display: flex; flex-direction: column; gap: 14px; }
+
+        .edit-section { border-radius: 18px; padding: 16px; }
+        .edit-section.book-sec { background: #FFF5E8; border: 1.5px solid #FFD9A8; }
+        .edit-section.vid-sec  { background: #E0F7FA; border: 1.5px solid #B2EBF2; }
+
+        .sec-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .sec-label { font-size: .78rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
+        .book-sec .sec-label { color: #E64A19; }
+        .vid-sec  .sec-label { color: #00695C; }
+        .yt-search-btn {
+            display: inline-flex; align-items: center; gap: 5px;
+            background: #FF0000; color: #fff; border: none; border-radius: 16px;
+            padding: 5px 12px; font-size: .72rem; font-weight: 800; cursor: pointer;
+            transition: opacity .2s; text-decoration: none;
+        }
+        .yt-search-btn:hover { opacity: .85; }
+
+        /* thumbnail preview */
+        .thumb-preview-wrap {
+            margin-bottom: 10px; border-radius: 12px; overflow: hidden;
+            background: #f5f5f5; position: relative; display: none;
+        }
+        .thumb-preview-wrap.show { display: block; }
+        .thumb-preview-wrap img { width: 100%; display: block; border-radius: 12px; }
+        .thumb-preview-wrap .thumb-label {
+            position: absolute; bottom: 0; left: 0; right: 0;
+            background: rgba(0,0,0,.55); color: #fff;
+            font-size: .72rem; font-weight: 700; padding: 5px 10px;
+            border-radius: 0 0 12px 12px;
+        }
+        .thumb-preview-wrap .thumb-error {
+            padding: 14px; text-align: center; font-size: .8rem; color: #aaa;
+        }
+
+        .field-row { display: flex; gap: 10px; margin-bottom: 10px; }
+        .field-row:last-child { margin-bottom: 0; }
+        .field-group { display: flex; flex-direction: column; gap: 4px; flex: 1; }
+        .field-group.emoji-group { flex: 0 0 68px; }
+        .field-label { font-size: .72rem; font-weight: 700; color: #555; }
+        .field-input {
+            border: 1.5px solid #E0E0E0; border-radius: 10px;
+            padding: 9px 12px; font-size: .85rem; color: #333;
+            outline: none; transition: border-color .2s; width: 100%;
+        }
+        .field-input:focus { border-color: #FF8C00; }
+        .url-row { display: flex; gap: 8px; align-items: flex-start; }
+        .url-row .field-group { flex: 1; }
+        .paste-btn {
+            margin-top: 0; padding: 9px 12px; border-radius: 10px;
+            border: 1.5px solid #ddd; background: #fff;
+            font-size: .8rem; font-weight: 700; cursor: pointer;
+            color: #FF8C00; transition: border-color .2s; white-space: nowrap; flex-shrink: 0;
+            font-family: 'yg-jalnan', sans-serif;
+        }
+        .paste-btn:hover { border-color: #FF8C00; }
+        .url-hint { font-size: .67rem; color: #bbb; margin-top: 3px; }
+
+        /* Edit footer */
+        .edit-footer { padding: 0 20px 20px; display: flex; gap: 10px; }
+        .save-btn {
+            flex: 1; padding: 13px; border-radius: 14px; border: none;
+            font-size: .95rem; font-weight: 800; cursor: pointer;
+            background: linear-gradient(135deg, #FF8C00, #FFB347); color: #fff; transition: transform .15s;
+            font-family: 'yg-jalnan', sans-serif;
+        }
+        .save-btn:hover { transform: scale(1.02); }
+        .reset-day-btn {
+            padding: 13px 16px; border-radius: 14px; border: 1.5px solid #ddd;
+            font-size: .82rem; font-weight: 700; cursor: pointer;
+            background: #fff; color: #aaa; transition: border-color .2s, color .2s;
+        }
+        .reset-day-btn:hover { border-color: #FF8C00; color: #FF8C00; }
+
+        /* Toast */
+        .toast {
+            position: fixed; bottom: 30px; left: 50%;
+            transform: translateX(-50%) translateY(80px);
+            background: #222; color: #fff; border-radius: 22px;
+            padding: 10px 22px; font-size: .88rem; font-weight: 700;
+            z-index: 999; transition: transform .3s ease; white-space: nowrap;
+        }
+        .toast.show { transform: translateX(-50%) translateY(0); }
+
+        /* Congrats */
+        .congrats { display: none; background: linear-gradient(135deg, #C8A97E, #FF8C00); border-radius: 22px; padding: 30px; text-align: center; color: #fff; margin-bottom: 16px; }
+        .congrats.show { display: block; }
+        .congrats .c-emoji { font-size: 3rem; }
+        .congrats .c-title { font-size: 1.6rem; font-weight: 900; margin: 8px 0 4px; }
+        .congrats .c-sub   { font-size: 1rem; opacity: .9; }
+
+        /* Footer */
+        footer { text-align: center; padding: 24px 0 18px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+        .reset-btn { background: none; border: 1.5px solid #E0D5C8; border-radius: 20px; padding: 7px 18px; font-size: .8rem; color: #C8A97E; cursor: pointer; transition: border-color .2s, color .2s; font-family: 'yg-jalnan', sans-serif; }
+        .reset-btn:hover { border-color: #FF8C00; color: #FF8C00; }
+
+        @media (max-width: 560px) {
+            .hero-title { font-size: 1.9rem; }
+            .hero { padding: 40px 20px 76px; }
+            .quick-menu { gap: 8px; }
+            .qm-btn { padding: 14px 6px 11px; }
+            .qm-icon { font-size: 1.5rem; }
+            .today-cards { grid-template-columns: 1fr; }
+            .week-grid { gap: 5px; }
+            .day-tile { padding: 8px 3px 6px; }
+            .tile-num { font-size: 1rem; }
+            .tile-btn { font-size: .54rem; }
+            .field-row { flex-direction: column; }
+            .field-group.emoji-group { flex: 1; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ── Hero Banner ── -->
+<div class="hero">
+    <div class="hero-blob1"></div>
+    <div class="hero-blob2"></div>
+    <div class="hero-blob3"></div>
+    <div class="hero-deco">📚 ✨ 🌟</div>
+    <div class="hero-title">소시네엄마표영어</div>
+    <div class="hero-sub">매일 영어 그림책 + 영상으로<br>친해지는 2주 플랜 🎯</div>
+    <div class="hero-wave"></div>
+</div>
+
+<!-- ── Quick Menu ── -->
+<div class="quick-menu-wrap">
+    <div class="quick-menu">
+        <button class="qm-btn" onclick="openModal(todayDayNum())">
+            <span class="qm-icon">📖</span>
+            <span class="qm-label">오늘 학습</span>
+        </button>
+        <button class="qm-btn" onclick="document.getElementById('progressSection').scrollIntoView({behavior:'smooth'})">
+            <span class="qm-icon">📊</span>
+            <span class="qm-label">진도 확인</span>
+        </button>
+        <button class="qm-btn" onclick="openEdit(editDay || 1)">
+            <span class="qm-icon">✏️</span>
+            <span class="qm-label">영상 수정</span>
+        </button>
+    </div>
+</div>
+
+<div class="container">
+
+    <div class="today-box">
+        <div class="today-tag">⭐ 오늘의 영어</div>
+        <div class="today-heading" id="todayHeading">Day 1</div>
+        <div class="today-cards" id="todayCards"></div>
+    </div>
+
+    <div class="progress-box" id="progressSection">
+        <div class="progress-stars" id="progressStars">🌱</div>
+        <div class="progress-info">
+            <div class="progress-text" id="progressText">0 / 14일 완료</div>
+            <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+        </div>
+        <div class="progress-pct" id="progressPct">0%</div>
+    </div>
+
+    <div class="congrats" id="congratsBox">
+        <div class="c-emoji">🎉🎊🏆</div>
+        <div class="c-title">2주 완주! 대단해요!</div>
+        <div class="c-sub">우리 아이 영어와 정말 친해졌어요 💕</div>
+    </div>
+
+    <div class="week-section">
+        <div class="week-label">📅 1주차</div>
+        <div class="week-grid" id="grid1"></div>
+    </div>
+    <div class="week-section">
+        <div class="week-label">📅 2주차</div>
+        <div class="week-grid" id="grid2"></div>
+    </div>
+
+    <footer>
+        <button class="reset-btn" onclick="resetPlan()">🔄 플랜 처음부터 다시 시작</button>
+        <button class="reset-btn" onclick="resetAllCustom()">🗑️ 내가 고른 영상 전체 초기화</button>
+    </footer>
+</div>
+
+<!-- View Modal -->
+<div class="overlay" id="overlay" onclick="overlayClick(event)">
+    <div class="modal">
+        <div class="modal-head">
+            <div class="modal-title" id="mTitle">Day 1</div>
+            <button class="modal-close" onclick="closeModal()">✕</button>
+        </div>
+        <div class="modal-cards" id="mCards"></div>
+        <button class="modal-done-btn" id="mDoneBtn" onclick="toggleFromModal()"></button>
+    </div>
+</div>
+
+<!-- Edit Panel -->
+<div class="edit-overlay" id="editOverlay" onclick="editOverlayClick(event)">
+    <div class="edit-panel">
+
+        <div class="edit-header">
+            <div class="edit-header-top">
+                <div class="edit-header-title">✏️ 내가 직접 영상 고르기</div>
+                <button class="edit-close-btn" onclick="closeEdit()">✕</button>
+            </div>
+            <div class="day-nav">
+                <button class="nav-btn" id="prevBtn" onclick="editGoDay(editDay-1)">◀ 이전</button>
+                <div class="day-dots" id="dayDots"></div>
+                <button class="nav-btn" id="nextBtn" onclick="editGoDay(editDay+1)">다음 ▶</button>
+            </div>
+        </div>
+
+        <div class="edit-body">
+
+            <!-- 📚 그림책 섹션 -->
+            <div class="edit-section book-sec">
+                <div class="sec-head">
+                    <div class="sec-label">📚 영어 그림책 영상</div>
+                    <a id="bookSearchBtn" href="#" target="_blank" class="yt-search-btn">
+                        ▶ YouTube 검색
+                    </a>
+                </div>
+
+                <!-- 썸네일 미리보기 -->
+                <div class="thumb-preview-wrap" id="bookThumbWrap">
+                    <img id="bookThumbImg" src="" alt="썸네일">
+                    <div class="thumb-label">📚 선택한 그림책 영상 미리보기</div>
+                </div>
+
+                <div class="field-row">
+                    <div class="field-group">
+                        <div class="field-label">제목</div>
+                        <input class="field-input" id="eBookTitle" type="text" placeholder="그림책 제목 입력">
+                    </div>
+                    <div class="field-group emoji-group">
+                        <div class="field-label">이모지</div>
+                        <input class="field-input" id="eBookEmoji" type="text" placeholder="📚" maxlength="4">
+                    </div>
+                </div>
+
+                <div class="field-group">
+                    <div class="field-label">YouTube 링크 붙여넣기</div>
+                    <div class="url-row">
+                        <div class="field-group">
+                            <input class="field-input" id="eBookUrl" type="url"
+                                placeholder="https://www.youtube.com/watch?v=..."
+                                oninput="onUrlInput('book')">
+                            <div class="url-hint">유튜브에서 영상 주소를 복사해 붙여넣으세요</div>
+                        </div>
+                        <button class="paste-btn" onclick="pasteUrl('eBookUrl')">📋 붙여넣기</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 🎬 영어 영상 섹션 -->
+            <div class="edit-section vid-sec">
+                <div class="sec-head">
+                    <div class="sec-label">🎬 영어 영상 (5~10분)</div>
+                    <a id="vidSearchBtn" href="#" target="_blank" class="yt-search-btn">
+                        ▶ YouTube 검색
+                    </a>
+                </div>
+
+                <!-- 썸네일 미리보기 -->
+                <div class="thumb-preview-wrap" id="vidThumbWrap">
+                    <img id="vidThumbImg" src="" alt="썸네일">
+                    <div class="thumb-label">🎬 선택한 영상 미리보기</div>
+                </div>
+
+                <div class="field-row">
+                    <div class="field-group">
+                        <div class="field-label">제목</div>
+                        <input class="field-input" id="eVidTitle" type="text" placeholder="영상 제목 입력">
+                    </div>
+                    <div class="field-group emoji-group">
+                        <div class="field-label">이모지</div>
+                        <input class="field-input" id="eVidEmoji" type="text" placeholder="🎬" maxlength="4">
+                    </div>
+                </div>
+
+                <div class="field-row">
+                    <div class="field-group">
+                        <div class="field-label">영상 길이 (선택)</div>
+                        <input class="field-input" id="eVidDur" type="text" placeholder="예: 약 7분">
+                    </div>
+                </div>
+
+                <div class="field-group">
+                    <div class="field-label">YouTube 링크 붙여넣기</div>
+                    <div class="url-row">
+                        <div class="field-group">
+                            <input class="field-input" id="eVidUrl" type="url"
+                                placeholder="https://www.youtube.com/watch?v=..."
+                                oninput="onUrlInput('vid')">
+                            <div class="url-hint">유튜브에서 영상 주소를 복사해 붙여넣으세요</div>
+                        </div>
+                        <button class="paste-btn" onclick="pasteUrl('eVidUrl')">📋 붙여넣기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="edit-footer">
+            <button class="reset-day-btn" onclick="resetDayCustom()">기본값으로</button>
+            <button class="save-btn" onclick="saveDay()">Day <span id="saveDayNum">1</span> 저장 ✓</button>
+        </div>
+    </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ── Default schedule ── */
+const OL = 'https://covers.openlibrary.org/b/id/';
+const DEFAULTS = [
+  { day:1,
+    book:{title:"Rosie's Walk", author:"Pat Hutchins", emoji:"🐔", url:"https://youtu.be/AlwlWlI5NTU", cover:OL+"14324-L.jpg"},
+    vid:{title:"Peppa Pig — Muddy Puddles", emoji:"🐷", dur:"약 5분", url:"https://www.youtube.com/watch?v=WdvGYRaRHUs"} },
+  { day:2,
+    book:{title:"How Do You Feel?", author:"Anthony Browne", emoji:"😊", url:"https://youtu.be/ZbzEPJyqQW8", cover:OL+"9731736-L.jpg"},
+    vid:{title:"Bluey — Keepy Uppy", emoji:"🐕", dur:"약 7분", url:"https://www.youtube.com/watch?v=xWyjy7SyirA"} },
+  { day:3,
+    book:{title:"Where Is the Green Sheep?", author:"Mem Fox", emoji:"🐑", url:"https://youtu.be/1GOICFvkIFw", cover:OL+"113648-L.jpg"},
+    vid:{title:"Ben & Holly — Nanny Plum is Sea Sick", emoji:"🧚", dur:"약 5분", url:"https://www.youtube.com/watch?v=_FtXf0uS33I"} },
+  { day:4,
+    book:{title:"Pete the Cat: I Love My White Shoes", author:"Eric Litwin", emoji:"🐱", url:"https://youtu.be/fj_z6zGQVyM", cover:OL+"6767307-L.jpg"},
+    vid:{title:"PAW Patrol — Pups & the Pirate Treasure", emoji:"🐾", dur:"약 11분", url:"https://www.youtube.com/watch?v=hc4hH7JMV_g"} },
+  { day:5,
+    book:{title:"Orange Pear Apple Bear", author:"Emily Gravett", emoji:"🍊", url:"https://youtu.be/rXfY-O8d1HM", cover:OL+"761846-L.jpg"},
+    vid:{title:"Sheriff Labrador — Don't Open the Door!", emoji:"🐶", dur:"약 7분", url:"https://www.youtube.com/watch?v=xARmBIKKTV8"} },
+  { day:6,
+    book:{title:"The Odd Egg", author:"Emily Gravett", emoji:"🥚", url:"https://youtu.be/XDwmrXJ5UO8", cover:OL+"7349310-L.jpg"},
+    vid:{title:"Peppa Pig — Swimming Lesson", emoji:"🏊", dur:"약 5분", url:"https://www.youtube.com/watch?v=yrUvRe87hFk"} },
+  { day:7,
+    book:{title:"Lunch", author:"Denise Fleming", emoji:"🍎", url:"https://youtu.be/hmuA8shS_uI", cover:OL+"579186-L.jpg"},
+    vid:{title:"Bluey — Keepy Uppy / Magic Xylophone", emoji:"🎵", dur:"약 11분", url:"https://www.youtube.com/watch?v=EJkn-r-rJJY"} },
+  { day:8,
+    book:{title:"Twenty-Four Robbers", author:"Audrey Wood", emoji:"🎭", url:"https://youtu.be/mQtnDfgRT6A", cover:OL+"2110684-L.jpg"},
+    vid:{title:"Ben & Holly — Nanny Plum Makes Sandwiches", emoji:"🥪", dur:"약 5분", url:"https://www.youtube.com/watch?v=P9qo3Bq5wJE"} },
+  { day:9,
+    book:{title:"Far Far Away", author:"John Segal", emoji:"🏰", url:"https://youtu.be/rqKdvJgW_cw", cover:OL+"9870173-L.jpg"},
+    vid:{title:"PAW Patrol — Pups Save a Walrus", emoji:"🦭", dur:"약 11분", url:"https://www.youtube.com/watch?v=cS-BGJ9E8XA"} },
+  { day:10,
+    book:{title:"I Love Lemonade", author:"Mark Sommerset", emoji:"🍋", url:"https://youtu.be/Fb48gqWj6Bc", cover:OL+"12720662-L.jpg"},
+    vid:{title:"Sheriff Labrador — Police Chase", emoji:"🚔", dur:"약 7분", url:"https://www.youtube.com/watch?v=18A5F847lEw"} },
+  { day:11,
+    book:{title:"I Can Roar Like a Dinosaur", author:"Karl Newson", emoji:"🦕", url:"https://youtu.be/2A8f7g1y5QY", cover:OL+"13339890-L.jpg"},
+    vid:{title:"Peppa Pig — Ballet Lesson", emoji:"🩰", dur:"약 5분", url:"https://www.youtube.com/watch?v=6105ebjrPvk"} },
+  { day:12,
+    book:{title:"Penguin", author:"Polly Dunbar", emoji:"🐧", url:"https://youtu.be/9fyi0ZJqk3Q", cover:OL+"1754490-L.jpg"},
+    vid:{title:"Bluey — Camping (Jean-Luc)", emoji:"⛺", dur:"약 7분", url:"https://www.youtube.com/watch?v=0X0wXilvHYU"} },
+  { day:13,
+    book:{title:"Faster, Faster! Nice and Slow!", author:"Nick Sharratt", emoji:"🐢", url:"https://youtu.be/58yCbgj9uXg", cover:OL+"1117858-L.jpg"},
+    vid:{title:"Ben & Holly — Nanny Plum's Magic Clean Up", emoji:"✨", dur:"약 5분", url:"https://www.youtube.com/watch?v=HD6K5iQMz-A"} },
+  { day:14,
+    book:{title:"The Doghouse", author:"Jan Thomas", emoji:"🏠", url:"https://youtu.be/_6Gg8X6IBIo", cover:OL+"11883494-L.jpg"},
+    vid:{title:"PAW Patrol — Pups Save the Penguins", emoji:"🐧", dur:"약 6분", url:"https://www.youtube.com/watch?v=z1vXJVI2L5M"} },
+];
+
+const STARS = ['🌱','🌿','⭐','🌟','💫','🏅','🥉','🥈','🥇','🏆','🎖️','🎗️','🎀','🎉'];
+
+let startDate, done, custom;
+let activeDay = null;
+let editDay   = 1;
+
+/* ── Storage ── */
+function load() {
+    const s = localStorage.getItem('ep_start');
+    startDate = s ? new Date(s) : (() => { const d = new Date(); d.setHours(0,0,0,0); return d; })();
+    if (!s) localStorage.setItem('ep_start', startDate.toISOString());
+    done   = new Set(JSON.parse(localStorage.getItem('ep_done')   || '[]'));
+    custom = JSON.parse(localStorage.getItem('ep_custom') || '{}');
+}
+function saveDone()   { localStorage.setItem('ep_done',   JSON.stringify([...done])); }
+function saveCustom() { localStorage.setItem('ep_custom', JSON.stringify(custom)); }
+
+/* ── Data ── */
+function getData(d) {
+    const def = DEFAULTS[d - 1];
+    const c   = custom[d] || {};
+    return {
+        day: d,
+        book: {
+            title:  c.bookTitle  || def.book.title,
+            author: c.bookAuthor || def.book.author || '',
+            emoji:  c.bookEmoji  || def.book.emoji,
+            url:    c.bookUrl    || def.book.url,
+            cover:  c.bookUrl ? null : def.book.cover,
+        },
+        vid: {
+            title: c.vidTitle || def.vid.title,
+            emoji: c.vidEmoji || def.vid.emoji,
+            dur:   c.vidDur   || def.vid.dur,
+            url:   c.vidUrl   || def.vid.url,
+        }
+    };
+}
+function hasCustom(d) { return !!custom[d]; }
+
+/* ── YouTube utils ── */
+function getYtId(url) {
+    if (!url) return null;
+    const m = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([^&\n?#]{11})/);
+    return m ? m[1] : null;
+}
+function thumbUrl(videoId) {
+    return `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+}
+
+/* ── Today ── */
+function todayDayNum() {
+    const now = new Date(); now.setHours(0,0,0,0);
+    return Math.min(Math.max(Math.floor((now - startDate) / 86400000) + 1, 1), 14);
+}
+
+/* ── Render helpers ── */
+function thumbHtml(url, type, coverUrl) {
+    const id = getYtId(url);
+    const isBook = type === 'book';
+    const noImgInner = isBook
+        ? `<div class="no-img-icon">📚</div><div class="no-img-txt">이미지 없음</div>`
+        : `<div class="no-img-icon">🎬</div>`;
+    const fbCls = isBook ? 'no-thumb book-no-img' : 'no-thumb';
+    const uid = 'th' + Math.random().toString(36).substr(2, 8);
+
+    if (coverUrl) {
+        // 책 표지 → YouTube 썸네일 → 이미지 없음 순으로 폴백
+        return `<div class="thumb-wrap">
+            <img src="${coverUrl}" data-ytid="${id || ''}"
+                onerror="coverFallback(this,'${uid}')" alt="책 표지">
+            <div id="${uid}" class="${fbCls}" style="display:none">${noImgInner}</div>
+        </div>`;
+    }
+    if (id) {
+        return `<div class="thumb-wrap">
+            <img src="${thumbUrl(id)}" alt="썸네일"
+                onerror="this.style.display='none';document.getElementById('${uid}').style.display='flex'">
+            <div id="${uid}" class="${fbCls}" style="display:none">${noImgInner}</div>
+        </div>`;
+    }
+    return `<div class="thumb-wrap"><div class="${fbCls}">${noImgInner}</div></div>`;
+}
+
+function coverFallback(img, noImgId) {
+    const ytid = img.dataset.ytid;
+    if (ytid) {
+        img.onerror = () => {
+            img.style.display = 'none';
+            document.getElementById(noImgId).style.display = 'flex';
+        };
+        img.src = thumbUrl(ytid);
+    } else {
+        img.style.display = 'none';
+        document.getElementById(noImgId).style.display = 'flex';
+    }
+}
+
+function coverFallbackModal(img, noImgId, thumbId) {
+    const wrap = document.getElementById(thumbId);
+    const ytid = img.dataset.ytid;
+    if (ytid) {
+        img.onload  = () => { if (wrap) wrap.classList.add('img-ready'); };
+        img.onerror = () => {
+            if (wrap) wrap.classList.add('img-ready');
+            img.style.display = 'none';
+            document.getElementById(noImgId).style.display = 'flex';
+        };
+        img.src = thumbUrl(ytid);
+    } else {
+        if (wrap) wrap.classList.add('img-ready');
+        img.style.display = 'none';
+        document.getElementById(noImgId).style.display = 'flex';
+    }
+}
+
+/* ── Main render ── */
+function render() {
+    const td = todayDayNum();
+    const t  = getData(td);
+
+    document.getElementById('todayHeading').textContent =
+        `Day ${td} — ${t.book.emoji} 그림책  +  ${t.vid.emoji} 영상`;
+
+    document.getElementById('todayCards').innerHTML = `
+        <a href="${t.book.url}" target="_blank" class="big-card book-card">
+            ${thumbHtml(t.book.url, 'book', t.book.cover)}
+            <div class="card-info">
+                <div class="type-label">📚 영어 그림책</div>
+                <div class="card-name">${t.book.emoji} ${t.book.title}</div>
+                ${t.book.author ? `<div class="card-meta">by ${t.book.author}</div>` : ''}
+                <span class="watch-btn">▶ YouTube에서 보기</span>
+            </div>
+        </a>
+        <a href="${t.vid.url}" target="_blank" class="big-card vid-card">
+            ${thumbHtml(t.vid.url, 'vid')}
+            <div class="card-info">
+                <div class="type-label">🎬 영어 영상</div>
+                <div class="card-name">${t.vid.emoji} ${t.vid.title}</div>
+                <div class="card-meta">${t.vid.dur}</div>
+                <span class="watch-btn">▶ YouTube에서 보기</span>
+            </div>
+        </a>
+    `;
+
+    const n   = done.size;
+    const pct = Math.round((n / 14) * 100);
+    document.getElementById('progressText').textContent = `${n} / 14일 완료`;
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progressPct').textContent  = pct + '%';
+    document.getElementById('progressStars').textContent = STARS[Math.min(n, 13)];
+    document.getElementById('congratsBox').classList.toggle('show', n === 14);
+
+    renderGrid('grid1', 1, 7, td);
+    renderGrid('grid2', 8, 14, td);
+}
+
+function renderGrid(id, from, to, td) {
+    const el = document.getElementById(id);
+    el.innerHTML = '';
+    for (let d = from; d <= to; d++) {
+        const s       = getData(d);
+        const isToday  = d === td;
+        const isDone   = done.has(d);
+        const isFuture = d > td;
+        const isCust   = hasCustom(d);
+        const cls = ['day-tile',
+            isToday  ? 'today'      : '',
+            isDone   ? 'done'       : '',
+            isFuture ? 'future'     : '',
+            isCust   ? 'custom-set' : ''
+        ].join(' ');
+        el.innerHTML += `
+            <div class="${cls}" onclick="openModal(${d})">
+                <div class="tile-label">Day</div>
+                <div class="tile-num">${d}</div>
+                <div class="tile-icons">${s.book.emoji}${s.vid.emoji}</div>
+                <div class="tile-check">${isDone ? '✅' : isToday ? '⭐' : '○'}</div>
+                <div class="tile-custom-dot"></div>
+                <button class="tile-btn" onclick="event.stopPropagation();toggleDay(${d})">
+                    ${isDone ? '완료됨!' : '완료 체크'}
+                </button>
+            </div>
+        `;
+    }
+}
+
+/* ── View Modal ── */
+function openModal(d) {
+    activeDay = d;
+    const s      = getData(d);
+    const isDone  = done.has(d);
+    const bookId  = getYtId(s.book.url);
+    const vidId   = getYtId(s.vid.url);
+
+    document.getElementById('mTitle').textContent = `Day ${d}`;
+    document.getElementById('mCards').innerHTML = `
+        <a href="${s.book.url}" target="_blank" class="modal-card book-card">
+            <div class="mc-thumb" id="mcthumb_b${d}">
+                ${s.book.cover
+                    ? `<img src="${s.book.cover}" data-ytid="${bookId||''}" fetchpriority="high"
+                        onload="this.parentElement.classList.add('img-ready')"
+                        onerror="coverFallbackModal(this,'mcfb${d}','mcthumb_b${d}')" alt="책 표지">
+                       <div id="mcfb${d}" class="mc-no-thumb book-mc-no-img" style="display:none"><div class="no-img-icon">📚</div><div class="no-img-txt">이미지 없음</div></div>`
+                    : bookId
+                        ? `<img src="${thumbUrl(bookId)}" fetchpriority="high" alt="썸네일"
+                            onload="this.parentElement.classList.add('img-ready')"
+                            onerror="this.parentElement.classList.add('img-ready');this.parentElement.innerHTML='<div class=\\"mc-no-thumb book-mc-no-img\\"><div class=no-img-icon>📚</div><div class=no-img-txt>이미지 없음</div></div>'">`
+                        : `<div class="mc-no-thumb book-mc-no-img"><div class="no-img-icon">📚</div><div class="no-img-txt">이미지 없음</div></div>`}
+            </div>
+            <div class="mc-body">
+                <div class="mc-emoji">${s.book.emoji}</div>
+                <div class="mc-info">
+                    <div class="mc-type">📚 영어 그림책</div>
+                    <div class="mc-title">${s.book.title}</div>
+                    <div class="mc-sub">${s.book.author ? 'by ' + s.book.author + ' · ' : ''}YouTube에서 보기 ▶</div>
+                </div>
+            </div>
+        </a>
+        <a href="${s.vid.url}" target="_blank" class="modal-card vid-card">
+            <div class="mc-thumb" id="mcthumb_v${d}">
+                ${vidId
+                    ? `<img src="${thumbUrl(vidId)}" fetchpriority="high" alt="썸네일"
+                        onload="this.parentElement.classList.add('img-ready')"
+                        onerror="this.parentElement.classList.add('img-ready');this.parentElement.innerHTML='<div class=mc-no-thumb>🎬</div>'">`
+                    : `<div class="mc-no-thumb">🎬</div>`}
+            </div>
+            <div class="mc-body">
+                <div class="mc-emoji">${s.vid.emoji}</div>
+                <div class="mc-info">
+                    <div class="mc-type">🎬 영어 영상</div>
+                    <div class="mc-title">${s.vid.title}</div>
+                    <div class="mc-sub">${s.vid.dur} · YouTube에서 보기 ▶</div>
+                </div>
+            </div>
+        </a>
+    `;
+    const btn = document.getElementById('mDoneBtn');
+    btn.textContent = isDone ? '✅ 오늘 완료했어요!' : '✔ 오늘 학습 완료!';
+    btn.className   = 'modal-done-btn' + (isDone ? ' already' : '');
+    document.getElementById('overlay').classList.add('open');
+}
+
+function closeModal()    { document.getElementById('overlay').classList.remove('open'); }
+function overlayClick(e) { if (e.target === document.getElementById('overlay')) closeModal(); }
+function toggleFromModal() { if (activeDay) { toggleDay(activeDay); openModal(activeDay); } }
+function toggleDay(d) {
+    done.has(d) ? done.delete(d) : done.add(d);
+    saveDone(); render();
+}
+
+/* ── Edit Panel ── */
+function openEdit(d) {
+    document.getElementById('editOverlay').classList.add('open');
+    editGoDay(d);
+}
+function closeEdit() { document.getElementById('editOverlay').classList.remove('open'); }
+function editOverlayClick(e) { if (e.target === document.getElementById('editOverlay')) closeEdit(); }
+
+function editGoDay(d) {
+    d = Math.min(Math.max(d, 1), 14);
+    editDay = d;
+
+    document.getElementById('prevBtn').disabled = d === 1;
+    document.getElementById('nextBtn').disabled = d === 14;
+    document.getElementById('saveDayNum').textContent = d;
+
+    // Dots
+    const dots = document.getElementById('dayDots');
+    dots.innerHTML = '';
+    for (let i = 1; i <= 14; i++) {
+        const cls = ['day-dot', i === d ? 'active' : '', hasCustom(i) ? 'has-custom' : ''].join(' ');
+        dots.innerHTML += `<button class="${cls}" onclick="editGoDay(${i})">${i}</button>`;
+    }
+
+    // Fill form
+    const def = DEFAULTS[d - 1];
+    const c   = custom[d] || {};
+
+    const bookTitle = c.bookTitle ?? def.book.title;
+    const bookUrl   = c.bookUrl   ?? def.book.url;
+    const vidTitle  = c.vidTitle  ?? def.vid.title;
+    const vidUrl    = c.vidUrl    ?? def.vid.url;
+
+    document.getElementById('eBookTitle').value = bookTitle;
+    document.getElementById('eBookEmoji').value = c.bookEmoji ?? def.book.emoji;
+    document.getElementById('eBookUrl').value   = bookUrl;
+    document.getElementById('eVidTitle').value  = vidTitle;
+    document.getElementById('eVidEmoji').value  = c.vidEmoji ?? def.vid.emoji;
+    document.getElementById('eVidDur').value    = c.vidDur   ?? def.vid.dur;
+    document.getElementById('eVidUrl').value    = vidUrl;
+
+    // YouTube search buttons
+    document.getElementById('bookSearchBtn').href =
+        `https://www.youtube.com/results?search_query=${encodeURIComponent(bookTitle + ' read aloud')}`;
+    document.getElementById('vidSearchBtn').href =
+        `https://www.youtube.com/results?search_query=${encodeURIComponent(vidTitle + ' kids english')}`;
+
+    // Thumbnails
+    updateThumb('book', bookUrl);
+    updateThumb('vid',  vidUrl);
+}
+
+/* ── Thumbnail preview ── */
+function updateThumb(type, url) {
+    const wrap = document.getElementById(type === 'book' ? 'bookThumbWrap' : 'vidThumbWrap');
+    const img  = document.getElementById(type === 'book' ? 'bookThumbImg'  : 'vidThumbImg');
+    const id   = getYtId(url);
+    if (id) {
+        img.src = thumbUrl(id);
+        img.onerror = () => { wrap.classList.remove('show'); };
+        img.onload  = () => { wrap.classList.add('show'); };
+        wrap.classList.add('show');
+    } else {
+        wrap.classList.remove('show');
+    }
+}
+
+function onUrlInput(type) {
+    const url = document.getElementById(type === 'book' ? 'eBookUrl' : 'eVidUrl').value;
+    updateThumb(type, url);
+    // Update search button if title field is empty
+    if (type === 'book') {
+        const t = document.getElementById('eBookTitle').value || DEFAULTS[editDay-1].book.title;
+        document.getElementById('bookSearchBtn').href =
+            `https://www.youtube.com/results?search_query=${encodeURIComponent(t + ' read aloud')}`;
+    } else {
+        const t = document.getElementById('eVidTitle').value || DEFAULTS[editDay-1].vid.title;
+        document.getElementById('vidSearchBtn').href =
+            `https://www.youtube.com/results?search_query=${encodeURIComponent(t + ' kids english')}`;
+    }
+}
+
+async function pasteUrl(inputId) {
+    try {
+        const text = await navigator.clipboard.readText();
+        document.getElementById(inputId).value = text;
+        const type = inputId === 'eBookUrl' ? 'book' : 'vid';
+        updateThumb(type, text);
+    } catch {
+        showToast('클립보드 접근이 거부됐어요. 직접 붙여넣기(Ctrl+V) 해주세요.');
+    }
+}
+
+/* ── Save / Reset ── */
+function saveDay() {
+    const d = editDay;
+    const def = DEFAULTS[d - 1];
+
+    const bookTitle = document.getElementById('eBookTitle').value.trim();
+    const bookEmoji = document.getElementById('eBookEmoji').value.trim();
+    const bookUrl   = document.getElementById('eBookUrl').value.trim();
+    const vidTitle  = document.getElementById('eVidTitle').value.trim();
+    const vidEmoji  = document.getElementById('eVidEmoji').value.trim();
+    const vidDur    = document.getElementById('eVidDur').value.trim();
+    const vidUrl    = document.getElementById('eVidUrl').value.trim();
+
+    const isDefault =
+        bookTitle === def.book.title && bookEmoji === def.book.emoji && bookUrl === def.book.url &&
+        vidTitle  === def.vid.title  && vidEmoji  === def.vid.emoji  && vidUrl  === def.vid.url &&
+        (!vidDur || vidDur === def.vid.dur);
+
+    if (isDefault) {
+        delete custom[d];
+    } else {
+        custom[d] = { bookTitle, bookEmoji, bookUrl, vidTitle, vidEmoji, vidDur, vidUrl };
+    }
+
+    saveCustom(); render(); editGoDay(d);
+    showToast(`Day ${d} 저장 완료! ✅`);
+    if (d < 14) setTimeout(() => editGoDay(d + 1), 700);
+}
+
+function resetDayCustom() {
+    delete custom[editDay];
+    saveCustom(); render(); editGoDay(editDay);
+    showToast(`Day ${editDay} 기본값으로 돌아왔어요`);
+}
+
+function resetAllCustom() {
+    if (!confirm('내가 고른 영상을 모두 지우고 기본값으로 돌릴까요?')) return;
+    custom = {}; saveCustom(); render();
+    showToast('전체 기본값으로 초기화됐어요');
+}
+
+function resetPlan() {
+    if (!confirm('플랜을 처음부터 다시 시작할까요? 완료 기록이 모두 지워집니다.')) return;
+    localStorage.removeItem('ep_start');
+    localStorage.removeItem('ep_done');
+    load(); render();
+}
+
+/* ── Toast ── */
+let toastTimer;
+function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 2400);
+}
+
+/* ── Image preloader ── */
+function preloadImages() {
+    function addPreload(url) {
+        const link = document.createElement('link');
+        link.rel = 'preload';
+        link.as = 'image';
+        link.href = url;
+        document.head.appendChild(link);
+    }
+    DEFAULTS.forEach(entry => {
+        const hasCustomUrl = custom[entry.day] && custom[entry.day].bookUrl;
+        if (!hasCustomUrl && entry.book.cover) addPreload(entry.book.cover);
+
+        const vidId  = getYtId(entry.vid.url);
+        if (vidId)  addPreload(thumbUrl(vidId));
+
+        const bookId = getYtId(entry.book.url);
+        if (bookId) addPreload(thumbUrl(bookId));
+    });
+}
+
+load(); render(); preloadImages();
+</script>
+</body>
+</html>
