@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>우리 아이 영어 여행 🌟</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(160deg, #FFF9C4 0%, #E1F5FE 55%, #FCE4EC 100%);
+            min-height: 100vh;
+            padding: 16px;
+        }
+
+        .container { max-width: 860px; margin: 0 auto; }
+
+        /* ── Header ── */
+        header { text-align: center; padding: 28px 0 16px; }
+        .title { font-size: 2.2rem; font-weight: 900; color: #FF6B6B; text-shadow: 2px 2px 0 rgba(0,0,0,.07); }
+        .subtitle { font-size: 1rem; color: #888; margin-top: 6px; }
+
+        /* ── Today ── */
+        .today-box {
+            background: #fff;
+            border-radius: 22px;
+            padding: 22px 22px 18px;
+            margin: 16px 0;
+            box-shadow: 0 8px 30px rgba(0,0,0,.1);
+            border: 3px solid #FFD93D;
+        }
+        .today-tag { font-size: .78rem; font-weight: 800; color: #FF6B6B; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 4px; }
+        .today-heading { font-size: 1.6rem; font-weight: 900; color: #333; margin-bottom: 14px; }
+        .today-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+        .big-card {
+            border-radius: 18px;
+            padding: 18px;
+            text-decoration: none;
+            display: block;
+            color: #fff;
+            transition: transform .2s, box-shadow .2s;
+        }
+        .big-card:hover { transform: translateY(-4px); box-shadow: 0 14px 28px rgba(0,0,0,.18); }
+        .big-card .type-label { font-size: .72rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; opacity: .85; margin-bottom: 5px; }
+        .big-card .card-emoji { font-size: 2.2rem; margin-bottom: 6px; display: block; }
+        .big-card .card-name { font-size: .95rem; font-weight: 800; line-height: 1.3; }
+        .big-card .card-meta { font-size: .76rem; opacity: .85; margin-top: 4px; }
+        .big-card .watch-btn { display: inline-flex; align-items: center; gap: 5px; margin-top: 11px; background: rgba(255,255,255,.28); border-radius: 20px; padding: 5px 13px; font-size: .8rem; font-weight: 700; }
+
+        .book-card { background: linear-gradient(135deg, #FF6B6B, #FF8E53); }
+        .vid-card  { background: linear-gradient(135deg, #4ECDC4, #45B7D1); }
+
+        /* ── Progress ── */
+        .progress-box {
+            background: #fff;
+            border-radius: 18px;
+            padding: 16px 20px;
+            margin: 12px 0;
+            box-shadow: 0 4px 16px rgba(0,0,0,.07);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .progress-stars { font-size: 1.6rem; flex-shrink: 0; }
+        .progress-info { flex: 1; }
+        .progress-text { font-size: .9rem; font-weight: 700; color: #444; margin-bottom: 7px; }
+        .progress-bar { height: 10px; background: #F0F0F0; border-radius: 5px; overflow: hidden; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, #FFD93D, #FF6B6B); border-radius: 5px; transition: width .6s ease; }
+        .progress-pct { font-size: 1.1rem; font-weight: 900; color: #FF6B6B; flex-shrink: 0; }
+
+        /* ── Week grid ── */
+        .week-section { margin: 18px 0; }
+        .week-label { font-size: 1rem; font-weight: 800; color: #666; margin-bottom: 10px; padding-left: 2px; }
+        .week-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
+
+        .day-tile {
+            background: #fff;
+            border-radius: 14px;
+            padding: 10px 6px 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform .15s, box-shadow .15s;
+            box-shadow: 0 3px 10px rgba(0,0,0,.08);
+            border: 2px solid transparent;
+            user-select: none;
+        }
+        .day-tile:hover { transform: translateY(-2px); box-shadow: 0 7px 18px rgba(0,0,0,.13); }
+        .day-tile.today  { border-color: #FFD93D; background: #FFFDE7; }
+        .day-tile.done   { border-color: #81C784; background: #F1F8E9; }
+        .day-tile.future { opacity: .55; }
+
+        .tile-label { font-size: .6rem; color: #bbb; font-weight: 600; }
+        .tile-num   { font-size: 1.25rem; font-weight: 900; color: #333; margin: 2px 0; }
+        .day-tile.today .tile-num { color: #FF6B6B; }
+        .tile-icons { font-size: .9rem; margin: 3px 0; }
+        .tile-check { font-size: 1.1rem; }
+        .tile-btn {
+            margin-top: 6px;
+            width: 100%;
+            padding: 3px 0;
+            border: none;
+            border-radius: 8px;
+            font-size: .62rem;
+            font-weight: 700;
+            cursor: pointer;
+            background: #F4F4F4;
+            color: #888;
+            transition: background .2s;
+        }
+        .tile-btn:hover { background: #E0F7FA; color: #00838F; }
+        .day-tile.done .tile-btn { background: #C8E6C9; color: #2E7D32; }
+
+        /* ── Modal ── */
+        .overlay {
+            display: none;
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,.48);
+            z-index: 200;
+            align-items: center;
+            justify-content: center;
+        }
+        .overlay.open { display: flex; }
+        .modal {
+            background: #fff;
+            border-radius: 24px;
+            padding: 28px 24px 22px;
+            max-width: 440px;
+            width: 92%;
+            box-shadow: 0 24px 64px rgba(0,0,0,.22);
+            animation: popIn .2s ease;
+        }
+        @keyframes popIn { from { transform: scale(.92); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .modal-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+        .modal-title { font-size: 1.25rem; font-weight: 900; color: #333; }
+        .modal-close { background: #F0F0F0; border: none; border-radius: 50%; width: 34px; height: 34px; font-size: 1.1rem; cursor: pointer; }
+        .modal-cards { display: flex; flex-direction: column; gap: 11px; }
+        .modal-card {
+            border-radius: 16px;
+            padding: 16px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            color: #fff;
+            transition: transform .15s;
+        }
+        .modal-card:hover { transform: scale(1.02); }
+        .mc-emoji { font-size: 2.2rem; flex-shrink: 0; }
+        .mc-info .mc-type  { font-size: .7rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; opacity: .85; margin-bottom: 3px; }
+        .mc-info .mc-title { font-size: 1rem; font-weight: 800; }
+        .mc-info .mc-sub   { font-size: .75rem; opacity: .85; margin-top: 2px; }
+        .modal-done-btn {
+            margin-top: 14px;
+            width: 100%;
+            padding: 13px;
+            border-radius: 14px;
+            border: none;
+            font-size: .95rem;
+            font-weight: 800;
+            cursor: pointer;
+            background: linear-gradient(135deg, #81C784, #4CAF50);
+            color: #fff;
+            transition: transform .15s, opacity .15s;
+        }
+        .modal-done-btn:hover { transform: scale(1.02); }
+        .modal-done-btn.already { background: linear-gradient(135deg, #C8E6C9, #A5D6A7); color: #2E7D32; }
+
+        /* ── Congrats ── */
+        .congrats {
+            display: none;
+            background: linear-gradient(135deg, #FFD93D, #FF6B6B);
+            border-radius: 22px;
+            padding: 30px;
+            text-align: center;
+            color: #fff;
+            margin: 16px 0;
+        }
+        .congrats.show { display: block; }
+        .congrats .c-emoji { font-size: 3rem; }
+        .congrats .c-title { font-size: 1.6rem; font-weight: 900; margin: 8px 0 4px; }
+        .congrats .c-sub   { font-size: 1rem; opacity: .9; }
+
+        /* ── Reset button ── */
+        footer { text-align: center; padding: 24px 0 18px; }
+        .reset-btn {
+            background: none;
+            border: 1.5px solid #ddd;
+            border-radius: 20px;
+            padding: 7px 18px;
+            font-size: .8rem;
+            color: #aaa;
+            cursor: pointer;
+            transition: border-color .2s, color .2s;
+        }
+        .reset-btn:hover { border-color: #FF6B6B; color: #FF6B6B; }
+
+        @media (max-width: 560px) {
+            .today-cards { grid-template-columns: 1fr; }
+            .title { font-size: 1.6rem; }
+            .week-grid { gap: 5px; }
+            .day-tile { padding: 8px 3px 6px; }
+            .tile-num { font-size: 1rem; }
+            .tile-btn { font-size: .56rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <header>
+        <div class="title">🌟 우리 아이 영어 여행</div>
+        <div class="subtitle">매일 영어 그림책 + 영상으로 친해지는 2주 플랜</div>
+    </header>
+
+    <!-- Today -->
+    <div class="today-box">
+        <div class="today-tag">⭐ 오늘의 영어</div>
+        <div class="today-heading" id="todayHeading">Day 1</div>
+        <div class="today-cards" id="todayCards"></div>
+    </div>
+
+    <!-- Progress -->
+    <div class="progress-box">
+        <div class="progress-stars" id="progressStars">🌱</div>
+        <div class="progress-info">
+            <div class="progress-text" id="progressText">0 / 14일 완료</div>
+            <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+        </div>
+        <div class="progress-pct" id="progressPct">0%</div>
+    </div>
+
+    <!-- Congrats -->
+    <div class="congrats" id="congratsBox">
+        <div class="c-emoji">🎉🎊🏆</div>
+        <div class="c-title">2주 완주! 대단해요!</div>
+        <div class="c-sub">우리 아이 영어와 정말 친해졌어요 💕</div>
+    </div>
+
+    <!-- Week 1 -->
+    <div class="week-section">
+        <div class="week-label">📅 1주차</div>
+        <div class="week-grid" id="grid1"></div>
+    </div>
+
+    <!-- Week 2 -->
+    <div class="week-section">
+        <div class="week-label">📅 2주차</div>
+        <div class="week-grid" id="grid2"></div>
+    </div>
+
+    <footer>
+        <button class="reset-btn" onclick="resetPlan()">🔄 플랜 처음부터 다시 시작</button>
+    </footer>
+</div>
+
+<!-- Modal -->
+<div class="overlay" id="overlay" onclick="overlayClick(event)">
+    <div class="modal">
+        <div class="modal-head">
+            <div class="modal-title" id="mTitle">Day 1</div>
+            <button class="modal-close" onclick="closeModal()">✕</button>
+        </div>
+        <div class="modal-cards" id="mCards"></div>
+        <button class="modal-done-btn" id="mDoneBtn" onclick="toggleFromModal()"></button>
+    </div>
+</div>
+
+<script>
+const SCHEDULE = [
+  { day:1,  book:{title:"The Very Hungry Caterpillar", author:"Eric Carle", emoji:"🐛", url:"https://www.youtube.com/results?search_query=The+Very+Hungry+Caterpillar+read+aloud+kids"}, vid:{title:"Peppa Pig — Muddy Puddles", emoji:"🐷", dur:"약 5분", url:"https://www.youtube.com/results?search_query=Peppa+Pig+Muddy+Puddles+episode+official"} },
+  { day:2,  book:{title:"Brown Bear, Brown Bear, What Do You See?", author:"Bill Martin Jr.", emoji:"🐻", url:"https://www.youtube.com/results?search_query=Brown+Bear+Brown+Bear+What+Do+You+See+read+aloud+kids"}, vid:{title:"Bluey — Magic Xylophone", emoji:"🎵", dur:"약 7분", url:"https://www.youtube.com/results?search_query=Bluey+Magic+Xylophone+full+episode"} },
+  { day:3,  book:{title:"Goodnight Moon", author:"Margaret Wise Brown", emoji:"🌙", url:"https://www.youtube.com/results?search_query=Goodnight+Moon+read+aloud+kids"}, vid:{title:"Peppa Pig — The Playground", emoji:"🛝", dur:"약 5분", url:"https://www.youtube.com/results?search_query=Peppa+Pig+The+Playground+episode"} },
+  { day:4,  book:{title:"Pete the Cat: I Love My White Shoes", author:"Eric Litwin", emoji:"🐱", url:"https://www.youtube.com/results?search_query=Pete+the+Cat+I+Love+My+White+Shoes+read+aloud"}, vid:{title:"Bluey — Daddy Putdown", emoji:"🐦", dur:"약 7분", url:"https://www.youtube.com/results?search_query=Bluey+Daddy+Putdown+episode"} },
+  { day:5,  book:{title:"If You Give a Mouse a Cookie", author:"Laura Numeroff", emoji:"🐭", url:"https://www.youtube.com/results?search_query=If+You+Give+a+Mouse+a+Cookie+read+aloud"}, vid:{title:"Alphablocks — Letters A to Z", emoji:"🔤", dur:"약 8분", url:"https://www.youtube.com/results?search_query=Alphablocks+alphabet+full+episode+CBeebies"} },
+  { day:6,  book:{title:"Dragons Love Tacos", author:"Adam Rubin", emoji:"🐉", url:"https://www.youtube.com/results?search_query=Dragons+Love+Tacos+read+aloud+kids"}, vid:{title:"Peppa Pig — Dressing Up", emoji:"👗", dur:"약 5분", url:"https://www.youtube.com/results?search_query=Peppa+Pig+Dressing+Up+episode"} },
+  { day:7,  book:{title:"Chicka Chicka Boom Boom", author:"Bill Martin Jr.", emoji:"🌴", url:"https://www.youtube.com/results?search_query=Chicka+Chicka+Boom+Boom+read+aloud+kids"}, vid:{title:"Numberblocks — One to Ten", emoji:"🔢", dur:"약 10분", url:"https://www.youtube.com/results?search_query=Numberblocks+1+to+10+full+episodes+CBeebies"} },
+  { day:8,  book:{title:"Where the Wild Things Are", author:"Maurice Sendak", emoji:"👹", url:"https://www.youtube.com/results?search_query=Where+the+Wild+Things+Are+read+aloud+kids"}, vid:{title:"Peppa Pig — Flying a Kite", emoji:"🪁", dur:"약 5분", url:"https://www.youtube.com/results?search_query=Peppa+Pig+Flying+a+Kite+episode"} },
+  { day:9,  book:{title:"The Giving Tree", author:"Shel Silverstein", emoji:"🌳", url:"https://www.youtube.com/results?search_query=The+Giving+Tree+read+aloud+kids"}, vid:{title:"Bluey — Keepy Uppy", emoji:"🎈", dur:"약 7분", url:"https://www.youtube.com/results?search_query=Bluey+Keepy+Uppy+full+episode"} },
+  { day:10, book:{title:"Click, Clack, Moo: Cows That Type", author:"Doreen Cronin", emoji:"🐄", url:"https://www.youtube.com/results?search_query=Click+Clack+Moo+Cows+That+Type+read+aloud"}, vid:{title:"Super Simple Songs — ABC & More", emoji:"🎶", dur:"약 8분", url:"https://www.youtube.com/results?search_query=Super+Simple+Songs+ABC+alphabet+kids+official"} },
+  { day:11, book:{title:"Corduroy", author:"Don Freeman", emoji:"🧸", url:"https://www.youtube.com/results?search_query=Corduroy+read+aloud+kids+book"}, vid:{title:"Peppa Pig — Peppa's Party", emoji:"🎉", dur:"약 5분", url:"https://www.youtube.com/results?search_query=Peppa+Pig+Peppas+Party+episode"} },
+  { day:12, book:{title:"The Snowy Day", author:"Ezra Jack Keats", emoji:"⛄", url:"https://www.youtube.com/results?search_query=The+Snowy+Day+read+aloud+kids"}, vid:{title:"Bluey — Camping", emoji:"⛺", dur:"약 7분", url:"https://www.youtube.com/results?search_query=Bluey+Camping+full+episode"} },
+  { day:13, book:{title:"Green Eggs and Ham", author:"Dr. Seuss", emoji:"🍳", url:"https://www.youtube.com/results?search_query=Green+Eggs+and+Ham+read+aloud+kids"}, vid:{title:"Alphablocks — Word Magic", emoji:"✨", dur:"약 8분", url:"https://www.youtube.com/results?search_query=Alphablocks+word+magic+CBeebies"} },
+  { day:14, book:{title:"The Lorax", author:"Dr. Seuss", emoji:"🌿", url:"https://www.youtube.com/results?search_query=The+Lorax+read+aloud+kids"}, vid:{title:"Peppa Pig — Best Day Ever", emoji:"🌈", dur:"약 5분", url:"https://www.youtube.com/results?search_query=Peppa+Pig+Best+Day+Ever+episode"} },
+];
+
+const STARS = ['🌱','🌿','⭐','🌟','💫','🏅','🥉','🥈','🥇','🏆','🎖️','🎗️','🎀','🎉'];
+
+let startDate, done;
+let activeDay = null;
+
+function load() {
+    const s = localStorage.getItem('ep_start');
+    startDate = s ? new Date(s) : (() => { const d = new Date(); d.setHours(0,0,0,0); return d; })();
+    if (!s) localStorage.setItem('ep_start', startDate.toISOString());
+    const dc = localStorage.getItem('ep_done');
+    done = dc ? new Set(JSON.parse(dc)) : new Set();
+}
+
+function save() {
+    localStorage.setItem('ep_done', JSON.stringify([...done]));
+}
+
+function todayDayNum() {
+    const now = new Date(); now.setHours(0,0,0,0);
+    const diff = Math.floor((now - startDate) / 86400000);
+    return Math.min(Math.max(diff + 1, 1), 14);
+}
+
+function render() {
+    const td = todayDayNum();
+    const t  = SCHEDULE[td - 1];
+
+    // Today heading
+    document.getElementById('todayHeading').textContent = `Day ${td} — ${t.book.emoji} 그림책  +  ${t.vid.emoji} 영상`;
+
+    // Today cards
+    document.getElementById('todayCards').innerHTML = `
+        <a href="${t.book.url}" target="_blank" class="big-card book-card">
+            <span class="type-label">📚 영어 그림책</span>
+            <span class="card-emoji">${t.book.emoji}</span>
+            <div class="card-name">${t.book.title}</div>
+            <div class="card-meta">by ${t.book.author}</div>
+            <span class="watch-btn">▶ YouTube에서 보기</span>
+        </a>
+        <a href="${t.vid.url}" target="_blank" class="big-card vid-card">
+            <span class="type-label">🎬 영어 영상</span>
+            <span class="card-emoji">${t.vid.emoji}</span>
+            <div class="card-name">${t.vid.title}</div>
+            <div class="card-meta">${t.vid.dur}</div>
+            <span class="watch-btn">▶ YouTube에서 보기</span>
+        </a>
+    `;
+
+    // Progress
+    const n = done.size;
+    const pct = Math.round((n / 14) * 100);
+    document.getElementById('progressText').textContent = `${n} / 14일 완료`;
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progressPct').textContent = pct + '%';
+    document.getElementById('progressStars').textContent = STARS[Math.min(n, 13)];
+    document.getElementById('congratsBox').classList.toggle('show', n === 14);
+
+    // Grids
+    renderGrid('grid1', 1, 7, td);
+    renderGrid('grid2', 8, 14, td);
+}
+
+function renderGrid(id, from, to, td) {
+    const el = document.getElementById(id);
+    el.innerHTML = '';
+    for (let d = from; d <= to; d++) {
+        const s = SCHEDULE[d - 1];
+        const isToday = d === td;
+        const isDone  = done.has(d);
+        const isFuture = d > td;
+        const cls = ['day-tile', isToday ? 'today' : '', isDone ? 'done' : '', isFuture ? 'future' : ''].join(' ');
+        el.innerHTML += `
+            <div class="${cls}" onclick="openModal(${d})">
+                <div class="tile-label">Day</div>
+                <div class="tile-num">${d}</div>
+                <div class="tile-icons">${s.book.emoji}${s.vid.emoji}</div>
+                <div class="tile-check">${isDone ? '✅' : isToday ? '⭐' : '○'}</div>
+                <button class="tile-btn" onclick="event.stopPropagation();toggleDay(${d})">
+                    ${isDone ? '완료됨!' : '완료 체크'}
+                </button>
+            </div>
+        `;
+    }
+}
+
+function openModal(d) {
+    activeDay = d;
+    const s = SCHEDULE[d - 1];
+    const isDone = done.has(d);
+    document.getElementById('mTitle').textContent = `Day ${d}`;
+    document.getElementById('mCards').innerHTML = `
+        <a href="${s.book.url}" target="_blank" class="modal-card book-card">
+            <div class="mc-emoji">${s.book.emoji}</div>
+            <div class="mc-info">
+                <div class="mc-type">📚 영어 그림책</div>
+                <div class="mc-title">${s.book.title}</div>
+                <div class="mc-sub">by ${s.book.author} &nbsp;·&nbsp; YouTube에서 보기 ▶</div>
+            </div>
+        </a>
+        <a href="${s.vid.url}" target="_blank" class="modal-card vid-card">
+            <div class="mc-emoji">${s.vid.emoji}</div>
+            <div class="mc-info">
+                <div class="mc-type">🎬 영어 영상</div>
+                <div class="mc-title">${s.vid.title}</div>
+                <div class="mc-sub">${s.vid.dur} &nbsp;·&nbsp; YouTube에서 보기 ▶</div>
+            </div>
+        </a>
+    `;
+    const btn = document.getElementById('mDoneBtn');
+    btn.textContent = isDone ? '✅ 오늘 완료했어요!' : '✔ 오늘 학습 완료!';
+    btn.className   = 'modal-done-btn' + (isDone ? ' already' : '');
+    document.getElementById('overlay').classList.add('open');
+}
+
+function closeModal() { document.getElementById('overlay').classList.remove('open'); }
+
+function overlayClick(e) { if (e.target === document.getElementById('overlay')) closeModal(); }
+
+function toggleFromModal() { if (activeDay) { toggleDay(activeDay); openModal(activeDay); } }
+
+function toggleDay(d) {
+    done.has(d) ? done.delete(d) : done.add(d);
+    save(); render();
+}
+
+function resetPlan() {
+    if (!confirm('플랜을 처음부터 다시 시작할까요? 완료 기록이 모두 지워집니다.')) return;
+    localStorage.removeItem('ep_start');
+    localStorage.removeItem('ep_done');
+    load(); render();
+}
+
+load(); render();
+</script>
+</body>
+</html>
