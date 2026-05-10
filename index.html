@@ -501,14 +501,41 @@
             font-family: 'yg-jalnan', sans-serif;
         }
         .name-start-btn:hover { opacity: .88; }
-        /* hero 사용자 배지 */
-        .hero-user {
-            margin-top: 8px; font-size: .85rem; color: rgba(255,255,255,.92);
-            display: none; align-items: center; justify-content: center; gap: 8px;
+        /* hero 이름 영역 */
+        .hero-name-area { margin-top: 18px; position: relative; z-index: 1; }
+        .hero-name-form { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+        .hero-name-row  { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+        .hero-name-input {
+            padding: 11px 16px; border-radius: 22px;
+            border: 2px solid rgba(255,255,255,.65);
+            background: rgba(255,255,255,.22); color: #fff;
+            font-size: .95rem; outline: none; width: 170px; text-align: center;
+            font-family: 'yg-jalnan', sans-serif;
+        }
+        .hero-name-input::placeholder { color: rgba(255,255,255,.75); }
+        .hero-name-input:focus { border-color: #fff; background: rgba(255,255,255,.32); }
+        .hero-name-btn {
+            padding: 11px 22px; border-radius: 22px; border: none;
+            background: #fff; color: #FF8C00;
+            font-size: .95rem; font-weight: 800; cursor: pointer;
+            font-family: 'yg-jalnan', sans-serif; white-space: nowrap;
+        }
+        .hero-name-chips { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
+        .hero-chip {
+            padding: 5px 14px; border-radius: 16px;
+            border: 1.5px solid rgba(255,255,255,.5);
+            background: rgba(255,255,255,.15); color: #fff;
+            font-size: .8rem; font-weight: 700; cursor: pointer;
+            font-family: 'yg-jalnan', sans-serif;
+        }
+        .hero-chip:hover { background: rgba(255,255,255,.32); }
+        .hero-name-done {
+            display: none; align-items: center; justify-content: center; gap: 10px;
+            color: rgba(255,255,255,.95); font-size: .92rem;
         }
         .hero-switch-btn {
             background: rgba(255,255,255,.22); border: none; border-radius: 10px;
-            padding: 3px 10px; color: rgba(255,255,255,.9); font-size: .75rem;
+            padding: 4px 12px; color: rgba(255,255,255,.9); font-size: .78rem;
             cursor: pointer; font-weight: 700;
         }
         .hero-switch-btn:hover { background: rgba(255,255,255,.38); }
@@ -526,10 +553,25 @@
         <div class="hero-title">소시네엄마표영어</div>
     </div>
     <div class="hero-sub">매일 영어 그림책 + 영상으로<br>친해지는 2주 플랜 🎯</div>
-    <div class="hero-user" id="heroUser">
-        <span id="heroUserName"></span>
-        <button class="hero-switch-btn" onclick="switchUser()">변경</button>
+
+    <div class="hero-name-area">
+        <!-- 미등록: 기본으로 보임 -->
+        <div class="hero-name-form" id="heroNameForm">
+            <div class="hero-name-row">
+                <input class="hero-name-input" id="heroNameInput" type="text"
+                    placeholder="이름 입력" maxlength="10"
+                    onkeydown="if(event.key==='Enter') heroStartName()">
+                <button class="hero-name-btn" onclick="heroStartName()">시작하기 🚀</button>
+            </div>
+            <div class="hero-name-chips" id="heroNameChips"></div>
+        </div>
+        <!-- 등록됨: JS가 표시 -->
+        <div class="hero-name-done" id="heroNameDone">
+            <span id="heroNameLabel"></span>
+            <button class="hero-switch-btn" onclick="switchUser()">이름 변경</button>
+        </div>
     </div>
+
     <div class="hero-wave"></div>
 </div>
 
@@ -816,38 +858,38 @@ let currentUser = '';
 /* ── 사용자 프로필 ── */
 function userKey(k) { return `ep_${currentUser}_${k}`; }
 
-function showRegisterSection() {
-    document.getElementById('registerForm').style.display = 'block';
-    document.getElementById('registerDone').style.display = 'none';
-    const users = JSON.parse(localStorage.getItem('ep_users') || '[]');
-    const chips = document.getElementById('registerChips');
-    chips.innerHTML = '';
-    users.forEach(u => {
-        const btn = document.createElement('button');
-        btn.className = 'register-chip';
-        btn.textContent = u;
-        btn.onclick = () => selectUser(u);
-        chips.appendChild(btn);
-    });
-    document.getElementById('registerNameInput').value = '';
-    setTimeout(() => document.getElementById('registerNameInput').focus(), 100);
-}
-
-function showRegisteredState(name) {
-    document.getElementById('registerForm').style.display = 'none';
-    document.getElementById('registerDone').style.display = 'block';
-    document.getElementById('registerDoneName').textContent = name + '의 2주 플랜 🌟';
-}
-
-function doRegister() {
-    const name = document.getElementById('registerNameInput').value.trim();
-    if (!name) { document.getElementById('registerNameInput').focus(); return; }
+function heroStartName() {
+    const name = document.getElementById('heroNameInput').value.trim();
+    if (!name) { document.getElementById('heroNameInput').focus(); return; }
     const users = JSON.parse(localStorage.getItem('ep_users') || '[]');
     if (!users.includes(name)) {
         users.push(name);
         localStorage.setItem('ep_users', JSON.stringify(users));
     }
     selectUser(name);
+}
+
+function showHeroForm() {
+    document.getElementById('heroNameForm').style.display = 'flex';
+    document.getElementById('heroNameDone').style.display = 'none';
+    document.getElementById('heroNameInput').value = '';
+    const users = JSON.parse(localStorage.getItem('ep_users') || '[]');
+    const chips = document.getElementById('heroNameChips');
+    chips.innerHTML = '';
+    users.forEach(u => {
+        const btn = document.createElement('button');
+        btn.className = 'hero-chip';
+        btn.textContent = u;
+        btn.onclick = () => selectUser(u);
+        chips.appendChild(btn);
+    });
+    setTimeout(() => document.getElementById('heroNameInput').focus(), 100);
+}
+
+function showHeroDone(name) {
+    document.getElementById('heroNameForm').style.display = 'none';
+    document.getElementById('heroNameDone').style.display = 'flex';
+    document.getElementById('heroNameLabel').textContent = name + '의 2주 플랜 🌟';
 }
 
 function showNameModal() {
@@ -875,8 +917,7 @@ function selectUser(name) {
     document.getElementById('nameOverlay').classList.remove('open');
     loadUserData();
     render();
-    updateHeroUser();
-    showRegisteredState(name);
+    showHeroDone(name);
 }
 
 function registerName() {
@@ -890,7 +931,7 @@ function registerName() {
     selectUser(name);
 }
 
-function switchUser() { showRegisterSection(); }
+function switchUser() { showHeroForm(); }
 
 function updateHeroUser() {
     document.getElementById('heroUserName').textContent = `${currentUser}의 2주 플랜 🌟`;
@@ -1371,10 +1412,8 @@ if (!currentUser) {
     done = new Set();
     custom = {};
     startDate = new Date(); startDate.setHours(0, 0, 0, 0);
-    showRegisterSection();
 } else {
-    updateHeroUser();
-    showRegisteredState(currentUser);
+    showHeroDone(currentUser);
 }
 render();
 preloadImages();
