@@ -411,6 +411,39 @@
         }
         .signup-btn:hover { transform: scale(1.02); }
 
+        /* Register */
+        .register-box {
+            background: linear-gradient(135deg, #fff8f0, #fff);
+            border-radius: 24px; padding: 32px 24px 28px;
+            margin-bottom: 14px;
+            box-shadow: 0 6px 24px rgba(200,169,126,.22);
+            border: 2px solid #FFD9A8; text-align: center;
+        }
+        .register-emoji { font-size: 2.6rem; margin-bottom: 10px; }
+        .register-title { font-size: 1.25rem; font-weight: 900; color: #3D2B1F; margin-bottom: 6px; }
+        .register-sub { font-size: .88rem; color: #8B6F5E; margin-bottom: 20px; line-height: 1.7; }
+        .register-input {
+            display: block; width: 100%; border: 2px solid #E8D5B7; border-radius: 14px;
+            padding: 13px 16px; font-size: 1rem; outline: none; margin-bottom: 12px;
+            transition: border-color .2s; font-family: 'yg-jalnan', sans-serif;
+            box-sizing: border-box; text-align: center;
+        }
+        .register-input:focus { border-color: #FF8C00; }
+        .register-btn {
+            width: 100%; padding: 14px; border-radius: 14px; border: none;
+            background: linear-gradient(135deg, #FF8C00, #FFB347); color: #fff;
+            font-size: 1rem; font-weight: 800; cursor: pointer;
+            transition: transform .15s; font-family: 'yg-jalnan', sans-serif;
+        }
+        .register-btn:hover { transform: scale(1.02); }
+        .register-chips { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 14px; }
+        .register-chip {
+            padding: 7px 16px; border-radius: 20px; border: 2px solid #E8D5B7;
+            background: #FFF5E8; color: #FF8C00; font-size: .85rem; font-weight: 700;
+            cursor: pointer; transition: all .15s; font-family: 'yg-jalnan', sans-serif;
+        }
+        .register-chip:hover { background: #FF8C00; color: #fff; border-color: #FF8C00; }
+
         /* Footer */
         footer { text-align: center; padding: 24px 0 18px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
         .reset-btn { background: none; border: 1.5px solid #E0D5C8; border-radius: 20px; padding: 7px 18px; font-size: .8rem; color: #C8A97E; cursor: pointer; transition: border-color .2s, color .2s; font-family: 'yg-jalnan', sans-serif; }
@@ -529,6 +562,20 @@
 
 <div class="container">
 
+    <!-- 이름 등록 섹션 (미등록 시 표시) -->
+    <div class="register-box" id="registerSection" style="display:none">
+        <div class="register-emoji">👋</div>
+        <div class="register-title">안녕하세요! 이름을 알려주세요</div>
+        <div class="register-sub">이름을 등록하면 2주 동안<br>내 학습 기록이 저장돼요</div>
+        <div class="register-chips" id="registerChips"></div>
+        <input class="register-input" id="registerNameInput" type="text" placeholder="이름 입력 (예: 소시엄마)"
+            maxlength="10" onkeydown="if(event.key==='Enter') doRegister()">
+        <button class="register-btn" onclick="doRegister()">시작하기 🚀</button>
+    </div>
+
+    <!-- 메인 콘텐츠 (등록 후 표시) -->
+    <div id="mainContent">
+
     <div class="today-box">
         <div class="today-tag">⭐ 오늘의 영어</div>
         <div class="today-heading" id="todayHeading">Day 1</div>
@@ -571,6 +618,8 @@
         <button class="reset-btn" onclick="resetPlan()">🔄 플랜 처음부터 다시 시작</button>
         <button class="reset-btn" onclick="resetAllCustom()">🗑️ 내가 고른 영상 전체 초기화</button>
     </footer>
+
+    </div><!-- /mainContent -->
 </div>
 
 <!-- View Modal -->
@@ -758,6 +807,33 @@ let currentUser = '';
 /* ── 사용자 프로필 ── */
 function userKey(k) { return `ep_${currentUser}_${k}`; }
 
+function showRegisterSection() {
+    const users = JSON.parse(localStorage.getItem('ep_users') || '[]');
+    document.getElementById('registerSection').style.display = 'block';
+    document.getElementById('mainContent').style.display = 'none';
+    const chips = document.getElementById('registerChips');
+    chips.innerHTML = '';
+    users.forEach(u => {
+        const btn = document.createElement('button');
+        btn.className = 'register-chip';
+        btn.textContent = u;
+        btn.onclick = () => selectUser(u);
+        chips.appendChild(btn);
+    });
+    setTimeout(() => document.getElementById('registerNameInput').focus(), 100);
+}
+
+function doRegister() {
+    const name = document.getElementById('registerNameInput').value.trim();
+    if (!name) { document.getElementById('registerNameInput').focus(); return; }
+    const users = JSON.parse(localStorage.getItem('ep_users') || '[]');
+    if (!users.includes(name)) {
+        users.push(name);
+        localStorage.setItem('ep_users', JSON.stringify(users));
+    }
+    selectUser(name);
+}
+
 function showNameModal() {
     const users = JSON.parse(localStorage.getItem('ep_users') || '[]');
     const existingEl = document.getElementById('existingUsers');
@@ -784,6 +860,8 @@ function selectUser(name) {
     loadUserData();
     render();
     updateHeroUser();
+    document.getElementById('registerSection').style.display = 'none';
+    document.getElementById('mainContent').style.display = 'block';
 }
 
 function registerName() {
@@ -797,7 +875,7 @@ function registerName() {
     selectUser(name);
 }
 
-function switchUser() { showNameModal(); }
+function switchUser() { showRegisterSection(); }
 
 function updateHeroUser() {
     document.getElementById('heroUserName').textContent = `${currentUser}의 2주 플랜 🌟`;
@@ -1278,7 +1356,7 @@ if (!currentUser) {
     done = new Set();
     custom = {};
     startDate = new Date(); startDate.setHours(0, 0, 0, 0);
-    showNameModal();
+    showRegisterSection();
 } else {
     updateHeroUser();
 }
