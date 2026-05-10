@@ -562,18 +562,27 @@
 
 <div class="container">
 
-    <!-- 이름 등록 섹션 (미등록 시 표시) -->
-    <div class="register-box" id="registerSection" style="display:none">
-        <div class="register-emoji">👋</div>
-        <div class="register-title">안녕하세요! 이름을 알려주세요</div>
-        <div class="register-sub">이름을 등록하면 2주 동안<br>내 학습 기록이 저장돼요</div>
-        <div class="register-chips" id="registerChips"></div>
-        <input class="register-input" id="registerNameInput" type="text" placeholder="이름 입력 (예: 소시엄마)"
-            maxlength="10" onkeydown="if(event.key==='Enter') doRegister()">
-        <button class="register-btn" onclick="doRegister()">시작하기 🚀</button>
+    <!-- 이름 카드: 항상 표시, 상태에 따라 내용 변경 -->
+    <div class="register-box" id="registerSection">
+        <!-- 미등록 상태 -->
+        <div id="registerForm">
+            <div class="register-emoji">👋</div>
+            <div class="register-title">안녕하세요! 이름을 알려주세요</div>
+            <div class="register-sub">이름을 등록하면 2주 동안<br>내 학습 기록이 저장돼요</div>
+            <div class="register-chips" id="registerChips"></div>
+            <input class="register-input" id="registerNameInput" type="text" placeholder="이름 입력 (예: 소시엄마)"
+                maxlength="10" onkeydown="if(event.key==='Enter') doRegister()">
+            <button class="register-btn" onclick="doRegister()">시작하기 🚀</button>
+        </div>
+        <!-- 등록 완료 상태 -->
+        <div id="registerDone" style="display:none">
+            <div class="register-emoji">🌟</div>
+            <div class="register-title" id="registerDoneName"></div>
+            <div class="register-sub">오늘도 영어 함께 해봐요!</div>
+            <button class="register-btn" style="background:linear-gradient(135deg,#C8A97E,#a07850);margin-top:4px" onclick="switchUser()">이름 변경</button>
+        </div>
     </div>
 
-    <!-- 메인 콘텐츠 (등록 후 표시) -->
     <div id="mainContent">
 
     <div class="today-box">
@@ -808,9 +817,9 @@ let currentUser = '';
 function userKey(k) { return `ep_${currentUser}_${k}`; }
 
 function showRegisterSection() {
+    document.getElementById('registerForm').style.display = 'block';
+    document.getElementById('registerDone').style.display = 'none';
     const users = JSON.parse(localStorage.getItem('ep_users') || '[]');
-    document.getElementById('registerSection').style.display = 'block';
-    document.getElementById('mainContent').style.display = 'none';
     const chips = document.getElementById('registerChips');
     chips.innerHTML = '';
     users.forEach(u => {
@@ -820,7 +829,14 @@ function showRegisterSection() {
         btn.onclick = () => selectUser(u);
         chips.appendChild(btn);
     });
+    document.getElementById('registerNameInput').value = '';
     setTimeout(() => document.getElementById('registerNameInput').focus(), 100);
+}
+
+function showRegisteredState(name) {
+    document.getElementById('registerForm').style.display = 'none';
+    document.getElementById('registerDone').style.display = 'block';
+    document.getElementById('registerDoneName').textContent = name + '의 2주 플랜 🌟';
 }
 
 function doRegister() {
@@ -860,8 +876,7 @@ function selectUser(name) {
     loadUserData();
     render();
     updateHeroUser();
-    document.getElementById('registerSection').style.display = 'none';
-    document.getElementById('mainContent').style.display = 'block';
+    showRegisteredState(name);
 }
 
 function registerName() {
@@ -1359,6 +1374,7 @@ if (!currentUser) {
     showRegisterSection();
 } else {
     updateHeroUser();
+    showRegisteredState(currentUser);
 }
 render();
 preloadImages();
