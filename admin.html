@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>관리자 대시보드 — 소시네엄마표영어</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+    <script src="/__env.js" onerror="window.__SUPABASE_URL='';window.__SUPABASE_ANON_KEY='';"></script>
+    <script src="/lib/supabase.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: #FBF6EF; min-height: 100vh; }
+
+        /* ── Login ── */
+        .login-wrap {
+            display: flex; align-items: center; justify-content: center; min-height: 100vh;
+        }
+        .login-box {
+            background: #fff; border-radius: 24px; padding: 36px 32px;
+            width: 320px; box-shadow: 0 8px 32px rgba(0,0,0,.12);
+            border: 2px solid #E8D5B7; text-align: center;
+        }
+        .login-icon  { font-size: 2.4rem; margin-bottom: 10px; }
+        .login-title { font-size: 1.25rem; font-weight: 900; color: #3D2B1F; margin-bottom: 4px; }
+        .login-sub   { font-size: .82rem; color: #aaa; margin-bottom: 20px; }
+        .login-input {
+            width: 100%; border: 1.5px solid #E0E0E0; border-radius: 10px;
+            padding: 11px 14px; font-size: .9rem; outline: none; margin-bottom: 10px;
+            transition: border-color .2s;
+        }
+        .login-input:focus { border-color: #FF8C00; }
+        .login-btn {
+            width: 100%; padding: 12px; border-radius: 12px; border: none;
+            background: linear-gradient(135deg, #FF8C00, #FFB347);
+            color: #fff; font-size: .95rem; font-weight: 800; cursor: pointer;
+        }
+        .login-err { color: #e53935; font-size: .82rem; margin-top: 8px; }
+
+        /* ── Header ── */
+        .header {
+            background: linear-gradient(135deg, #FF8C00, #FFB347);
+            padding: 20px 28px; color: #fff;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .header h1  { font-size: 1.3rem; font-weight: 900; }
+        .header p   { font-size: .82rem; opacity: .85; margin-top: 3px; }
+        .refresh-btn {
+            background: rgba(255,255,255,.22); border: none; border-radius: 12px;
+            padding: 8px 16px; color: #fff; font-size: .82rem; font-weight: 700;
+            cursor: pointer; transition: background .2s;
+        }
+        .refresh-btn:hover { background: rgba(255,255,255,.36); }
+
+        /* ── Container ── */
+        .container { max-width: 1000px; margin: 0 auto; padding: 24px 16px 40px; }
+
+        /* ── Stats ── */
+        .stats-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 14px; margin-bottom: 22px;
+        }
+        .stat-card {
+            background: #fff; border-radius: 18px; padding: 18px 20px;
+            border: 2px solid #E8D5B7; box-shadow: 0 4px 16px rgba(200,169,126,.14);
+        }
+        .stat-label { font-size: .72rem; color: #8B6F5E; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+        .stat-value { font-size: 2.2rem; font-weight: 900; color: #FF8C00; line-height: 1; }
+        .stat-sub   { font-size: .72rem; color: #bbb; margin-top: 6px; }
+
+        /* ── Cards ── */
+        .card {
+            background: #fff; border-radius: 18px; padding: 22px 20px;
+            border: 2px solid #E8D5B7; box-shadow: 0 4px 16px rgba(200,169,126,.14);
+            margin-bottom: 18px;
+        }
+        .card-title { font-size: 1rem; font-weight: 800; color: #3D2B1F; margin-bottom: 16px; }
+
+        /* ── Table ── */
+        .table-wrap { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; }
+        th {
+            text-align: left; font-size: .72rem; font-weight: 800; color: #8B6F5E;
+            text-transform: uppercase; letter-spacing: 1px;
+            padding: 8px 12px; border-bottom: 2px solid #F0E8DC;
+        }
+        td { padding: 11px 12px; font-size: .88rem; color: #3D2B1F; border-bottom: 1px solid #F5EDE0; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: #FFF8F0; }
+        .empty { text-align: center; color: #bbb; padding: 36px; font-size: .88rem; }
+        .badge {
+            display: inline-block; padding: 3px 10px; border-radius: 20px;
+            font-size: .72rem; font-weight: 800;
+            background: #FFF3E0; color: #FF8C00;
+        }
+
+        @media (max-width: 600px) {
+            .stats-grid { grid-template-columns: 1fr 1fr; }
+            .header { flex-direction: column; gap: 10px; align-items: flex-start; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- 로그인 -->
+<div class="login-wrap" id="loginWrap">
+    <div class="login-box">
+        <div class="login-icon">🔐</div>
+        <div class="login-title">관리자 로그인</div>
+        <div class="login-sub">소시네엄마표영어 대시보드</div>
+        <input class="login-input" id="pwInput" type="password" placeholder="비밀번호"
+            onkeydown="if(event.key==='Enter') checkLogin()">
+        <button class="login-btn" onclick="checkLogin()">로그인</button>
+        <div class="login-err" id="loginErr"></div>
+    </div>
+</div>
+
+<!-- 대시보드 -->
+<div id="dashboard" style="display:none">
+    <div class="header">
+        <div>
+            <h1>📊 관리자 대시보드</h1>
+            <p>소시네엄마표영어 — 실시간 현황</p>
+        </div>
+        <button class="refresh-btn" onclick="loadDashboard()">🔄 새로고침</button>
+    </div>
+
+    <div class="container">
+
+        <!-- 통계 카드 -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">총 신청자</div>
+                <div class="stat-value" id="totalSignups">—</div>
+                <div class="stat-sub">누적 신청</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">오늘 완료</div>
+                <div class="stat-value" id="todayCompletions">—</div>
+                <div class="stat-sub">오늘 체크된 학습</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">총 완료 수</div>
+                <div class="stat-value" id="totalCompletions">—</div>
+                <div class="stat-sub">전체 누적 완료</div>
+            </div>
+        </div>
+
+        <!-- Day별 완료 차트 -->
+        <div class="card">
+            <div class="card-title">📅 Day별 완료 현황</div>
+            <canvas id="completionsChart" height="80"></canvas>
+        </div>
+
+        <!-- 신청자 테이블 -->
+        <div class="card">
+            <div class="card-title">👥 신청자 목록</div>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>이름</th>
+                            <th>연락처</th>
+                            <th>신청일</th>
+                        </tr>
+                    </thead>
+                    <tbody id="signupsBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+const ADMIN_PW = 'sosine2024';
+let chartInstance = null;
+
+function checkLogin() {
+    const pw = document.getElementById('pwInput').value;
+    if (pw === ADMIN_PW) {
+        document.getElementById('loginWrap').style.display = 'none';
+        document.getElementById('dashboard').style.display = 'block';
+        loadDashboard();
+    } else {
+        document.getElementById('loginErr').textContent = '비밀번호가 틀렸습니다';
+    }
+}
+
+async function loadDashboard() {
+    if (!window.__supabase) {
+        alert('Supabase가 연결되지 않았습니다.');
+        return;
+    }
+
+    const [signupsRes, completionsRes] = await Promise.all([
+        window.__supabase.from('signups').select('*').order('created_at', { ascending: false }),
+        window.__supabase.from('completions').select('*')
+    ]);
+
+    const signups     = signupsRes.data     || [];
+    const completions = completionsRes.data || [];
+
+    // 오늘 날짜 기준 완료 수
+    const today = new Date().toISOString().slice(0, 10);
+    const todayCount = completions.filter(c => c.completed_at.slice(0, 10) === today).length;
+
+    document.getElementById('totalSignups').textContent     = signups.length;
+    document.getElementById('todayCompletions').textContent = todayCount;
+    document.getElementById('totalCompletions').textContent = completions.length;
+
+    // Day별 완료 차트
+    const counts = Array(14).fill(0);
+    completions.forEach(c => { if (c.plan_day >= 1 && c.plan_day <= 14) counts[c.plan_day - 1]++; });
+
+    if (chartInstance) chartInstance.destroy();
+    chartInstance = new Chart(document.getElementById('completionsChart'), {
+        type: 'bar',
+        data: {
+            labels: Array.from({ length: 14 }, (_, i) => `Day ${i + 1}`),
+            datasets: [{
+                label: '완료 수',
+                data: counts,
+                backgroundColor: 'rgba(255, 140, 0, 0.75)',
+                borderColor: '#FF8C00',
+                borderWidth: 2,
+                borderRadius: 8,
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { display: false } },
+            scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+        }
+    });
+
+    // 신청자 테이블
+    const tbody = document.getElementById('signupsBody');
+    if (signups.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" class="empty">아직 신청자가 없어요 🌱</td></tr>';
+    } else {
+        tbody.innerHTML = signups.map((s, i) => `
+            <tr>
+                <td><span class="badge">${signups.length - i}</span></td>
+                <td>${s.name}</td>
+                <td>${s.phone || '—'}</td>
+                <td>${new Date(s.created_at).toLocaleDateString('ko-KR', { year:'numeric', month:'2-digit', day:'2-digit' })}</td>
+            </tr>
+        `).join('');
+    }
+}
+</script>
+
+</body>
+</html>

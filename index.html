@@ -371,6 +371,30 @@
         .congrats .c-title { font-size: 1.6rem; font-weight: 900; margin: 8px 0 4px; }
         .congrats .c-sub   { font-size: 1rem; opacity: .9; }
 
+        /* Signup */
+        .signup-box {
+            background: #fff; border-radius: 24px;
+            padding: 28px 24px; margin-bottom: 14px;
+            box-shadow: 0 6px 24px rgba(200,169,126,.18);
+            border: 2px solid #E8D5B7; text-align: center;
+        }
+        .signup-title { font-size: 1.2rem; font-weight: 900; color: #3D2B1F; margin-bottom: 6px; }
+        .signup-sub { font-size: .85rem; color: #8B6F5E; margin-bottom: 18px; line-height: 1.6; }
+        .signup-row { display: flex; gap: 10px; margin-bottom: 10px; }
+        .signup-input {
+            flex: 1; border: 1.5px solid #E0E0E0; border-radius: 12px;
+            padding: 11px 14px; font-size: .9rem; outline: none;
+            transition: border-color .2s; font-family: 'yg-jalnan', sans-serif;
+        }
+        .signup-input:focus { border-color: #FF8C00; }
+        .signup-btn {
+            width: 100%; padding: 13px; border-radius: 14px; border: none;
+            background: linear-gradient(135deg, #FF8C00, #FFB347); color: #fff;
+            font-size: .95rem; font-weight: 800; cursor: pointer;
+            transition: transform .15s; font-family: 'yg-jalnan', sans-serif;
+        }
+        .signup-btn:hover { transform: scale(1.02); }
+
         /* Footer */
         footer { text-align: center; padding: 24px 0 18px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
         .reset-btn { background: none; border: 1.5px solid #E0D5C8; border-radius: 20px; padding: 7px 18px; font-size: .8rem; color: #C8A97E; cursor: pointer; transition: border-color .2s, color .2s; font-family: 'yg-jalnan', sans-serif; }
@@ -453,6 +477,17 @@
     <div class="week-section">
         <div class="week-label">📅 2주차</div>
         <div class="week-grid" id="grid2"></div>
+    </div>
+
+    <!-- 신청 섹션 -->
+    <div class="signup-box">
+        <div class="signup-title">📬 소식 받기</div>
+        <div class="signup-sub">새 플랜 업데이트 소식을<br>제일 먼저 받아보세요!</div>
+        <div class="signup-row">
+            <input class="signup-input" id="signupName" type="text" placeholder="이름">
+            <input class="signup-input" id="signupPhone" type="tel" placeholder="연락처">
+        </div>
+        <button class="signup-btn" onclick="submitSignup()">신청하기 ✉️</button>
     </div>
 
     <footer>
@@ -650,8 +685,56 @@ function load() {
     done   = new Set(JSON.parse(localStorage.getItem('ep_done')   || '[]'));
     custom = JSON.parse(localStorage.getItem('ep_custom') || '{}');
 }
-function saveDone()   { localStorage.setItem('ep_done',   JSON.stringify([...done])); }
-function saveCustom() { localStorage.setItem('ep_custom', JSON.stringify(custom)); }
+function saveDone()   { localStorage.setItem('ep_done',   JSON.stringify([...done])); syncToSupabase(); }
+function saveCustom() { localStorage.setItem('ep_custom', JSON.stringify(custom));   syncToSupabase(); }
+
+/* ── Supabase Sync ── */
+const PLAN_ID = 'sosine';
+
+function buildPayload() {
+    return {
+        user_id:        PLAN_ID,
+        start_date:     startDate.toISOString(),
+        done_days:      [...done],
+        custom_content: custom,
+        updated_at:     new Date().toISOString()
+    };
+}
+
+async function syncToSupabase() {
+    if (!window.__supabase) return;
+    try {
+        const { error } = await window.__supabase.from('plans').upsert(buildPayload());
+        if (error) console.warn('[Supabase] 저장 실패:', error.message);
+    } catch (e) {
+        console.warn('[Supabase] 저장 오류:', e.message);
+    }
+}
+
+async function syncFromSupabase() {
+    if (!window.__supabase) return;
+    try {
+        const { data, error } = await window.__supabase
+            .from('plans').select('*').eq('user_id', PLAN_ID).single();
+        if (error || !data) return;
+
+        const sd = new Date(data.start_date);
+        sd.setHours(0,0,0,0);
+        startDate = sd;
+        localStorage.setItem('ep_start', startDate.toISOString());
+
+        done = new Set(data.done_days || []);
+        localStorage.setItem('ep_done', JSON.stringify([...done]));
+
+        custom = data.custom_content || {};
+        localStorage.setItem('ep_custom', JSON.stringify(custom));
+
+        render();
+        console.log('[Supabase] ✅ 데이터 불러오기 완료');
+    } catch (e) {
+        console.warn('[Supabase] 불러오기 오류:', e.message);
+    }
+}
 
 /* ── Data ── */
 function getData(d) {
@@ -882,9 +965,30 @@ function openModal(d) {
 function closeModal()    { document.getElementById('overlay').classList.remove('open'); }
 function overlayClick(e) { if (e.target === document.getElementById('overlay')) closeModal(); }
 function toggleFromModal() { if (activeDay) { toggleDay(activeDay); openModal(activeDay); } }
-function toggleDay(d) {
-    done.has(d) ? done.delete(d) : done.add(d);
+async function toggleDay(d) {
+    const completing = !done.has(d);
+    completing ? done.add(d) : done.delete(d);
     saveDone(); render();
+    await logCompletion(d, completing);
+}
+
+async function logCompletion(planDay, completing) {
+    if (!window.__supabase) return;
+    try {
+        if (completing) {
+            await window.__supabase.from('completions').upsert({
+                user_id:  PLAN_ID,
+                plan_day: planDay
+            });
+        } else {
+            await window.__supabase.from('completions')
+                .delete()
+                .eq('user_id', PLAN_ID)
+                .eq('plan_day', planDay);
+        }
+    } catch (e) {
+        console.warn('[Supabase] 완료 기록 실패:', e.message);
+    }
 }
 
 /* ── Edit Panel ── */
@@ -1025,7 +1129,8 @@ function resetPlan() {
     if (!confirm('플랜을 처음부터 다시 시작할까요? 완료 기록이 모두 지워집니다.')) return;
     localStorage.removeItem('ep_start');
     localStorage.removeItem('ep_done');
-    load(); render();
+    done = new Set();
+    load(); render(); syncToSupabase();
 }
 
 /* ── Toast ── */
@@ -1059,7 +1164,20 @@ function preloadImages() {
     });
 }
 
-load(); render(); preloadImages();
+/* ── Signup ── */
+async function submitSignup() {
+    const name  = document.getElementById('signupName').value.trim();
+    const phone = document.getElementById('signupPhone').value.trim();
+    if (!name) { showToast('이름을 입력해주세요'); return; }
+    if (!window.__supabase) { showToast('연결 오류'); return; }
+    const { error } = await window.__supabase.from('signups').insert({ name, phone });
+    if (error) { showToast('신청 실패: ' + error.message); return; }
+    showToast('신청 완료! 감사합니다 💕');
+    document.getElementById('signupName').value  = '';
+    document.getElementById('signupPhone').value = '';
+}
+
+load(); render(); preloadImages(); syncFromSupabase();
 </script>
 </body>
 </html>

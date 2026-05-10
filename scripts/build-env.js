@@ -1,10 +1,26 @@
 /**
  * Vercel 빌드 시 실행됩니다.
  * NEXT_PUBLIC_ 환경변수를 읽어 브라우저에서 접근 가능한 __env.js를 생성합니다.
+ * 로컬에서는 .env.local 파일을 자동으로 읽습니다.
  * 값이 없어도 앱이 중단되지 않습니다.
  */
 const fs = require('fs');
 const path = require('path');
+
+// .env.local 로드 (로컬 개발용)
+const envLocalPath = path.join(__dirname, '..', '.env.local');
+if (fs.existsSync(envLocalPath)) {
+  const lines = fs.readFileSync(envLocalPath, 'utf8').split('\n');
+  for (const line of lines) {
+    const trimmed = line.trim();
+    if (!trimmed || trimmed.startsWith('#')) continue;
+    const eqIdx = trimmed.indexOf('=');
+    if (eqIdx === -1) continue;
+    const key = trimmed.slice(0, eqIdx).trim();
+    const val = trimmed.slice(eqIdx + 1).trim();
+    if (!process.env[key]) process.env[key] = val;
+  }
+}
 
 const url = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
 const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
