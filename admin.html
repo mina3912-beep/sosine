@@ -132,14 +132,9 @@
         <!-- 통계 카드 -->
         <div class="stats-grid">
             <div class="stat-card">
-                <div class="stat-label">등록 사용자</div>
-                <div class="stat-value" id="totalUsers">—</div>
-                <div class="stat-sub">누적 등록</div>
-            </div>
-            <div class="stat-card">
                 <div class="stat-label">총 신청자</div>
                 <div class="stat-value" id="totalSignups">—</div>
-                <div class="stat-sub">소식 신청</div>
+                <div class="stat-sub">누적 신청</div>
             </div>
             <div class="stat-card">
                 <div class="stat-label">오늘 완료</div>
@@ -159,27 +154,9 @@
             <canvas id="completionsChart" height="80"></canvas>
         </div>
 
-        <!-- 등록된 사용자 테이블 -->
-        <div class="card">
-            <div class="card-title">👶 등록된 사용자</div>
-            <div class="table-wrap">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>이름</th>
-                            <th>아이 나이</th>
-                            <th>등록일</th>
-                        </tr>
-                    </thead>
-                    <tbody id="usersBody"></tbody>
-                </table>
-            </div>
-        </div>
-
         <!-- 신청자 테이블 -->
         <div class="card">
-            <div class="card-title">👥 소식 신청자 목록</div>
+            <div class="card-title">👥 신청자 목록</div>
             <div class="table-wrap">
                 <table>
                     <thead>
@@ -225,21 +202,18 @@ async function loadDashboard() {
         return;
     }
 
-    const [signupsRes, completionsRes, usersRes] = await Promise.all([
+    const [signupsRes, completionsRes] = await Promise.all([
         window.__supabase.from('signups').select('*').order('created_at', { ascending: false }),
-        window.__supabase.from('completions').select('*'),
-        window.__supabase.from('users').select('*').order('created_at', { ascending: false })
+        window.__supabase.from('completions').select('*')
     ]);
 
     const signups     = signupsRes.data     || [];
     const completions = completionsRes.data || [];
-    const users       = usersRes.data       || [];
 
     // 오늘 날짜 기준 완료 수
     const today = new Date().toISOString().slice(0, 10);
     const todayCount = completions.filter(c => c.completed_at.slice(0, 10) === today).length;
 
-    document.getElementById('totalUsers').textContent       = users.length;
     document.getElementById('totalSignups').textContent     = signups.length;
     document.getElementById('todayCompletions').textContent = todayCount;
     document.getElementById('totalCompletions').textContent = completions.length;
@@ -268,21 +242,6 @@ async function loadDashboard() {
             scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
         }
     });
-
-    // 등록된 사용자 테이블
-    const usersBody = document.getElementById('usersBody');
-    if (users.length === 0) {
-        usersBody.innerHTML = '<tr><td colspan="4" class="empty">아직 등록된 사용자가 없어요 🌱</td></tr>';
-    } else {
-        usersBody.innerHTML = users.map((u, i) => `
-            <tr>
-                <td><span class="badge">${users.length - i}</span></td>
-                <td>${u.name}</td>
-                <td>만 ${u.child_age}세</td>
-                <td>${new Date(u.created_at).toLocaleDateString('ko-KR', { year:'numeric', month:'2-digit', day:'2-digit' })}</td>
-            </tr>
-        `).join('');
-    }
 
     // 신청자 테이블
     const tbody = document.getElementById('signupsBody');
