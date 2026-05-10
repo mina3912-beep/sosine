@@ -616,23 +616,6 @@
 </head>
 <body>
 
-<!-- ── 상단 이름 바 ── -->
-<div class="name-bar">
-    <div class="name-bar-inner">
-        <span class="name-bar-label">👤 내 이름</span>
-        <div class="name-bar-form" id="nameBarForm">
-            <input class="name-bar-input" id="nameBarInput" type="text"
-                placeholder="이름을 입력하세요" maxlength="10"
-                onkeydown="if(event.key==='Enter') nameBarSubmit()">
-            <button class="name-bar-btn" onclick="nameBarSubmit()">확인 ✓</button>
-        </div>
-        <div class="name-bar-done" id="nameBarDone" style="display:none">
-            <span class="name-bar-name" id="nameBarName"></span>
-            <button class="name-bar-change" onclick="nameBarSwitch()">이름 변경</button>
-        </div>
-    </div>
-</div>
-
 <!-- ── Hero Banner ── -->
 <div class="hero">
     <div class="hero-blob1"></div>
@@ -643,24 +626,6 @@
         <div class="hero-title">소시네엄마표영어</div>
     </div>
     <div class="hero-sub">매일 영어 그림책 + 영상으로<br>친해지는 2주 플랜 🎯</div>
-
-    <div class="hero-name-area">
-        <!-- 미등록: 기본으로 보임 -->
-        <div class="hero-name-form" id="heroNameForm">
-            <div class="hero-name-row">
-                <input class="hero-name-input" id="heroNameInput" type="text"
-                    placeholder="이름 입력" maxlength="10"
-                    onkeydown="if(event.key==='Enter') heroStartName()">
-                <button class="hero-name-btn" onclick="heroStartName()">시작하기 🚀</button>
-            </div>
-            <div class="hero-name-chips" id="heroNameChips"></div>
-        </div>
-        <!-- 등록됨: JS가 표시 -->
-        <div class="hero-name-done" id="heroNameDone">
-            <span id="heroNameLabel"></span>
-            <button class="hero-switch-btn" onclick="switchUser()">이름 변경</button>
-        </div>
-    </div>
 
     <div class="hero-wave"></div>
 </div>
