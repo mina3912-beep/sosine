@@ -913,69 +913,9 @@ let currentUser = '';
 /* ── 사용자 프로필 ── */
 function userKey(k) { return `ep_${currentUser}_${k}`; }
 
-function nameBarSubmit() {
-    const name = document.getElementById('nameBarInput').value.trim();
-    if (!name) { document.getElementById('nameBarInput').focus(); return; }
-    const users = JSON.parse(localStorage.getItem('ep_users') || '[]');
-    if (!users.includes(name)) {
-        users.push(name);
-        localStorage.setItem('ep_users', JSON.stringify(users));
-    }
-    selectUser(name);
-}
-
-function nameBarSwitch() {
-    document.getElementById('nameBarDone').style.display = 'none';
-    document.getElementById('nameBarForm').style.display = 'flex';
-    document.getElementById('nameBarInput').value = currentUser;
-    setTimeout(() => document.getElementById('nameBarInput').focus(), 50);
-}
-
-function updateNameBar(name) {
-    if (name) {
-        document.getElementById('nameBarForm').style.display = 'none';
-        document.getElementById('nameBarDone').style.display = 'flex';
-        document.getElementById('nameBarName').textContent = name + ' 님 👋';
-    } else {
-        document.getElementById('nameBarForm').style.display = 'flex';
-        document.getElementById('nameBarDone').style.display = 'none';
-        document.getElementById('nameBarInput').value = '';
-    }
-}
-
-function heroStartName() {
-    const name = document.getElementById('heroNameInput').value.trim();
-    if (!name) { document.getElementById('heroNameInput').focus(); return; }
-    const users = JSON.parse(localStorage.getItem('ep_users') || '[]');
-    if (!users.includes(name)) {
-        users.push(name);
-        localStorage.setItem('ep_users', JSON.stringify(users));
-    }
-    selectUser(name);
-}
-
-function showHeroForm() {
-    document.getElementById('heroNameForm').style.display = 'flex';
-    document.getElementById('heroNameDone').style.display = 'none';
-    document.getElementById('heroNameInput').value = '';
-    const users = JSON.parse(localStorage.getItem('ep_users') || '[]');
-    const chips = document.getElementById('heroNameChips');
-    chips.innerHTML = '';
-    users.forEach(u => {
-        const btn = document.createElement('button');
-        btn.className = 'hero-chip';
-        btn.textContent = u;
-        btn.onclick = () => selectUser(u);
-        chips.appendChild(btn);
-    });
-    setTimeout(() => document.getElementById('heroNameInput').focus(), 100);
-}
-
-function showHeroDone(name) {
-    document.getElementById('heroNameForm').style.display = 'none';
-    document.getElementById('heroNameDone').style.display = 'flex';
-    document.getElementById('heroNameLabel').textContent = name + '의 2주 플랜 🌟';
-}
+function showHeroDone(name) {}
+function showHeroForm() {}
+function updateNameBar(name) {}
 
 function showNameModal() {
     const users = JSON.parse(localStorage.getItem('ep_users') || '[]');
