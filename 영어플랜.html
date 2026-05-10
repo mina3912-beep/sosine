@@ -13,55 +13,63 @@
             min-height: 100vh;
             padding: 16px;
         }
-
         .container { max-width: 860px; margin: 0 auto; }
 
         /* ── Header ── */
         header { text-align: center; padding: 28px 0 16px; }
         .title { font-size: 2.2rem; font-weight: 900; color: #FF6B6B; text-shadow: 2px 2px 0 rgba(0,0,0,.07); }
         .subtitle { font-size: 1rem; color: #888; margin-top: 6px; }
+        .edit-open-btn {
+            display: inline-flex; align-items: center; gap: 6px;
+            margin-top: 14px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: #fff; border: none; border-radius: 22px;
+            padding: 9px 22px; font-size: .88rem; font-weight: 800;
+            cursor: pointer; transition: transform .2s, box-shadow .2s;
+            box-shadow: 0 4px 14px rgba(102,126,234,.35);
+        }
+        .edit-open-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(102,126,234,.45); }
 
         /* ── Today ── */
         .today-box {
-            background: #fff;
-            border-radius: 22px;
-            padding: 22px 22px 18px;
-            margin: 16px 0;
-            box-shadow: 0 8px 30px rgba(0,0,0,.1);
-            border: 3px solid #FFD93D;
+            background: #fff; border-radius: 22px;
+            padding: 22px 22px 18px; margin: 16px 0;
+            box-shadow: 0 8px 30px rgba(0,0,0,.1); border: 3px solid #FFD93D;
         }
         .today-tag { font-size: .78rem; font-weight: 800; color: #FF6B6B; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 4px; }
         .today-heading { font-size: 1.6rem; font-weight: 900; color: #333; margin-bottom: 14px; }
         .today-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 
         .big-card {
-            border-radius: 18px;
-            padding: 18px;
-            text-decoration: none;
-            display: block;
-            color: #fff;
-            transition: transform .2s, box-shadow .2s;
+            border-radius: 18px; padding: 0;
+            text-decoration: none; display: block; color: #fff;
+            transition: transform .2s, box-shadow .2s; overflow: hidden;
         }
         .big-card:hover { transform: translateY(-4px); box-shadow: 0 14px 28px rgba(0,0,0,.18); }
-        .big-card .type-label { font-size: .72rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; opacity: .85; margin-bottom: 5px; }
-        .big-card .card-emoji { font-size: 2.2rem; margin-bottom: 6px; display: block; }
-        .big-card .card-name { font-size: .95rem; font-weight: 800; line-height: 1.3; }
-        .big-card .card-meta { font-size: .76rem; opacity: .85; margin-top: 4px; }
-        .big-card .watch-btn { display: inline-flex; align-items: center; gap: 5px; margin-top: 11px; background: rgba(255,255,255,.28); border-radius: 20px; padding: 5px 13px; font-size: .8rem; font-weight: 700; }
-
-        .book-card { background: linear-gradient(135deg, #FF6B6B, #FF8E53); }
-        .vid-card  { background: linear-gradient(135deg, #4ECDC4, #45B7D1); }
+        .big-card .thumb-wrap {
+            width: 100%; aspect-ratio: 16/9; overflow: hidden; position: relative;
+        }
+        .big-card .thumb-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .big-card .thumb-wrap .no-thumb {
+            width: 100%; height: 100%; display: flex; align-items: center;
+            justify-content: center; font-size: 2.8rem;
+        }
+        .big-card.book-card .no-thumb { background: linear-gradient(135deg, #FF6B6B, #FF8E53); }
+        .big-card.vid-card  .no-thumb { background: linear-gradient(135deg, #4ECDC4, #45B7D1); }
+        .big-card .card-info { padding: 14px 16px 16px; }
+        .big-card.book-card .card-info { background: linear-gradient(135deg, #FF6B6B, #FF8E53); }
+        .big-card.vid-card  .card-info { background: linear-gradient(135deg, #4ECDC4, #45B7D1); }
+        .big-card .type-label { font-size: .72rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; opacity: .85; margin-bottom: 4px; }
+        .big-card .card-name { font-size: .92rem; font-weight: 800; line-height: 1.3; }
+        .big-card .card-meta { font-size: .75rem; opacity: .85; margin-top: 3px; }
+        .big-card .watch-btn { display: inline-flex; align-items: center; gap: 5px; margin-top: 10px; background: rgba(255,255,255,.28); border-radius: 20px; padding: 5px 13px; font-size: .8rem; font-weight: 700; }
 
         /* ── Progress ── */
         .progress-box {
-            background: #fff;
-            border-radius: 18px;
-            padding: 16px 20px;
-            margin: 12px 0;
+            background: #fff; border-radius: 18px;
+            padding: 16px 20px; margin: 12px 0;
             box-shadow: 0 4px 16px rgba(0,0,0,.07);
-            display: flex;
-            align-items: center;
-            gap: 16px;
+            display: flex; align-items: center; gap: 16px;
         }
         .progress-stars { font-size: 1.6rem; flex-shrink: 0; }
         .progress-info { flex: 1; }
@@ -76,60 +84,43 @@
         .week-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
 
         .day-tile {
-            background: #fff;
-            border-radius: 14px;
-            padding: 10px 6px 8px;
-            text-align: center;
-            cursor: pointer;
+            background: #fff; border-radius: 14px;
+            padding: 10px 6px 8px; text-align: center; cursor: pointer;
             transition: transform .15s, box-shadow .15s;
             box-shadow: 0 3px 10px rgba(0,0,0,.08);
-            border: 2px solid transparent;
-            user-select: none;
+            border: 2px solid transparent; user-select: none;
         }
         .day-tile:hover { transform: translateY(-2px); box-shadow: 0 7px 18px rgba(0,0,0,.13); }
         .day-tile.today  { border-color: #FFD93D; background: #FFFDE7; }
         .day-tile.done   { border-color: #81C784; background: #F1F8E9; }
         .day-tile.future { opacity: .55; }
-
+        .day-tile.custom-set { box-shadow: 0 3px 10px rgba(102,126,234,.3); }
         .tile-label { font-size: .6rem; color: #bbb; font-weight: 600; }
         .tile-num   { font-size: 1.25rem; font-weight: 900; color: #333; margin: 2px 0; }
         .day-tile.today .tile-num { color: #FF6B6B; }
         .tile-icons { font-size: .9rem; margin: 3px 0; }
         .tile-check { font-size: 1.1rem; }
         .tile-btn {
-            margin-top: 6px;
-            width: 100%;
-            padding: 3px 0;
-            border: none;
-            border-radius: 8px;
-            font-size: .62rem;
-            font-weight: 700;
-            cursor: pointer;
-            background: #F4F4F4;
-            color: #888;
-            transition: background .2s;
+            margin-top: 6px; width: 100%; padding: 3px 0; border: none;
+            border-radius: 8px; font-size: .62rem; font-weight: 700;
+            cursor: pointer; background: #F4F4F4; color: #888; transition: background .2s;
         }
         .tile-btn:hover { background: #E0F7FA; color: #00838F; }
         .day-tile.done .tile-btn { background: #C8E6C9; color: #2E7D32; }
+        .tile-custom-dot { display: none; width: 6px; height: 6px; background: #667eea; border-radius: 50%; margin: 2px auto 0; }
+        .day-tile.custom-set .tile-custom-dot { display: block; }
 
-        /* ── Modal ── */
+        /* ── View Modal ── */
         .overlay {
-            display: none;
-            position: fixed; inset: 0;
-            background: rgba(0,0,0,.48);
-            z-index: 200;
-            align-items: center;
-            justify-content: center;
+            display: none; position: fixed; inset: 0;
+            background: rgba(0,0,0,.48); z-index: 200;
+            align-items: center; justify-content: center;
         }
         .overlay.open { display: flex; }
         .modal {
-            background: #fff;
-            border-radius: 24px;
-            padding: 28px 24px 22px;
-            max-width: 440px;
-            width: 92%;
-            box-shadow: 0 24px 64px rgba(0,0,0,.22);
-            animation: popIn .2s ease;
+            background: #fff; border-radius: 24px;
+            padding: 28px 24px 22px; max-width: 440px; width: 92%;
+            box-shadow: 0 24px 64px rgba(0,0,0,.22); animation: popIn .2s ease;
         }
         @keyframes popIn { from { transform: scale(.92); opacity: 0; } to { transform: scale(1); opacity: 1; } }
         .modal-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
@@ -137,63 +128,161 @@
         .modal-close { background: #F0F0F0; border: none; border-radius: 50%; width: 34px; height: 34px; font-size: 1.1rem; cursor: pointer; }
         .modal-cards { display: flex; flex-direction: column; gap: 11px; }
         .modal-card {
-            border-radius: 16px;
-            padding: 16px;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            color: #fff;
-            transition: transform .15s;
+            border-radius: 16px; text-decoration: none;
+            overflow: hidden; color: #fff; transition: transform .15s;
         }
         .modal-card:hover { transform: scale(1.02); }
-        .mc-emoji { font-size: 2.2rem; flex-shrink: 0; }
+        .modal-card .mc-thumb { width: 100%; aspect-ratio: 16/9; overflow: hidden; }
+        .modal-card .mc-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .modal-card .mc-thumb .mc-no-thumb { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; }
+        .modal-card.book-card .mc-no-thumb { background: linear-gradient(135deg, #FF6B6B, #FF8E53); }
+        .modal-card.vid-card  .mc-no-thumb { background: linear-gradient(135deg, #4ECDC4, #45B7D1); }
+        .mc-body { padding: 14px 16px; display: flex; align-items: center; gap: 12px; }
+        .modal-card.book-card .mc-body { background: linear-gradient(135deg, #FF6B6B, #FF8E53); }
+        .modal-card.vid-card  .mc-body { background: linear-gradient(135deg, #4ECDC4, #45B7D1); }
+        .mc-emoji { font-size: 1.8rem; flex-shrink: 0; }
         .mc-info .mc-type  { font-size: .7rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; opacity: .85; margin-bottom: 3px; }
-        .mc-info .mc-title { font-size: 1rem; font-weight: 800; }
+        .mc-info .mc-title { font-size: .95rem; font-weight: 800; }
         .mc-info .mc-sub   { font-size: .75rem; opacity: .85; margin-top: 2px; }
         .modal-done-btn {
-            margin-top: 14px;
-            width: 100%;
-            padding: 13px;
-            border-radius: 14px;
-            border: none;
-            font-size: .95rem;
-            font-weight: 800;
-            cursor: pointer;
-            background: linear-gradient(135deg, #81C784, #4CAF50);
-            color: #fff;
-            transition: transform .15s, opacity .15s;
+            margin-top: 14px; width: 100%; padding: 13px; border-radius: 14px;
+            border: none; font-size: .95rem; font-weight: 800; cursor: pointer;
+            background: linear-gradient(135deg, #81C784, #4CAF50); color: #fff; transition: transform .15s;
         }
         .modal-done-btn:hover { transform: scale(1.02); }
         .modal-done-btn.already { background: linear-gradient(135deg, #C8E6C9, #A5D6A7); color: #2E7D32; }
 
-        /* ── Congrats ── */
-        .congrats {
-            display: none;
-            background: linear-gradient(135deg, #FFD93D, #FF6B6B);
-            border-radius: 22px;
-            padding: 30px;
-            text-align: center;
-            color: #fff;
-            margin: 16px 0;
+        /* ── Edit Overlay ── */
+        .edit-overlay {
+            display: none; position: fixed; inset: 0;
+            background: rgba(0,0,0,.55); z-index: 300;
+            align-items: flex-start; justify-content: center;
+            overflow-y: auto; padding: 20px 16px;
         }
+        .edit-overlay.open { display: flex; }
+        .edit-panel {
+            background: #fff; border-radius: 26px; width: 100%; max-width: 580px;
+            box-shadow: 0 24px 64px rgba(0,0,0,.25); animation: popIn .2s ease;
+            overflow: hidden; margin: auto;
+        }
+
+        /* Edit header */
+        .edit-header { background: linear-gradient(135deg, #667eea, #764ba2); padding: 20px 22px 16px; color: #fff; }
+        .edit-header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .edit-header-title { font-size: 1.05rem; font-weight: 900; }
+        .edit-close-btn { background: rgba(255,255,255,.25); border: none; border-radius: 50%; width: 34px; height: 34px; font-size: 1rem; color: #fff; cursor: pointer; }
+        .day-nav { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+        .nav-btn {
+            background: rgba(255,255,255,.2); border: none; border-radius: 12px;
+            padding: 7px 14px; color: #fff; font-size: .82rem; font-weight: 800;
+            cursor: pointer; transition: background .2s; flex-shrink: 0;
+        }
+        .nav-btn:hover { background: rgba(255,255,255,.35); }
+        .nav-btn:disabled { opacity: .3; cursor: default; }
+        .day-dots { display: flex; gap: 4px; flex-wrap: wrap; justify-content: center; flex: 1; }
+        .day-dot {
+            width: 24px; height: 24px; border-radius: 50%;
+            background: rgba(255,255,255,.2); border: none; color: #fff;
+            font-size: .65rem; font-weight: 800; cursor: pointer; transition: background .15s;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .day-dot:hover  { background: rgba(255,255,255,.38); }
+        .day-dot.active { background: #fff; color: #667eea; }
+        .day-dot.has-custom { outline: 2px solid rgba(255,255,255,.7); }
+
+        /* Edit body */
+        .edit-body { padding: 18px 20px; display: flex; flex-direction: column; gap: 14px; }
+
+        .edit-section { border-radius: 18px; padding: 16px; }
+        .edit-section.book-sec { background: #FFF0ED; border: 1.5px solid #FFCCBC; }
+        .edit-section.vid-sec  { background: #E0F7FA; border: 1.5px solid #B2EBF2; }
+
+        .sec-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .sec-label { font-size: .78rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
+        .book-sec .sec-label { color: #E64A19; }
+        .vid-sec  .sec-label { color: #00695C; }
+        .yt-search-btn {
+            display: inline-flex; align-items: center; gap: 5px;
+            background: #FF0000; color: #fff; border: none; border-radius: 16px;
+            padding: 5px 12px; font-size: .72rem; font-weight: 800; cursor: pointer;
+            transition: opacity .2s; text-decoration: none;
+        }
+        .yt-search-btn:hover { opacity: .85; }
+
+        /* thumbnail preview */
+        .thumb-preview-wrap {
+            margin-bottom: 10px; border-radius: 12px; overflow: hidden;
+            background: #f5f5f5; position: relative; display: none;
+        }
+        .thumb-preview-wrap.show { display: block; }
+        .thumb-preview-wrap img { width: 100%; display: block; border-radius: 12px; }
+        .thumb-preview-wrap .thumb-label {
+            position: absolute; bottom: 0; left: 0; right: 0;
+            background: rgba(0,0,0,.55); color: #fff;
+            font-size: .72rem; font-weight: 700; padding: 5px 10px;
+            border-radius: 0 0 12px 12px;
+        }
+        .thumb-preview-wrap .thumb-error {
+            padding: 14px; text-align: center; font-size: .8rem; color: #aaa;
+        }
+
+        .field-row { display: flex; gap: 10px; margin-bottom: 10px; }
+        .field-row:last-child { margin-bottom: 0; }
+        .field-group { display: flex; flex-direction: column; gap: 4px; flex: 1; }
+        .field-group.emoji-group { flex: 0 0 68px; }
+        .field-label { font-size: .72rem; font-weight: 700; color: #555; }
+        .field-input {
+            border: 1.5px solid #E0E0E0; border-radius: 10px;
+            padding: 9px 12px; font-size: .85rem; color: #333;
+            outline: none; transition: border-color .2s; width: 100%;
+        }
+        .field-input:focus { border-color: #667eea; }
+        .url-row { display: flex; gap: 8px; align-items: flex-start; }
+        .url-row .field-group { flex: 1; }
+        .paste-btn {
+            margin-top: 0; padding: 9px 12px; border-radius: 10px;
+            border: 1.5px solid #ddd; background: #fff;
+            font-size: .8rem; font-weight: 700; cursor: pointer;
+            color: #667eea; transition: border-color .2s; white-space: nowrap; flex-shrink: 0;
+        }
+        .paste-btn:hover { border-color: #667eea; }
+        .url-hint { font-size: .67rem; color: #bbb; margin-top: 3px; }
+
+        /* Edit footer */
+        .edit-footer { padding: 0 20px 20px; display: flex; gap: 10px; }
+        .save-btn {
+            flex: 1; padding: 13px; border-radius: 14px; border: none;
+            font-size: .95rem; font-weight: 800; cursor: pointer;
+            background: linear-gradient(135deg, #667eea, #764ba2); color: #fff; transition: transform .15s;
+        }
+        .save-btn:hover { transform: scale(1.02); }
+        .reset-day-btn {
+            padding: 13px 16px; border-radius: 14px; border: 1.5px solid #ddd;
+            font-size: .82rem; font-weight: 700; cursor: pointer;
+            background: #fff; color: #aaa; transition: border-color .2s, color .2s;
+        }
+        .reset-day-btn:hover { border-color: #FF6B6B; color: #FF6B6B; }
+
+        /* Toast */
+        .toast {
+            position: fixed; bottom: 30px; left: 50%;
+            transform: translateX(-50%) translateY(80px);
+            background: #222; color: #fff; border-radius: 22px;
+            padding: 10px 22px; font-size: .88rem; font-weight: 700;
+            z-index: 999; transition: transform .3s ease; white-space: nowrap;
+        }
+        .toast.show { transform: translateX(-50%) translateY(0); }
+
+        /* Congrats */
+        .congrats { display: none; background: linear-gradient(135deg, #FFD93D, #FF6B6B); border-radius: 22px; padding: 30px; text-align: center; color: #fff; margin: 16px 0; }
         .congrats.show { display: block; }
         .congrats .c-emoji { font-size: 3rem; }
         .congrats .c-title { font-size: 1.6rem; font-weight: 900; margin: 8px 0 4px; }
         .congrats .c-sub   { font-size: 1rem; opacity: .9; }
 
-        /* ── Reset button ── */
-        footer { text-align: center; padding: 24px 0 18px; }
-        .reset-btn {
-            background: none;
-            border: 1.5px solid #ddd;
-            border-radius: 20px;
-            padding: 7px 18px;
-            font-size: .8rem;
-            color: #aaa;
-            cursor: pointer;
-            transition: border-color .2s, color .2s;
-        }
+        /* Footer */
+        footer { text-align: center; padding: 24px 0 18px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+        .reset-btn { background: none; border: 1.5px solid #ddd; border-radius: 20px; padding: 7px 18px; font-size: .8rem; color: #aaa; cursor: pointer; transition: border-color .2s, color .2s; }
         .reset-btn:hover { border-color: #FF6B6B; color: #FF6B6B; }
 
         @media (max-width: 560px) {
@@ -203,6 +292,8 @@
             .day-tile { padding: 8px 3px 6px; }
             .tile-num { font-size: 1rem; }
             .tile-btn { font-size: .56rem; }
+            .field-row { flex-direction: column; }
+            .field-group.emoji-group { flex: 1; }
         }
     </style>
 </head>
@@ -212,16 +303,15 @@
     <header>
         <div class="title">🌟 우리 아이 영어 여행</div>
         <div class="subtitle">매일 영어 그림책 + 영상으로 친해지는 2주 플랜</div>
+        <button class="edit-open-btn" onclick="openEdit(editDay || 1)">✏️ 내가 직접 영상 고르기</button>
     </header>
 
-    <!-- Today -->
     <div class="today-box">
         <div class="today-tag">⭐ 오늘의 영어</div>
         <div class="today-heading" id="todayHeading">Day 1</div>
         <div class="today-cards" id="todayCards"></div>
     </div>
 
-    <!-- Progress -->
     <div class="progress-box">
         <div class="progress-stars" id="progressStars">🌱</div>
         <div class="progress-info">
@@ -231,20 +321,16 @@
         <div class="progress-pct" id="progressPct">0%</div>
     </div>
 
-    <!-- Congrats -->
     <div class="congrats" id="congratsBox">
         <div class="c-emoji">🎉🎊🏆</div>
         <div class="c-title">2주 완주! 대단해요!</div>
         <div class="c-sub">우리 아이 영어와 정말 친해졌어요 💕</div>
     </div>
 
-    <!-- Week 1 -->
     <div class="week-section">
         <div class="week-label">📅 1주차</div>
         <div class="week-grid" id="grid1"></div>
     </div>
-
-    <!-- Week 2 -->
     <div class="week-section">
         <div class="week-label">📅 2주차</div>
         <div class="week-grid" id="grid2"></div>
@@ -252,10 +338,11 @@
 
     <footer>
         <button class="reset-btn" onclick="resetPlan()">🔄 플랜 처음부터 다시 시작</button>
+        <button class="reset-btn" onclick="resetAllCustom()">🗑️ 내가 고른 영상 전체 초기화</button>
     </footer>
 </div>
 
-<!-- Modal -->
+<!-- View Modal -->
 <div class="overlay" id="overlay" onclick="overlayClick(event)">
     <div class="modal">
         <div class="modal-head">
@@ -267,82 +354,271 @@
     </div>
 </div>
 
+<!-- Edit Panel -->
+<div class="edit-overlay" id="editOverlay" onclick="editOverlayClick(event)">
+    <div class="edit-panel">
+
+        <div class="edit-header">
+            <div class="edit-header-top">
+                <div class="edit-header-title">✏️ 내가 직접 영상 고르기</div>
+                <button class="edit-close-btn" onclick="closeEdit()">✕</button>
+            </div>
+            <div class="day-nav">
+                <button class="nav-btn" id="prevBtn" onclick="editGoDay(editDay-1)">◀ 이전</button>
+                <div class="day-dots" id="dayDots"></div>
+                <button class="nav-btn" id="nextBtn" onclick="editGoDay(editDay+1)">다음 ▶</button>
+            </div>
+        </div>
+
+        <div class="edit-body">
+
+            <!-- 📚 그림책 섹션 -->
+            <div class="edit-section book-sec">
+                <div class="sec-head">
+                    <div class="sec-label">📚 영어 그림책 영상</div>
+                    <a id="bookSearchBtn" href="#" target="_blank" class="yt-search-btn">
+                        ▶ YouTube 검색
+                    </a>
+                </div>
+
+                <!-- 썸네일 미리보기 -->
+                <div class="thumb-preview-wrap" id="bookThumbWrap">
+                    <img id="bookThumbImg" src="" alt="썸네일">
+                    <div class="thumb-label">📚 선택한 그림책 영상 미리보기</div>
+                </div>
+
+                <div class="field-row">
+                    <div class="field-group">
+                        <div class="field-label">제목</div>
+                        <input class="field-input" id="eBookTitle" type="text" placeholder="그림책 제목 입력">
+                    </div>
+                    <div class="field-group emoji-group">
+                        <div class="field-label">이모지</div>
+                        <input class="field-input" id="eBookEmoji" type="text" placeholder="📚" maxlength="4">
+                    </div>
+                </div>
+
+                <div class="field-group">
+                    <div class="field-label">YouTube 링크 붙여넣기</div>
+                    <div class="url-row">
+                        <div class="field-group">
+                            <input class="field-input" id="eBookUrl" type="url"
+                                placeholder="https://www.youtube.com/watch?v=..."
+                                oninput="onUrlInput('book')">
+                            <div class="url-hint">유튜브에서 영상 주소를 복사해 붙여넣으세요</div>
+                        </div>
+                        <button class="paste-btn" onclick="pasteUrl('eBookUrl')">📋 붙여넣기</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 🎬 영어 영상 섹션 -->
+            <div class="edit-section vid-sec">
+                <div class="sec-head">
+                    <div class="sec-label">🎬 영어 영상 (5~10분)</div>
+                    <a id="vidSearchBtn" href="#" target="_blank" class="yt-search-btn">
+                        ▶ YouTube 검색
+                    </a>
+                </div>
+
+                <!-- 썸네일 미리보기 -->
+                <div class="thumb-preview-wrap" id="vidThumbWrap">
+                    <img id="vidThumbImg" src="" alt="썸네일">
+                    <div class="thumb-label">🎬 선택한 영상 미리보기</div>
+                </div>
+
+                <div class="field-row">
+                    <div class="field-group">
+                        <div class="field-label">제목</div>
+                        <input class="field-input" id="eVidTitle" type="text" placeholder="영상 제목 입력">
+                    </div>
+                    <div class="field-group emoji-group">
+                        <div class="field-label">이모지</div>
+                        <input class="field-input" id="eVidEmoji" type="text" placeholder="🎬" maxlength="4">
+                    </div>
+                </div>
+
+                <div class="field-row">
+                    <div class="field-group">
+                        <div class="field-label">영상 길이 (선택)</div>
+                        <input class="field-input" id="eVidDur" type="text" placeholder="예: 약 7분">
+                    </div>
+                </div>
+
+                <div class="field-group">
+                    <div class="field-label">YouTube 링크 붙여넣기</div>
+                    <div class="url-row">
+                        <div class="field-group">
+                            <input class="field-input" id="eVidUrl" type="url"
+                                placeholder="https://www.youtube.com/watch?v=..."
+                                oninput="onUrlInput('vid')">
+                            <div class="url-hint">유튜브에서 영상 주소를 복사해 붙여넣으세요</div>
+                        </div>
+                        <button class="paste-btn" onclick="pasteUrl('eVidUrl')">📋 붙여넣기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="edit-footer">
+            <button class="reset-day-btn" onclick="resetDayCustom()">기본값으로</button>
+            <button class="save-btn" onclick="saveDay()">Day <span id="saveDayNum">1</span> 저장 ✓</button>
+        </div>
+    </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
 <script>
-const SCHEDULE = [
-  { day:1,  book:{title:"The Very Hungry Caterpillar", author:"Eric Carle", emoji:"🐛", url:"https://www.youtube.com/results?search_query=The+Very+Hungry+Caterpillar+read+aloud+kids"}, vid:{title:"Peppa Pig — Muddy Puddles", emoji:"🐷", dur:"약 5분", url:"https://www.youtube.com/results?search_query=Peppa+Pig+Muddy+Puddles+episode+official"} },
-  { day:2,  book:{title:"Brown Bear, Brown Bear, What Do You See?", author:"Bill Martin Jr.", emoji:"🐻", url:"https://www.youtube.com/results?search_query=Brown+Bear+Brown+Bear+What+Do+You+See+read+aloud+kids"}, vid:{title:"Bluey — Magic Xylophone", emoji:"🎵", dur:"약 7분", url:"https://www.youtube.com/results?search_query=Bluey+Magic+Xylophone+full+episode"} },
-  { day:3,  book:{title:"Goodnight Moon", author:"Margaret Wise Brown", emoji:"🌙", url:"https://www.youtube.com/results?search_query=Goodnight+Moon+read+aloud+kids"}, vid:{title:"Peppa Pig — The Playground", emoji:"🛝", dur:"약 5분", url:"https://www.youtube.com/results?search_query=Peppa+Pig+The+Playground+episode"} },
-  { day:4,  book:{title:"Pete the Cat: I Love My White Shoes", author:"Eric Litwin", emoji:"🐱", url:"https://www.youtube.com/results?search_query=Pete+the+Cat+I+Love+My+White+Shoes+read+aloud"}, vid:{title:"Bluey — Daddy Putdown", emoji:"🐦", dur:"약 7분", url:"https://www.youtube.com/results?search_query=Bluey+Daddy+Putdown+episode"} },
-  { day:5,  book:{title:"If You Give a Mouse a Cookie", author:"Laura Numeroff", emoji:"🐭", url:"https://www.youtube.com/results?search_query=If+You+Give+a+Mouse+a+Cookie+read+aloud"}, vid:{title:"Alphablocks — Letters A to Z", emoji:"🔤", dur:"약 8분", url:"https://www.youtube.com/results?search_query=Alphablocks+alphabet+full+episode+CBeebies"} },
-  { day:6,  book:{title:"Dragons Love Tacos", author:"Adam Rubin", emoji:"🐉", url:"https://www.youtube.com/results?search_query=Dragons+Love+Tacos+read+aloud+kids"}, vid:{title:"Peppa Pig — Dressing Up", emoji:"👗", dur:"약 5분", url:"https://www.youtube.com/results?search_query=Peppa+Pig+Dressing+Up+episode"} },
-  { day:7,  book:{title:"Chicka Chicka Boom Boom", author:"Bill Martin Jr.", emoji:"🌴", url:"https://www.youtube.com/results?search_query=Chicka+Chicka+Boom+Boom+read+aloud+kids"}, vid:{title:"Numberblocks — One to Ten", emoji:"🔢", dur:"약 10분", url:"https://www.youtube.com/results?search_query=Numberblocks+1+to+10+full+episodes+CBeebies"} },
-  { day:8,  book:{title:"Where the Wild Things Are", author:"Maurice Sendak", emoji:"👹", url:"https://www.youtube.com/results?search_query=Where+the+Wild+Things+Are+read+aloud+kids"}, vid:{title:"Peppa Pig — Flying a Kite", emoji:"🪁", dur:"약 5분", url:"https://www.youtube.com/results?search_query=Peppa+Pig+Flying+a+Kite+episode"} },
-  { day:9,  book:{title:"The Giving Tree", author:"Shel Silverstein", emoji:"🌳", url:"https://www.youtube.com/results?search_query=The+Giving+Tree+read+aloud+kids"}, vid:{title:"Bluey — Keepy Uppy", emoji:"🎈", dur:"약 7분", url:"https://www.youtube.com/results?search_query=Bluey+Keepy+Uppy+full+episode"} },
-  { day:10, book:{title:"Click, Clack, Moo: Cows That Type", author:"Doreen Cronin", emoji:"🐄", url:"https://www.youtube.com/results?search_query=Click+Clack+Moo+Cows+That+Type+read+aloud"}, vid:{title:"Super Simple Songs — ABC & More", emoji:"🎶", dur:"약 8분", url:"https://www.youtube.com/results?search_query=Super+Simple+Songs+ABC+alphabet+kids+official"} },
-  { day:11, book:{title:"Corduroy", author:"Don Freeman", emoji:"🧸", url:"https://www.youtube.com/results?search_query=Corduroy+read+aloud+kids+book"}, vid:{title:"Peppa Pig — Peppa's Party", emoji:"🎉", dur:"약 5분", url:"https://www.youtube.com/results?search_query=Peppa+Pig+Peppas+Party+episode"} },
-  { day:12, book:{title:"The Snowy Day", author:"Ezra Jack Keats", emoji:"⛄", url:"https://www.youtube.com/results?search_query=The+Snowy+Day+read+aloud+kids"}, vid:{title:"Bluey — Camping", emoji:"⛺", dur:"약 7분", url:"https://www.youtube.com/results?search_query=Bluey+Camping+full+episode"} },
-  { day:13, book:{title:"Green Eggs and Ham", author:"Dr. Seuss", emoji:"🍳", url:"https://www.youtube.com/results?search_query=Green+Eggs+and+Ham+read+aloud+kids"}, vid:{title:"Alphablocks — Word Magic", emoji:"✨", dur:"약 8분", url:"https://www.youtube.com/results?search_query=Alphablocks+word+magic+CBeebies"} },
-  { day:14, book:{title:"The Lorax", author:"Dr. Seuss", emoji:"🌿", url:"https://www.youtube.com/results?search_query=The+Lorax+read+aloud+kids"}, vid:{title:"Peppa Pig — Best Day Ever", emoji:"🌈", dur:"약 5분", url:"https://www.youtube.com/results?search_query=Peppa+Pig+Best+Day+Ever+episode"} },
+/* ── Default schedule ── */
+const DEFAULTS = [
+  { day:1,
+    book:{title:"Rosie's Walk", author:"Pat Hutchins", emoji:"🐔", url:"https://youtu.be/AlwlWlI5NTU"},
+    vid:{title:"Peppa Pig — Muddy Puddles", emoji:"🐷", dur:"약 5분", url:"https://www.youtube.com/@PeppaPigOfficial/search?query=Muddy+Puddles"} },
+  { day:2,
+    book:{title:"How Do You Feel?", author:"Anthony Browne", emoji:"😊", url:"https://youtu.be/ZbzEPJyqQW8"},
+    vid:{title:"Bluey — Keepy Uppy", emoji:"🐕", dur:"약 7분", url:"https://www.youtube.com/@BlueyOfficialChannel/search?query=Keepy+Uppy"} },
+  { day:3,
+    book:{title:"Where Is the Green Sheep?", author:"Mem Fox", emoji:"🐑", url:"https://youtu.be/1GOICFvkIFw"},
+    vid:{title:"Ben & Holly — Nanny Plum's Rules", emoji:"🧚", dur:"약 5분", url:"https://www.youtube.com/@BenAndHollyOfficial/search?query=Nanny+Plum"} },
+  { day:4,
+    book:{title:"Pete the Cat: I Love My White Shoes", author:"Eric Litwin", emoji:"🐱", url:"https://youtu.be/fj_z6zGQVyM"},
+    vid:{title:"PAW Patrol — Pups Save the Bunnies", emoji:"🐾", dur:"약 6분", url:"https://www.youtube.com/@PAWPatrolOfficial/search?query=Pups+Save+the+Bunnies"} },
+  { day:5,
+    book:{title:"Orange Pear Apple Bear", author:"Emily Gravett", emoji:"🍊", url:"https://youtu.be/rXfY-O8d1HM"},
+    vid:{title:"Sheriff Labrador — New Episode", emoji:"🐶", dur:"약 7분", url:"https://www.youtube.com/@SheriffLabrador/videos"} },
+  { day:6,
+    book:{title:"The Odd Egg", author:"Emily Gravett", emoji:"🥚", url:"https://youtu.be/XDwmrXJ5UO8"},
+    vid:{title:"Peppa Pig — Swimming", emoji:"🏊", dur:"약 5분", url:"https://www.youtube.com/@PeppaPigOfficial/search?query=Swimming"} },
+  { day:7,
+    book:{title:"Lunch", author:"Denise Fleming", emoji:"🍎", url:"https://youtu.be/hmuA8shS_uI"},
+    vid:{title:"Bluey — Magic Xylophone", emoji:"🎵", dur:"약 7분", url:"https://www.youtube.com/@BlueyOfficialChannel/search?query=Magic+Xylophone"} },
+  { day:8,
+    book:{title:"Twenty Four Robbers", author:"Audrey Wood", emoji:"🎭", url:"https://youtu.be/mQtnDfgRT6A"},
+    vid:{title:"Ben & Holly — The Wise Old Elf", emoji:"🧙", dur:"약 5분", url:"https://www.youtube.com/@BenAndHollyOfficial/search?query=Wise+Old+Elf"} },
+  { day:9,
+    book:{title:"Far Far Away", author:"John Segal", emoji:"🏰", url:"https://youtu.be/rqKdvJgW_cw"},
+    vid:{title:"PAW Patrol — Pup Pup Boogie", emoji:"💃", dur:"약 6분", url:"https://www.youtube.com/@PAWPatrolOfficial/search?query=Pup+Pup+Boogie"} },
+  { day:10,
+    book:{title:"I Love Lemonade", author:"Mark Birchall", emoji:"🍋", url:"https://youtu.be/Fb48gqWj6Bc"},
+    vid:{title:"Sheriff Labrador — Episode", emoji:"🐶", dur:"약 7분", url:"https://www.youtube.com/@SheriffLabrador/videos"} },
+  { day:11,
+    book:{title:"I Can Roar Like a Dinosaur", author:"Karl Newson", emoji:"🦕", url:"https://youtu.be/2A8f7g1y5QY"},
+    vid:{title:"Peppa Pig — Ballet Lesson", emoji:"🩰", dur:"약 5분", url:"https://www.youtube.com/@PeppaPigOfficial/search?query=Ballet+Lesson"} },
+  { day:12,
+    book:{title:"Penguin", author:"Polly Dunbar", emoji:"🐧", url:"https://youtu.be/9fyi0ZJqk3Q"},
+    vid:{title:"Bluey — Camping", emoji:"⛺", dur:"약 7분", url:"https://www.youtube.com/@BlueyOfficialChannel/search?query=Camping"} },
+  { day:13,
+    book:{title:"Faster, Faster! Nice and Slow!", author:"Nick Sharratt", emoji:"🐢", url:"https://youtu.be/58yCbgj9uXg"},
+    vid:{title:"Ben & Holly — Elf Farm", emoji:"🌱", dur:"약 5분", url:"https://www.youtube.com/@BenAndHollyOfficial/search?query=Elf+Farm"} },
+  { day:14,
+    book:{title:"The Doghouse", author:"Jan Thomas", emoji:"🏠", url:"https://youtu.be/_6Gg8X6IBIo"},
+    vid:{title:"PAW Patrol — Sea Patrol", emoji:"🌊", dur:"약 6분", url:"https://www.youtube.com/@PAWPatrolOfficial/search?query=Sea+Patrol"} },
 ];
 
 const STARS = ['🌱','🌿','⭐','🌟','💫','🏅','🥉','🥈','🥇','🏆','🎖️','🎗️','🎀','🎉'];
 
-let startDate, done;
+let startDate, done, custom;
 let activeDay = null;
+let editDay   = 1;
 
+/* ── Storage ── */
 function load() {
     const s = localStorage.getItem('ep_start');
     startDate = s ? new Date(s) : (() => { const d = new Date(); d.setHours(0,0,0,0); return d; })();
     if (!s) localStorage.setItem('ep_start', startDate.toISOString());
-    const dc = localStorage.getItem('ep_done');
-    done = dc ? new Set(JSON.parse(dc)) : new Set();
+    done   = new Set(JSON.parse(localStorage.getItem('ep_done')   || '[]'));
+    custom = JSON.parse(localStorage.getItem('ep_custom') || '{}');
+}
+function saveDone()   { localStorage.setItem('ep_done',   JSON.stringify([...done])); }
+function saveCustom() { localStorage.setItem('ep_custom', JSON.stringify(custom)); }
+
+/* ── Data ── */
+function getData(d) {
+    const def = DEFAULTS[d - 1];
+    const c   = custom[d] || {};
+    return {
+        day: d,
+        book: {
+            title:  c.bookTitle  || def.book.title,
+            author: c.bookAuthor || def.book.author || '',
+            emoji:  c.bookEmoji  || def.book.emoji,
+            url:    c.bookUrl    || def.book.url,
+        },
+        vid: {
+            title: c.vidTitle || def.vid.title,
+            emoji: c.vidEmoji || def.vid.emoji,
+            dur:   c.vidDur   || def.vid.dur,
+            url:   c.vidUrl   || def.vid.url,
+        }
+    };
+}
+function hasCustom(d) { return !!custom[d]; }
+
+/* ── YouTube utils ── */
+function getYtId(url) {
+    if (!url) return null;
+    const m = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([^&\n?#]{11})/);
+    return m ? m[1] : null;
+}
+function thumbUrl(videoId) {
+    return `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
 }
 
-function save() {
-    localStorage.setItem('ep_done', JSON.stringify([...done]));
-}
-
+/* ── Today ── */
 function todayDayNum() {
     const now = new Date(); now.setHours(0,0,0,0);
-    const diff = Math.floor((now - startDate) / 86400000);
-    return Math.min(Math.max(diff + 1, 1), 14);
+    return Math.min(Math.max(Math.floor((now - startDate) / 86400000) + 1, 1), 14);
 }
 
+/* ── Render helpers ── */
+function thumbHtml(url, type) {
+    const id = getYtId(url);
+    if (id) {
+        return `<div class="thumb-wrap"><img src="${thumbUrl(id)}" alt="썸네일" onerror="this.style.display='none'"></div>`;
+    }
+    const def = DEFAULTS[0];
+    const emoji = type === 'book' ? '📚' : '🎬';
+    return `<div class="thumb-wrap"><div class="no-thumb">${emoji}</div></div>`;
+}
+
+/* ── Main render ── */
 function render() {
     const td = todayDayNum();
-    const t  = SCHEDULE[td - 1];
+    const t  = getData(td);
 
-    // Today heading
-    document.getElementById('todayHeading').textContent = `Day ${td} — ${t.book.emoji} 그림책  +  ${t.vid.emoji} 영상`;
+    document.getElementById('todayHeading').textContent =
+        `Day ${td} — ${t.book.emoji} 그림책  +  ${t.vid.emoji} 영상`;
 
-    // Today cards
     document.getElementById('todayCards').innerHTML = `
         <a href="${t.book.url}" target="_blank" class="big-card book-card">
-            <span class="type-label">📚 영어 그림책</span>
-            <span class="card-emoji">${t.book.emoji}</span>
-            <div class="card-name">${t.book.title}</div>
-            <div class="card-meta">by ${t.book.author}</div>
-            <span class="watch-btn">▶ YouTube에서 보기</span>
+            ${thumbHtml(t.book.url, 'book')}
+            <div class="card-info">
+                <div class="type-label">📚 영어 그림책</div>
+                <div class="card-name">${t.book.emoji} ${t.book.title}</div>
+                ${t.book.author ? `<div class="card-meta">by ${t.book.author}</div>` : ''}
+                <span class="watch-btn">▶ YouTube에서 보기</span>
+            </div>
         </a>
         <a href="${t.vid.url}" target="_blank" class="big-card vid-card">
-            <span class="type-label">🎬 영어 영상</span>
-            <span class="card-emoji">${t.vid.emoji}</span>
-            <div class="card-name">${t.vid.title}</div>
-            <div class="card-meta">${t.vid.dur}</div>
-            <span class="watch-btn">▶ YouTube에서 보기</span>
+            ${thumbHtml(t.vid.url, 'vid')}
+            <div class="card-info">
+                <div class="type-label">🎬 영어 영상</div>
+                <div class="card-name">${t.vid.emoji} ${t.vid.title}</div>
+                <div class="card-meta">${t.vid.dur}</div>
+                <span class="watch-btn">▶ YouTube에서 보기</span>
+            </div>
         </a>
     `;
 
-    // Progress
-    const n = done.size;
+    const n   = done.size;
     const pct = Math.round((n / 14) * 100);
     document.getElementById('progressText').textContent = `${n} / 14일 완료`;
     document.getElementById('progressFill').style.width = pct + '%';
-    document.getElementById('progressPct').textContent = pct + '%';
+    document.getElementById('progressPct').textContent  = pct + '%';
     document.getElementById('progressStars').textContent = STARS[Math.min(n, 13)];
     document.getElementById('congratsBox').classList.toggle('show', n === 14);
 
-    // Grids
     renderGrid('grid1', 1, 7, td);
     renderGrid('grid2', 8, 14, td);
 }
@@ -351,17 +627,24 @@ function renderGrid(id, from, to, td) {
     const el = document.getElementById(id);
     el.innerHTML = '';
     for (let d = from; d <= to; d++) {
-        const s = SCHEDULE[d - 1];
-        const isToday = d === td;
-        const isDone  = done.has(d);
+        const s       = getData(d);
+        const isToday  = d === td;
+        const isDone   = done.has(d);
         const isFuture = d > td;
-        const cls = ['day-tile', isToday ? 'today' : '', isDone ? 'done' : '', isFuture ? 'future' : ''].join(' ');
+        const isCust   = hasCustom(d);
+        const cls = ['day-tile',
+            isToday  ? 'today'      : '',
+            isDone   ? 'done'       : '',
+            isFuture ? 'future'     : '',
+            isCust   ? 'custom-set' : ''
+        ].join(' ');
         el.innerHTML += `
             <div class="${cls}" onclick="openModal(${d})">
                 <div class="tile-label">Day</div>
                 <div class="tile-num">${d}</div>
                 <div class="tile-icons">${s.book.emoji}${s.vid.emoji}</div>
                 <div class="tile-check">${isDone ? '✅' : isToday ? '⭐' : '○'}</div>
+                <div class="tile-custom-dot"></div>
                 <button class="tile-btn" onclick="event.stopPropagation();toggleDay(${d})">
                     ${isDone ? '완료됨!' : '완료 체크'}
                 </button>
@@ -370,26 +653,44 @@ function renderGrid(id, from, to, td) {
     }
 }
 
+/* ── View Modal ── */
 function openModal(d) {
     activeDay = d;
-    const s = SCHEDULE[d - 1];
-    const isDone = done.has(d);
+    const s      = getData(d);
+    const isDone  = done.has(d);
+    const bookId  = getYtId(s.book.url);
+    const vidId   = getYtId(s.vid.url);
+
     document.getElementById('mTitle').textContent = `Day ${d}`;
     document.getElementById('mCards').innerHTML = `
         <a href="${s.book.url}" target="_blank" class="modal-card book-card">
-            <div class="mc-emoji">${s.book.emoji}</div>
-            <div class="mc-info">
-                <div class="mc-type">📚 영어 그림책</div>
-                <div class="mc-title">${s.book.title}</div>
-                <div class="mc-sub">by ${s.book.author} &nbsp;·&nbsp; YouTube에서 보기 ▶</div>
+            <div class="mc-thumb">
+                ${bookId
+                    ? `<img src="${thumbUrl(bookId)}" alt="썸네일" onerror="this.parentElement.innerHTML='<div class=mc-no-thumb>📚</div>'">`
+                    : `<div class="mc-no-thumb">📚</div>`}
+            </div>
+            <div class="mc-body">
+                <div class="mc-emoji">${s.book.emoji}</div>
+                <div class="mc-info">
+                    <div class="mc-type">📚 영어 그림책</div>
+                    <div class="mc-title">${s.book.title}</div>
+                    <div class="mc-sub">${s.book.author ? 'by ' + s.book.author + ' · ' : ''}YouTube에서 보기 ▶</div>
+                </div>
             </div>
         </a>
         <a href="${s.vid.url}" target="_blank" class="modal-card vid-card">
-            <div class="mc-emoji">${s.vid.emoji}</div>
-            <div class="mc-info">
-                <div class="mc-type">🎬 영어 영상</div>
-                <div class="mc-title">${s.vid.title}</div>
-                <div class="mc-sub">${s.vid.dur} &nbsp;·&nbsp; YouTube에서 보기 ▶</div>
+            <div class="mc-thumb">
+                ${vidId
+                    ? `<img src="${thumbUrl(vidId)}" alt="썸네일" onerror="this.parentElement.innerHTML='<div class=mc-no-thumb>🎬</div>'">`
+                    : `<div class="mc-no-thumb">🎬</div>`}
+            </div>
+            <div class="mc-body">
+                <div class="mc-emoji">${s.vid.emoji}</div>
+                <div class="mc-info">
+                    <div class="mc-type">🎬 영어 영상</div>
+                    <div class="mc-title">${s.vid.title}</div>
+                    <div class="mc-sub">${s.vid.dur} · YouTube에서 보기 ▶</div>
+                </div>
             </div>
         </a>
     `;
@@ -399,15 +700,146 @@ function openModal(d) {
     document.getElementById('overlay').classList.add('open');
 }
 
-function closeModal() { document.getElementById('overlay').classList.remove('open'); }
-
+function closeModal()    { document.getElementById('overlay').classList.remove('open'); }
 function overlayClick(e) { if (e.target === document.getElementById('overlay')) closeModal(); }
-
 function toggleFromModal() { if (activeDay) { toggleDay(activeDay); openModal(activeDay); } }
-
 function toggleDay(d) {
     done.has(d) ? done.delete(d) : done.add(d);
-    save(); render();
+    saveDone(); render();
+}
+
+/* ── Edit Panel ── */
+function openEdit(d) {
+    document.getElementById('editOverlay').classList.add('open');
+    editGoDay(d);
+}
+function closeEdit() { document.getElementById('editOverlay').classList.remove('open'); }
+function editOverlayClick(e) { if (e.target === document.getElementById('editOverlay')) closeEdit(); }
+
+function editGoDay(d) {
+    d = Math.min(Math.max(d, 1), 14);
+    editDay = d;
+
+    document.getElementById('prevBtn').disabled = d === 1;
+    document.getElementById('nextBtn').disabled = d === 14;
+    document.getElementById('saveDayNum').textContent = d;
+
+    // Dots
+    const dots = document.getElementById('dayDots');
+    dots.innerHTML = '';
+    for (let i = 1; i <= 14; i++) {
+        const cls = ['day-dot', i === d ? 'active' : '', hasCustom(i) ? 'has-custom' : ''].join(' ');
+        dots.innerHTML += `<button class="${cls}" onclick="editGoDay(${i})">${i}</button>`;
+    }
+
+    // Fill form
+    const def = DEFAULTS[d - 1];
+    const c   = custom[d] || {};
+
+    const bookTitle = c.bookTitle ?? def.book.title;
+    const bookUrl   = c.bookUrl   ?? def.book.url;
+    const vidTitle  = c.vidTitle  ?? def.vid.title;
+    const vidUrl    = c.vidUrl    ?? def.vid.url;
+
+    document.getElementById('eBookTitle').value = bookTitle;
+    document.getElementById('eBookEmoji').value = c.bookEmoji ?? def.book.emoji;
+    document.getElementById('eBookUrl').value   = bookUrl;
+    document.getElementById('eVidTitle').value  = vidTitle;
+    document.getElementById('eVidEmoji').value  = c.vidEmoji ?? def.vid.emoji;
+    document.getElementById('eVidDur').value    = c.vidDur   ?? def.vid.dur;
+    document.getElementById('eVidUrl').value    = vidUrl;
+
+    // YouTube search buttons
+    document.getElementById('bookSearchBtn').href =
+        `https://www.youtube.com/results?search_query=${encodeURIComponent(bookTitle + ' read aloud')}`;
+    document.getElementById('vidSearchBtn').href =
+        `https://www.youtube.com/results?search_query=${encodeURIComponent(vidTitle + ' kids english')}`;
+
+    // Thumbnails
+    updateThumb('book', bookUrl);
+    updateThumb('vid',  vidUrl);
+}
+
+/* ── Thumbnail preview ── */
+function updateThumb(type, url) {
+    const wrap = document.getElementById(type === 'book' ? 'bookThumbWrap' : 'vidThumbWrap');
+    const img  = document.getElementById(type === 'book' ? 'bookThumbImg'  : 'vidThumbImg');
+    const id   = getYtId(url);
+    if (id) {
+        img.src = thumbUrl(id);
+        img.onerror = () => { wrap.classList.remove('show'); };
+        img.onload  = () => { wrap.classList.add('show'); };
+        wrap.classList.add('show');
+    } else {
+        wrap.classList.remove('show');
+    }
+}
+
+function onUrlInput(type) {
+    const url = document.getElementById(type === 'book' ? 'eBookUrl' : 'eVidUrl').value;
+    updateThumb(type, url);
+    // Update search button if title field is empty
+    if (type === 'book') {
+        const t = document.getElementById('eBookTitle').value || DEFAULTS[editDay-1].book.title;
+        document.getElementById('bookSearchBtn').href =
+            `https://www.youtube.com/results?search_query=${encodeURIComponent(t + ' read aloud')}`;
+    } else {
+        const t = document.getElementById('eVidTitle').value || DEFAULTS[editDay-1].vid.title;
+        document.getElementById('vidSearchBtn').href =
+            `https://www.youtube.com/results?search_query=${encodeURIComponent(t + ' kids english')}`;
+    }
+}
+
+async function pasteUrl(inputId) {
+    try {
+        const text = await navigator.clipboard.readText();
+        document.getElementById(inputId).value = text;
+        const type = inputId === 'eBookUrl' ? 'book' : 'vid';
+        updateThumb(type, text);
+    } catch {
+        showToast('클립보드 접근이 거부됐어요. 직접 붙여넣기(Ctrl+V) 해주세요.');
+    }
+}
+
+/* ── Save / Reset ── */
+function saveDay() {
+    const d = editDay;
+    const def = DEFAULTS[d - 1];
+
+    const bookTitle = document.getElementById('eBookTitle').value.trim();
+    const bookEmoji = document.getElementById('eBookEmoji').value.trim();
+    const bookUrl   = document.getElementById('eBookUrl').value.trim();
+    const vidTitle  = document.getElementById('eVidTitle').value.trim();
+    const vidEmoji  = document.getElementById('eVidEmoji').value.trim();
+    const vidDur    = document.getElementById('eVidDur').value.trim();
+    const vidUrl    = document.getElementById('eVidUrl').value.trim();
+
+    const isDefault =
+        bookTitle === def.book.title && bookEmoji === def.book.emoji && bookUrl === def.book.url &&
+        vidTitle  === def.vid.title  && vidEmoji  === def.vid.emoji  && vidUrl  === def.vid.url &&
+        (!vidDur || vidDur === def.vid.dur);
+
+    if (isDefault) {
+        delete custom[d];
+    } else {
+        custom[d] = { bookTitle, bookEmoji, bookUrl, vidTitle, vidEmoji, vidDur, vidUrl };
+    }
+
+    saveCustom(); render(); editGoDay(d);
+    showToast(`Day ${d} 저장 완료! ✅`);
+    if (d < 14) setTimeout(() => editGoDay(d + 1), 700);
+}
+
+function resetDayCustom() {
+    delete custom[editDay];
+    saveCustom(); render(); editGoDay(editDay);
+    showToast(`Day ${editDay} 기본값으로 돌아왔어요`);
+}
+
+function resetAllCustom() {
+    if (!confirm('내가 고른 영상을 모두 지우고 기본값으로 돌릴까요?')) return;
+    custom = {}; saveCustom(); render();
+    showToast('전체 기본값으로 초기화됐어요');
 }
 
 function resetPlan() {
@@ -415,6 +847,16 @@ function resetPlan() {
     localStorage.removeItem('ep_start');
     localStorage.removeItem('ep_done');
     load(); render();
+}
+
+/* ── Toast ── */
+let toastTimer;
+function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 2400);
 }
 
 load(); render();
