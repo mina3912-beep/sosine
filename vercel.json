@@ -1,5 +1,4 @@
 {
-  "buildCommand": "node scripts/build-env.js",
   "outputDirectory": ".",
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }
