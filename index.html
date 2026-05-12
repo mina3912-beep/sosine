@@ -156,15 +156,20 @@
 
         .scroll-thumb {
             width: 100%;
+            aspect-ratio: 16/10;
             background: #ECE2D2;
-            position: relative; overflow: hidden;
-            display: flex; align-items: center; justify-content: center;
+            position: relative;
+            overflow: hidden;
         }
-        .scroll-thumb { aspect-ratio: 16/10; }
         .scroll-thumb img {
-            width: 100%; height: 100%; object-fit: cover; display: block;
+            position: absolute; inset: 0;
+            width: 100%; height: 100%;
+            object-fit: cover; display: block;
         }
         .scroll-thumb .no-thumb {
+            position: absolute; inset: 0;
+            width: 100%; height: 100%;
+            display: flex; align-items: center; justify-content: center;
             font-size: 2.2rem; color: #b09a82;
         }
         .scroll-thumb .day-badge {
