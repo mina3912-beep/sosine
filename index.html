@@ -156,6 +156,7 @@
 
         .scroll-thumb {
             width: 100%;
+            height: 90px;
             aspect-ratio: 16/10;
             background: #ECE2D2;
             position: relative;
@@ -1184,14 +1185,17 @@ function renderScrollRow(rowId, type, td) {
         const ytId = getYtId(item.url);
 
         let thumbHtml;
-        if (type === 'book' && item.cover) {
-            thumbHtml = `<img src="${item.cover}" data-ytid="${ytId||''}" alt=""
-                onerror="scrollThumbFallback(this,'${type}')">`;
-        } else if (ytId) {
-            thumbHtml = `<img src="${thumbUrl(ytId)}" alt=""
-                onerror="this.style.display='none'; this.parentElement.innerHTML += '<div class=&quot;no-thumb&quot;>${type==='book'?'📚':'🎬'}</div>'">`;
+        const fallbackEmoji = type === 'book' ? '📚' : '🎬';
+        if (ytId) {
+            // 1순위: YouTube 썸네일 (가장 안정적)
+            const altCover = (type === 'book' && item.cover) ? item.cover : '';
+            thumbHtml = `<img src="${thumbUrl(ytId)}" data-alt="${altCover}" alt=""
+                onerror="scrollThumbFallback(this,'${fallbackEmoji}')">`;
+        } else if (type === 'book' && item.cover) {
+            thumbHtml = `<img src="${item.cover}" alt=""
+                onerror="scrollThumbFallback(this,'${fallbackEmoji}')">`;
         } else {
-            thumbHtml = `<div class="no-thumb">${type === 'book' ? '📚' : '🎬'}</div>`;
+            thumbHtml = `<div class="no-thumb">${fallbackEmoji}</div>`;
         }
 
         const metaText = (type === 'vid' && item.dur) ? item.dur : `Day ${d}`;
@@ -1214,24 +1218,23 @@ function renderScrollRow(rowId, type, td) {
     el.innerHTML = html;
 }
 
-function scrollThumbFallback(img, type) {
-    const ytid = img.dataset.ytid;
-    if (ytid) {
-        img.onerror = () => {
-            img.style.display = 'none';
-            const noThumb = document.createElement('div');
-            noThumb.className = 'no-thumb';
-            noThumb.textContent = type === 'book' ? '📚' : '🎬';
-            img.parentElement.appendChild(noThumb);
-        };
-        img.src = thumbUrl(ytid);
-    } else {
-        img.style.display = 'none';
-        const noThumb = document.createElement('div');
-        noThumb.className = 'no-thumb';
-        noThumb.textContent = type === 'book' ? '📚' : '🎬';
-        img.parentElement.appendChild(noThumb);
+function scrollThumbFallback(img, fallbackEmoji) {
+    // 책 커버 등 대체 이미지 한 번 더 시도, 안 되면 이모지로
+    const altCover = img.dataset.alt;
+    if (altCover && img.src !== altCover) {
+        img.dataset.alt = '';
+        img.onerror = () => showNoThumb(img, fallbackEmoji);
+        img.src = altCover;
+        return;
     }
+    showNoThumb(img, fallbackEmoji);
+}
+function showNoThumb(img, emoji) {
+    img.style.display = 'none';
+    const noThumb = document.createElement('div');
+    noThumb.className = 'no-thumb';
+    noThumb.textContent = emoji;
+    if (img.parentElement) img.parentElement.appendChild(noThumb);
 }
 
 function scrollTodayIntoView() {
