@@ -1071,24 +1071,52 @@ function saveCustom() {
     saveToSupabase();
 }
 
-/* ── Supabase ── */
+/* ── Supabase 익명 세션 ── */
+let __authReady = null;
+async function ensureAnonAuth() {
+    if (!window.__supabase) return null;
+    if (__authReady) return __authReady;
+    __authReady = (async () => {
+        try {
+            const { data: { session } } = await window.__supabase.auth.getSession();
+            if (session && session.user) return session.user.id;
+            const { data, error } = await window.__supabase.auth.signInAnonymously();
+            if (error) { console.warn('[auth] anon sign-in 실패', error.message); return null; }
+            return data && data.user ? data.user.id : null;
+        } catch (e) {
+            console.warn('[auth] 예외', e && e.message);
+            return null;
+        }
+    })();
+    return __authReady;
+}
+
+/* ── Supabase 데이터 ── */
 async function loadFromSupabase(name) {
     if (!window.__supabase) return null;
+    const ownerId = await ensureAnonAuth();
+    if (!ownerId) return null;
     try {
         const { data } = await window.__supabase
-            .from('plans').select('*').eq('user_id', name).maybeSingle();
+            .from('plans').select('*')
+            .eq('user_id', name)
+            .eq('owner_id', ownerId)   // RLS 가 막아주지만 명시도 해둠
+            .maybeSingle();
         return data || null;
     } catch(e) { return null; }
 }
 
 async function saveToSupabase() {
     if (!window.__supabase || !currentUser) return;
+    const ownerId = await ensureAnonAuth();
+    if (!ownerId) return;
     try {
         await window.__supabase.from('plans').upsert({
             user_id: currentUser,
             start_date: startDate.toISOString(),
             done_days: [...done],
             custom_content: custom,
+            owner_id: ownerId,
             updated_at: new Date().toISOString()
         }, { onConflict: 'user_id' });
     } catch(e) {}
@@ -1620,6 +1648,9 @@ if (!currentUser) {
 }
 render();
 preloadImages();
+
+// 페이지 로드 직후 익명 세션 확보 (이후 모든 Supabase 호출이 owner_id 를 가짐)
+ensureAnonAuth();
 
 // Supabase 동기화
 if (currentUser) {
