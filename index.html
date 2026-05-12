@@ -681,7 +681,7 @@
         <input class="name-input" id="nameInput" placeholder="이름 입력" maxlength="10"
             onkeydown="if(event.key==='Enter') registerName()">
         <button class="name-start-btn" onclick="registerName()">시작하기 🚀</button>
-        <button class="name-cancel-btn" id="nameCancelBtn" onclick="closeNameModal()" style="display:none">닫기</button>
+        <button class="name-cancel-btn" id="nameCancelBtn" onclick="logoutUser()" style="display:none">나가기</button>
     </div>
 </div>
 
@@ -979,6 +979,7 @@ let startDate, done, custom;
 let activeDay = null;
 let editDay   = 1;
 let currentUser = '';
+let loggedOutThisSession = false;
 
 /* ── 사용자 키 ── */
 function userKey(k) { return `ep_${currentUser}_${k}`; }
@@ -1003,12 +1004,41 @@ function showNameModal() {
         document.getElementById('nameModalSub').innerHTML = '이름을 입력하면 2주 동안<br>내 진도를 기억해줘요';
     }
     document.getElementById('nameInput').value = '';
-    document.getElementById('nameCancelBtn').style.display = currentUser ? 'block' : 'none';
+    const cancelBtn = document.getElementById('nameCancelBtn');
+    if (currentUser) {
+        cancelBtn.textContent = '나가기';
+        cancelBtn.onclick = logoutUser;
+        cancelBtn.style.display = 'block';
+    } else if (loggedOutThisSession) {
+        cancelBtn.textContent = '닫기';
+        cancelBtn.onclick = closeNameModal;
+        cancelBtn.style.display = 'block';
+    } else {
+        cancelBtn.style.display = 'none';
+    }
     document.getElementById('nameOverlay').classList.add('open');
 }
 
 function closeNameModal() {
     document.getElementById('nameOverlay').classList.remove('open');
+}
+
+function logoutUser() {
+    const name = currentUser;
+    if (name) {
+        const users = JSON.parse(localStorage.getItem('ep_users') || '[]')
+            .filter(u => u !== name);
+        localStorage.setItem('ep_users', JSON.stringify(users));
+    }
+    localStorage.removeItem('ep_currentUser');
+    currentUser = '';
+    done = new Set();
+    custom = {};
+    startDate = new Date(); startDate.setHours(0, 0, 0, 0);
+    loggedOutThisSession = true;
+    updateGreet(null);
+    render();
+    showNameModal();
 }
 
 async function selectUser(name) {
