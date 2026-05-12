@@ -91,11 +91,15 @@
             background: #FFF3E0; color: #FF8C00;
         }
 
+        .stat-card.users { border-color: #B2DFDB; }
+        .stat-card.users .stat-value { color: #00897B; }
+
         @media (max-width: 600px) {
             .stats-grid { grid-template-columns: 1fr 1fr; }
             .header { flex-direction: column; gap: 10px; align-items: flex-start; }
         }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 </head>
 <body>
 
@@ -127,32 +131,31 @@
         <!-- 통계 카드 -->
         <div class="stats-grid">
             <div class="stat-card">
-                <div class="stat-label">총 신청자</div>
+                <div class="stat-label">소식 신청자</div>
                 <div class="stat-value" id="totalSignups">—</div>
-                <div class="stat-sub">누적 신청</div>
+                <div class="stat-sub">누적 이메일 신청</div>
             </div>
-            <div class="stat-card">
-                <div class="stat-label">오늘 완료</div>
-                <div class="stat-value" id="todayCompletions">—</div>
-                <div class="stat-sub">오늘 체크된 학습</div>
+            <div class="stat-card users">
+                <div class="stat-label">등록 사용자</div>
+                <div class="stat-value" id="totalUsers">—</div>
+                <div class="stat-sub">이름 등록한 전체</div>
             </div>
             <div class="stat-card">
                 <div class="stat-label">총 완료 수</div>
                 <div class="stat-value" id="totalCompletions">—</div>
-                <div class="stat-sub">전체 누적 완료</div>
+                <div class="stat-sub">전체 누적 Day 완료</div>
             </div>
         </div>
 
-        <!-- 신청자 테이블 -->
+        <!-- 소식 신청자 테이블 -->
         <div class="card">
-            <div class="card-title">👥 신청자 목록</div>
+            <div class="card-title">📬 소식 신청자 목록</div>
             <div class="table-wrap">
                 <table>
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>이름</th>
-                            <th>연락처</th>
+                            <th>이메일</th>
                             <th>신청일</th>
                         </tr>
                     </thead>
@@ -161,9 +164,29 @@
             </div>
         </div>
 
+        <!-- 사용자 진도 테이블 -->
+        <div class="card">
+            <div class="card-title">📊 사용자별 진도</div>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>이름</th>
+                            <th>완료 Day</th>
+                            <th>시작일</th>
+                            <th>마지막 활동</th>
+                        </tr>
+                    </thead>
+                    <tbody id="plansBody"></tbody>
+                </table>
+            </div>
+        </div>
+
     </div>
 </div>
 
+<script src="/__env.js"></script>
+<script src="/lib/supabase.js"></script>
 <script>
 const ADMIN_PW_HASH = '324cc2001745e165a7caf3d79b00918e087e2b0885b682294b441b6cee92de8e';
 
@@ -184,12 +207,64 @@ async function checkLogin() {
     }
 }
 
-function loadDashboard() {
-    document.getElementById('totalSignups').textContent     = '—';
-    document.getElementById('todayCompletions').textContent = '—';
-    document.getElementById('totalCompletions').textContent = '—';
-    document.getElementById('signupsBody').innerHTML =
-        '<tr><td colspan="4" class="empty">소식 신청은 이메일로 수집됩니다 📬</td></tr>';
+function fmtDate(iso) {
+    if (!iso) return '—';
+    const d = new Date(iso);
+    return `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}`;
+}
+
+async function loadDashboard() {
+    document.getElementById('totalSignups').textContent     = '…';
+    document.getElementById('totalUsers').textContent       = '…';
+    document.getElementById('totalCompletions').textContent = '…';
+
+    if (!window.__supabase) {
+        document.getElementById('signupsBody').innerHTML =
+            '<tr><td colspan="3" class="empty">Supabase 연결이 필요합니다</td></tr>';
+        document.getElementById('plansBody').innerHTML =
+            '<tr><td colspan="4" class="empty">Supabase 연결이 필요합니다</td></tr>';
+        return;
+    }
+
+    // 신청자 목록
+    const { data: signups } = await window.__supabase
+        .from('signups').select('*').order('created_at', { ascending: false });
+
+    document.getElementById('totalSignups').textContent = signups ? signups.length : 0;
+
+    const signupsBody = document.getElementById('signupsBody');
+    if (!signups || signups.length === 0) {
+        signupsBody.innerHTML = '<tr><td colspan="3" class="empty">아직 신청자가 없어요 📭</td></tr>';
+    } else {
+        signupsBody.innerHTML = signups.map((s, i) => `
+            <tr>
+                <td>${i + 1}</td>
+                <td>${s.name}</td>
+                <td>${fmtDate(s.created_at)}</td>
+            </tr>`).join('');
+    }
+
+    // 사용자 진도
+    const { data: plans } = await window.__supabase
+        .from('plans').select('*').order('updated_at', { ascending: false });
+
+    document.getElementById('totalUsers').textContent = plans ? plans.length : 0;
+
+    const totalDone = plans ? plans.reduce((sum, p) => sum + (p.done_days ? p.done_days.length : 0), 0) : 0;
+    document.getElementById('totalCompletions').textContent = totalDone;
+
+    const plansBody = document.getElementById('plansBody');
+    if (!plans || plans.length === 0) {
+        plansBody.innerHTML = '<tr><td colspan="4" class="empty">아직 등록된 사용자가 없어요</td></tr>';
+    } else {
+        plansBody.innerHTML = plans.map(p => `
+            <tr>
+                <td><strong>${p.user_id}</strong></td>
+                <td><span class="badge">${p.done_days ? p.done_days.length : 0} / 14일</span></td>
+                <td>${fmtDate(p.start_date)}</td>
+                <td>${fmtDate(p.updated_at)}</td>
+            </tr>`).join('');
+    }
 }
 </script>
 

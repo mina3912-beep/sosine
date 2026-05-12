@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>소시네엄마표영어</title>
 
     <style>
@@ -17,192 +17,407 @@
 
         body {
             font-family: 'yg-jalnan', 'Segoe UI', sans-serif;
-            background: #FBF6EF;
+            background: #EFE6D5;
             min-height: 100vh;
+            padding-bottom: 92px;
+            color: #2B1E12;
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* ── Hero Banner ── */
-        .hero {
-            background: linear-gradient(135deg, #FF8C00 0%, #FFB347 65%, #FFC875 100%);
-            padding: 48px 24px 60px;
-            text-align: center;
+        /* ── 앱 컨테이너 (어플 폭) ── */
+        .app {
+            max-width: 480px;
+            margin: 0 auto;
+            background: #F4EFE2;
+            min-height: 100vh;
+            padding: 22px 18px 30px;
             position: relative;
-            overflow: hidden;
         }
-        .hero-blob1 {
-            position: absolute; top: -50px; right: -50px;
-            width: 220px; height: 220px;
-            background: rgba(255,255,255,.13); border-radius: 50%;
+        @media (min-width: 481px) {
+            .app {
+                border-left: 1px solid #E5DBC2;
+                border-right: 1px solid #E5DBC2;
+                box-shadow: 0 0 30px rgba(0,0,0,.05);
+            }
         }
-        .hero-blob2 {
-            position: absolute; bottom: 40px; left: -40px;
-            width: 140px; height: 140px;
-            background: rgba(255,255,255,.1); border-radius: 50%;
+
+        /* ── 통합 상단 카드 (인사 + 챌린지 + Day) ── */
+        .hero-card {
+            background: linear-gradient(135deg, #FFC1D0 0%, #FF9FB6 100%);
+            border-radius: 22px;
+            padding: 20px 22px 18px;
+            margin: 4px 0 18px;
+            color: #fff;
+            box-shadow: 0 8px 22px rgba(255,159,182,.32);
+            cursor: pointer; transition: transform .12s;
+            position: relative; overflow: hidden;
         }
-        .hero-blob3 {
-            position: absolute; top: 20px; left: 30%;
-            width: 80px; height: 80px;
-            background: rgba(255,255,255,.08); border-radius: 50%;
+        .hero-card:active { transform: scale(.99); }
+        .hero-badge {
+            display: inline-block;
+            background: rgba(255,255,255,.22);
+            border-radius: 14px;
+            padding: 4px 12px;
+            font-size: .72rem; font-weight: 800;
+            margin-bottom: 11px;
         }
-        .hero-deco { font-size: 2rem; margin-bottom: 10px; letter-spacing: 8px; position: relative; z-index: 1; }
-        .hero-title-wrap {
-            display: flex; align-items: center; justify-content: center;
-            gap: 14px; position: relative; z-index: 1;
+        .hero-greet {
+            font-size: 1.35rem; font-weight: 900;
+            line-height: 1.3; margin-bottom: 3px;
         }
-        .hero-char-img {
-            width: 175px; height: auto; flex-shrink: 0;
-        }
-        .hero-title {
-            font-size: 2.6rem; color: #fff; position: relative; z-index: 1;
-            text-shadow: 2px 4px 0 rgba(150,70,0,.22);
-            line-height: 1.2;
-        }
+        .hero-greet .greet-name { color: #fff; }
         .hero-sub {
-            font-size: .9rem; color: rgba(255,255,255,.93);
-            margin-top: 12px; line-height: 1.7; position: relative; z-index: 1;
+            font-size: .78rem; opacity: .85;
+            margin-bottom: 16px; font-weight: 600;
         }
-        .hero-wave {
-            position: absolute; bottom: 0; left: 0; right: 0;
-            height: 52px; background: #FBF6EF;
-            border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+        .hero-meta {
+            display: flex; justify-content: space-between;
+            align-items: flex-end; margin-bottom: 11px;
+        }
+        .hero-day-label {
+            font-size: .68rem; opacity: .8;
+            margin-bottom: 3px; font-weight: 600;
+        }
+        .hero-day {
+            font-size: 1.7rem; font-weight: 900; line-height: 1;
+        }
+        .hero-day small {
+            font-size: .9rem; opacity: .68;
+            font-weight: 700; margin-left: 2px;
+        }
+        .hero-meta-right { text-align: right; }
+        .hero-dday {
+            font-size: 1.45rem; font-weight: 900; line-height: 1;
+        }
+        .hero-dday-sub {
+            font-size: .62rem; opacity: .85;
+            margin-top: 3px; font-weight: 600;
+        }
+        .hero-dots {
+            display: flex; gap: 5px; justify-content: center;
+            margin: 6px 0 12px;
+        }
+        .hero-dot {
+            width: 11px; height: 11px; border-radius: 50%;
+            background: rgba(255,255,255,.28);
+        }
+        .hero-dot.done  { background: #fff; }
+        .hero-dot.today { background: #FFD43B; box-shadow: 0 0 0 3px rgba(255,212,59,.25); }
+        .hero-cta-bottom {
+            text-align: center;
+            background: rgba(255,255,255,.18);
+            border-radius: 14px;
+            padding: 9px 0;
+            font-size: .8rem; font-weight: 700;
         }
 
-        /* ── Quick Menu ── */
-        .quick-menu-wrap {
-            max-width: 860px; margin: 16px auto 0;
-            padding: 0 20px; position: relative; z-index: 10;
+        /* ── 가로 스크롤 섹션 (그림책 / 영상) ── */
+        .scroll-section { margin-bottom: 20px; }
+        .scroll-head {
+            display: flex; justify-content: space-between; align-items: baseline;
+            padding: 0 4px 10px;
         }
-        .quick-menu { display: flex; gap: 12px; }
-        .qm-btn {
-            flex: 1; background: #fff;
-            border: 2px solid #E8D5B7; border-radius: 22px;
-            padding: 18px 8px 14px; text-align: center;
+        .scroll-title {
+            font-size: .88rem; font-weight: 900; color: #2B1E12;
+        }
+        .scroll-more {
+            font-size: .72rem; color: #8B6F5E; font-weight: 700;
+        }
+        .scroll-row {
+            display: flex; gap: 10px;
+            overflow-x: auto; overflow-y: hidden;
+            scroll-snap-type: x mandatory;
+            padding: 4px 18px 10px;
+            margin: 0 -18px;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+        .scroll-row::-webkit-scrollbar { display: none; }
+
+        .scroll-card {
+            flex: 0 0 144px;
+            scroll-snap-align: start;
+            background: #fff;
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(170,140,110,.18);
             cursor: pointer;
-            box-shadow: 0 6px 22px rgba(200,169,126,.24);
-            transition: transform .15s, box-shadow .15s;
-            font-family: 'yg-jalnan', sans-serif;
+            transition: transform .12s, box-shadow .12s;
+            text-decoration: none; color: inherit;
+            display: block;
+            position: relative;
         }
-        .qm-btn:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(200,169,126,.38); }
-        .qm-icon { font-size: 1.8rem; display: block; margin-bottom: 6px; }
-        .qm-label { font-size: .68rem; color: #8B6F5E; font-weight: 700; }
+        .scroll-card:active { transform: scale(.97); }
+        .scroll-card.today {
+            box-shadow: 0 4px 16px rgba(44,89,133,.35);
+            outline: 2px solid #3F7AAE;
+        }
+        .scroll-card.future { opacity: .85; }
 
-        /* ── Container ── */
-        .container { max-width: 860px; margin: 0 auto; padding: 30px 16px 16px; }
+        .scroll-thumb {
+            width: 100%;
+            background: #ECE2D2;
+            position: relative; overflow: hidden;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .scroll-thumb { aspect-ratio: 16/10; }
+        .scroll-thumb img {
+            width: 100%; height: 100%; object-fit: cover; display: block;
+        }
+        .scroll-thumb .no-thumb {
+            font-size: 2.2rem; color: #b09a82;
+        }
+        .scroll-thumb .day-badge {
+            position: absolute; top: 7px; left: 7px;
+            background: rgba(0,0,0,.62); color: #fff;
+            font-size: .6rem; font-weight: 800;
+            padding: 2px 8px; border-radius: 10px;
+            letter-spacing: .3px;
+        }
+        .scroll-card.today .day-badge { background: #FFD43B; color: #2B1E12; }
+        .scroll-card.done .day-badge { background: #5C8E3F; }
+        .scroll-thumb .play-overlay {
+            position: absolute; inset: 0;
+            display: flex; align-items: center; justify-content: center;
+            pointer-events: none;
+        }
+        .scroll-thumb .play-icon {
+            width: 38px; height: 38px;
+            border-radius: 50%;
+            background: rgba(255,255,255,.9);
+            display: flex; align-items: center; justify-content: center;
+            font-size: .9rem; color: #2C5985;
+            box-shadow: 0 3px 8px rgba(0,0,0,.25);
+            padding-left: 3px;
+        }
+        .scroll-thumb .done-check {
+            position: absolute; top: 7px; right: 7px;
+            width: 24px; height: 24px;
+            border-radius: 50%;
+            background: rgba(92,142,63,.95); color: #fff;
+            display: none;
+            align-items: center; justify-content: center;
+            font-size: .8rem;
+        }
+        .scroll-card.done .done-check { display: flex; }
 
-        /* ── Today ── */
-        .today-box {
-            background: #fff; border-radius: 24px;
-            padding: 22px 20px 18px; margin-bottom: 14px;
-            box-shadow: 0 6px 24px rgba(200,169,126,.18);
-            border: 2px solid #E8D5B7;
+        .scroll-info { padding: 8px 10px 10px; }
+        .scroll-info-title {
+            font-size: .78rem; font-weight: 800;
+            color: #2B1E12; line-height: 1.3;
+            display: -webkit-box; -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical; overflow: hidden;
+            min-height: 2.4em;
         }
-        .today-tag { font-size: .72rem; font-weight: 800; color: #FF8C00; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 4px; }
-        .today-heading { font-size: 1.4rem; font-weight: 900; color: #3D2B1F; margin-bottom: 14px; }
-        .today-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+        .scroll-info-meta {
+            font-size: .65rem; color: #8B6F5E;
+            margin-top: 3px; font-weight: 600;
+        }
 
-        .big-card {
-            border-radius: 18px; padding: 0;
-            text-decoration: none; display: block; color: #fff;
-            transition: transform .2s, box-shadow .2s; overflow: hidden;
+        /* ── 진도 요약 카드 ── */
+        .stats-card {
+            background: #fff; border-radius: 18px;
+            padding: 14px 18px; margin-bottom: 18px;
+            box-shadow: 0 4px 12px rgba(170,140,110,.12);
+            display: flex; align-items: center; justify-content: space-between;
+            cursor: pointer; transition: transform .12s;
         }
-        .big-card:hover { transform: translateY(-4px); box-shadow: 0 14px 28px rgba(0,0,0,.18); }
-        .big-card .thumb-wrap {
-            width: 100%; aspect-ratio: 16/9; overflow: hidden; position: relative;
+        .stats-card:active { transform: scale(.99); }
+        .stats-left {
+            display: flex; align-items: center; gap: 12px; flex: 1;
         }
-        .big-card .thumb-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
-        .big-card .thumb-wrap .no-thumb {
-            width: 100%; height: 100%; display: flex; align-items: center;
-            justify-content: center; font-size: 2.8rem;
+        .stats-icon { font-size: 1.4rem; }
+        .stats-body { flex: 1; }
+        .stats-text {
+            font-size: .93rem; font-weight: 800;
+            color: #3D2B1F; margin-bottom: 5px;
         }
-        .big-card.book-card .no-thumb { background: linear-gradient(135deg, #FF8C00, #FFB347); }
-        .big-card.vid-card  .no-thumb { background: linear-gradient(135deg, #4ECDC4, #45B7D1); }
-        .big-card .card-info { padding: 13px 15px 15px; }
-        .big-card.book-card .card-info { background: linear-gradient(135deg, #FF8C00, #FFB347); }
-        .big-card.vid-card  .card-info { background: linear-gradient(135deg, #4ECDC4, #45B7D1); }
-        .big-card .type-label { font-size: .72rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; opacity: .85; margin-bottom: 4px; }
-        .big-card .card-name { font-size: .92rem; font-weight: 800; line-height: 1.3; }
-        .big-card .card-meta { font-size: .75rem; opacity: .85; margin-top: 3px; }
-        .big-card .watch-btn { display: inline-flex; align-items: center; gap: 5px; margin-top: 10px; background: rgba(255,255,255,.28); border-radius: 20px; padding: 5px 13px; font-size: .8rem; font-weight: 700; }
+        .stats-bar {
+            height: 7px; background: #F0E8DC;
+            border-radius: 4px; overflow: hidden;
+        }
+        .stats-fill {
+            height: 100%; border-radius: 4px;
+            background: linear-gradient(90deg, #C8A97E, #6B4423);
+            transition: width .5s ease;
+        }
+        .stats-right {
+            background: #FFF3DC; border-radius: 14px;
+            padding: 6px 12px; font-size: .78rem;
+            color: #B6883B; font-weight: 800;
+            flex-shrink: 0; margin-left: 10px;
+        }
 
-        /* ── Progress ── */
-        .progress-box {
-            background: #fff; border-radius: 20px;
-            padding: 16px 20px; margin-bottom: 14px;
-            box-shadow: 0 4px 16px rgba(200,169,126,.14);
-            border: 2px solid #E8D5B7;
-            display: flex; align-items: center; gap: 16px;
+        /* ── 진도 그리드 섹션 ── */
+        .grid-section {
+            background: #fff; border-radius: 18px;
+            padding: 18px 14px 22px; margin-bottom: 18px;
+            box-shadow: 0 4px 12px rgba(170,140,110,.12);
         }
-        .progress-stars { font-size: 1.6rem; flex-shrink: 0; }
-        .progress-info { flex: 1; }
-        .progress-text { font-size: .88rem; font-weight: 700; color: #3D2B1F; margin-bottom: 7px; }
-        .progress-bar { height: 10px; background: #F0E8DC; border-radius: 5px; overflow: hidden; }
-        .progress-fill { height: 100%; background: linear-gradient(90deg, #C8A97E, #FF8C00); border-radius: 5px; transition: width .6s ease; }
-        .progress-pct { font-size: 1.1rem; font-weight: 900; color: #FF8C00; flex-shrink: 0; }
+        .grid-head {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 6px 14px;
+        }
+        .grid-title { font-size: 1.05rem; font-weight: 900; color: #3D2B1F; }
+        .grid-more { font-size: .78rem; color: #8B6F5E; font-weight: 700; }
 
-        /* ── Week grid ── */
-        .week-section { margin-bottom: 18px; }
-        .week-label { font-size: .9rem; font-weight: 800; color: #8B6F5E; margin-bottom: 10px; padding-left: 2px; }
-        .week-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
+        .week-label {
+            font-size: .85rem; color: #6B4423; font-weight: 800;
+            margin: 10px 6px 10px;
+        }
+        .week-label + .week-grid { margin-bottom: 14px; }
+
+        /* 진도 뷰에서는 4열 큰 카드로 */
+        .view-grid .week-grid {
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+        .view-grid .tile-cover { height: 100px; font-size: 1.6rem; }
+        .view-grid .tile-vid-badge { font-size: .65rem; padding: 2px 6px; bottom: 5px; right: 5px; }
+        .view-grid .tile-body { padding: 8px 4px 10px; }
+        .view-grid .tile-label { font-size: .65rem; }
+        .view-grid .tile-num   { font-size: 1.4rem; margin-top: 2px; }
+        .view-grid .tile-check { font-size: 1.15rem; margin-top: 4px; }
+        .week-grid {
+            display: grid; grid-template-columns: repeat(7, 1fr);
+            gap: 6px;
+        }
 
         .day-tile {
-            background: #fff; border-radius: 14px;
-            padding: 0; text-align: center; cursor: pointer;
-            transition: transform .15s, box-shadow .15s;
-            box-shadow: 0 2px 8px rgba(200,169,126,.14);
-            border: 2px solid #EAD9C5; user-select: none;
-            overflow: hidden;
-        }
-        .day-tile:hover { transform: translateY(-2px); box-shadow: 0 7px 18px rgba(200,169,126,.28); }
-        .day-tile.today  { border-color: #C8A97E; background: #FFF5E8; }
-        .day-tile.done   { border-color: #81C784; background: #F1F8E9; }
-        .day-tile.future { opacity: .5; }
-        .day-tile.custom-set { box-shadow: 0 3px 10px rgba(255,140,0,.22); }
-
-        /* 책 표지 이미지 영역 (tile 상단 full-width) */
-        .tile-cover {
-            width: 100%; height: 80px;
-            overflow: hidden; background: #e8ddd2;
+            background: #FBF7EE; border-radius: 12px;
+            cursor: pointer; overflow: hidden;
+            border: 1.5px solid #EAE0CC;
+            transition: transform .12s;
             position: relative;
+        }
+        .day-tile:active { transform: scale(.95); }
+        .day-tile.today  { border-color: #2C5985; background: #E8F0F8; }
+        .day-tile.done   { border-color: #5C8E3F; background: #EFF7E7; }
+        .day-tile.future { opacity: .55; }
+
+        .tile-cover {
+            width: 100%; height: 52px;
+            overflow: hidden; background: #ECE2D2;
             display: flex; align-items: center; justify-content: center;
-            font-size: 1.8rem; color: #c9b8a8;
+            font-size: 1.25rem; color: #b09a82;
+            position: relative;
         }
         .tile-cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
         .tile-vid-badge {
-            position: absolute; bottom: 4px; right: 4px;
-            font-size: .65rem; background: rgba(0,0,0,.65); color: #fff;
+            position: absolute; bottom: 3px; right: 3px;
+            font-size: .55rem; background: rgba(0,0,0,.6); color: #fff;
             border-radius: 4px; padding: 1px 4px; line-height: 1.4;
         }
-        .tile-body { padding: 6px 6px 8px; }
-        .tile-label { font-size: .6rem; color: #C8A97E; font-weight: 600; }
-        .tile-num   { font-size: 1.25rem; font-weight: 900; color: #3D2B1F; margin: 2px 0; }
-        .day-tile.today .tile-num { color: #FF8C00; }
-        .tile-check { font-size: 1.1rem; }
-        .tile-btn {
-            margin-top: 6px; width: 100%; padding: 3px 0; border: none;
-            border-radius: 8px; font-size: .6rem; font-weight: 700;
-            cursor: pointer; background: #F8F1E8; color: #C8A97E; transition: background .2s;
+        .tile-body { padding: 5px 3px 7px; text-align: center; }
+        .tile-label { font-size: .54rem; color: #B89C7E; font-weight: 700; }
+        .tile-num   { font-size: .98rem; font-weight: 900; color: #3D2B1F; line-height: 1.2; }
+        .day-tile.today .tile-num { color: #2C5985; }
+        .day-tile.done .tile-num  { color: #4F8A3A; }
+        .tile-check { font-size: .85rem; line-height: 1; margin-top: 1px; }
+        .tile-btn, .tile-custom-dot { display: none; }
+
+        /* ── 가입 폼 ── */
+        .signup-card {
+            background: #fff; border-radius: 18px;
+            padding: 20px 20px 18px; margin-bottom: 16px;
+            box-shadow: 0 4px 12px rgba(170,140,110,.12);
+            text-align: center;
+        }
+        .signup-title { font-size: 1rem; font-weight: 900; color: #3D2B1F; margin-bottom: 5px; }
+        .signup-sub { font-size: .8rem; color: #7A6859; margin-bottom: 14px; font-weight: 600; line-height: 1.5; }
+        .signup-input {
+            width: 100%; border: 1.5px solid #E5DBC8; border-radius: 12px;
+            padding: 11px 14px; font-size: .88rem; outline: none;
+            margin-bottom: 8px; font-family: 'yg-jalnan', sans-serif;
+            background: #FBF7EE; box-sizing: border-box;
+        }
+        .signup-input:focus { border-color: #8A5A33; }
+        .signup-btn {
+            width: 100%; padding: 12px; border-radius: 14px; border: none;
+            background: linear-gradient(135deg, #6B4423, #8A5A33); color: #fff;
+            font-size: .92rem; font-weight: 800; cursor: pointer;
             font-family: 'yg-jalnan', sans-serif;
+            transition: transform .12s;
         }
-        .tile-btn:hover { background: #FFE8CC; color: #FF8C00; }
-        .day-tile.done .tile-btn { background: #C8E6C9; color: #2E7D32; }
-        .tile-custom-dot { display: none; width: 6px; height: 6px; background: #FF8C00; border-radius: 50%; margin: 2px auto 0; }
-        .day-tile.custom-set .tile-custom-dot { display: block; }
+        .signup-btn:active { transform: scale(.98); }
 
-        /* ── No-image book placeholder ── */
-        .book-no-img {
-            background: #f0ece7 !important;
-            flex-direction: column; gap: 5px;
+        /* ── 축하 박스 ── */
+        .congrats {
+            display: none;
+            background: linear-gradient(135deg, #6B4423, #C8A97E);
+            border-radius: 18px; padding: 22px;
+            text-align: center; color: #fff;
+            margin-bottom: 18px;
         }
-        .book-no-img .no-img-icon { font-size: 2.2rem; }
-        .book-no-img .no-img-txt  { font-size: .68rem; font-weight: 700; color: #bbb; letter-spacing: .3px; }
-        .mc-no-thumb.book-mc-no-img {
-            background: #f0ece7 !important;
-            flex-direction: column; gap: 5px;
-        }
-        .book-mc-no-img .no-img-icon { font-size: 2rem; }
-        .book-mc-no-img .no-img-txt  { font-size: .65rem; font-weight: 700; color: #bbb; }
+        .congrats.show { display: block; }
+        .congrats .c-emoji { font-size: 2.4rem; }
+        .congrats .c-title { font-size: 1.3rem; font-weight: 900; margin: 6px 0 4px; }
+        .congrats .c-sub   { font-size: .88rem; opacity: .9; }
 
-        /* ── View Modal ── */
+        /* ── 푸터 ── */
+        footer {
+            text-align: center; padding: 10px 0 0;
+        }
+        .reset-btn {
+            background: none; border: 1.5px solid #D5C7AC;
+            border-radius: 18px; padding: 7px 16px;
+            font-size: .76rem; color: #8B6F5E;
+            font-family: 'yg-jalnan', sans-serif; cursor: pointer;
+            transition: border-color .15s, color .15s;
+        }
+        .reset-btn:hover, .reset-btn:active { border-color: #6B4423; color: #6B4423; }
+
+        /* ── 하단 탭바 ── */
+        .tabbar {
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            background: #fff;
+            border-top: 1px solid #EFE6D5;
+            padding: 7px 0 calc(7px + env(safe-area-inset-bottom));
+            display: flex; justify-content: space-around;
+            box-shadow: 0 -4px 18px rgba(0,0,0,.06);
+            z-index: 100;
+            max-width: 480px; margin: 0 auto;
+        }
+        .tab-btn {
+            background: none; border: none;
+            display: flex; flex-direction: column;
+            align-items: center; gap: 3px;
+            font-family: 'yg-jalnan', sans-serif;
+            color: #B5A695; font-size: .65rem;
+            cursor: pointer; padding: 5px 6px;
+            flex: 1; font-weight: 700;
+            transition: color .12s;
+        }
+        .tab-btn.active { color: #6B4423; }
+        .tab-btn:active { transform: scale(.94); }
+        .tab-icon { font-size: 1.45rem; line-height: 1; }
+
+        /* ── FAB ── */
+        .fab {
+            position: fixed;
+            right: calc(50% - 220px); /* 480px의 중앙 정렬 안에서 우측 */
+            bottom: 82px;
+            width: 54px; height: 54px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6B4423, #8A5A33);
+            color: #fff; border: none;
+            font-size: 1.8rem; font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 6px 18px rgba(107,68,35,.4);
+            z-index: 99;
+            transition: transform .12s;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .fab:active { transform: scale(.92); }
+        @media (max-width: 520px) {
+            .fab { right: 18px; }
+        }
+
+        /* ────────────────────────────────────────────── */
+        /* ── 모달/오버레이 (기존 유지, 톤만 정리) ── */
+        /* ────────────────────────────────────────────── */
+
         .overlay {
             display: none; position: fixed; inset: 0;
             background: rgba(0,0,0,.48); z-index: 200;
@@ -211,53 +426,58 @@
         .overlay.open { display: flex; }
         .modal {
             background: #fff; border-radius: 24px;
-            padding: 28px 24px 22px; max-width: 440px; width: 92%;
-            box-shadow: 0 24px 64px rgba(0,0,0,.22); animation: popIn .2s ease;
+            padding: 28px 22px 22px; max-width: 420px; width: 92%;
+            box-shadow: 0 24px 64px rgba(0,0,0,.22);
+            animation: popIn .2s ease;
         }
         @keyframes popIn { from { transform: scale(.92); opacity: 0; } to { transform: scale(1); opacity: 1; } }
         .modal-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-        .modal-title { font-size: 1.25rem; font-weight: 900; color: #333; }
-        .modal-close { background: #F0F0F0; border: none; border-radius: 50%; width: 34px; height: 34px; font-size: 1.1rem; cursor: pointer; }
+        .modal-title { font-size: 1.25rem; font-weight: 900; color: #3D2B1F; }
+        .modal-close {
+            background: #F4EFE2; border: none; border-radius: 50%;
+            width: 34px; height: 34px; font-size: 1.1rem; cursor: pointer;
+            color: #6B4423;
+        }
         .modal-cards { display: flex; flex-direction: column; gap: 11px; }
         .modal-card {
             border-radius: 16px; text-decoration: none;
-            overflow: hidden; color: #fff; transition: transform .15s;
+            overflow: hidden; color: #fff;
+            transition: transform .15s; display: block;
         }
-        .modal-card:hover { transform: scale(1.02); }
+        .modal-card:active { transform: scale(.98); }
         .modal-card .mc-thumb {
             width: 100%; aspect-ratio: 16/9; overflow: hidden; position: relative;
-            background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%);
-            background-size: 200% 100%;
-            animation: shimmer 1.4s infinite;
+            background: linear-gradient(90deg, #f5ede3 25%, #ede0d0 50%, #f5ede3 75%);
+            background-size: 200% 100%; animation: shimmer 1.4s infinite;
         }
         .modal-card .mc-thumb.img-ready { background: none; animation: none; }
         @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
         .modal-card .mc-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; opacity: 0; transition: opacity .25s; }
         .modal-card .mc-thumb.img-ready img { opacity: 1; }
         .modal-card .mc-thumb .mc-no-thumb { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; }
-        .modal-card.book-card .mc-no-thumb { background: linear-gradient(135deg, #FF8C00, #FFB347); }
-        .modal-card.vid-card  .mc-no-thumb { background: linear-gradient(135deg, #4ECDC4, #45B7D1); }
+        .modal-card.book-card .mc-no-thumb { background: linear-gradient(135deg, #D24A38, #E76A50); }
+        .modal-card.vid-card  .mc-no-thumb { background: linear-gradient(135deg, #B97640, #C88A55); }
         .mc-body { padding: 14px 16px; display: flex; align-items: center; gap: 12px; }
-        .modal-card.book-card .mc-body { background: linear-gradient(135deg, #FF8C00, #FFB347); }
-        .modal-card.vid-card  .mc-body { background: linear-gradient(135deg, #4ECDC4, #45B7D1); }
+        .modal-card.book-card .mc-body { background: linear-gradient(135deg, #D24A38, #E76A50); }
+        .modal-card.vid-card  .mc-body { background: linear-gradient(135deg, #B97640, #C88A55); }
         .mc-emoji { font-size: 1.8rem; flex-shrink: 0; }
-        .mc-info .mc-type  { font-size: .7rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; opacity: .85; margin-bottom: 3px; }
+        .mc-info .mc-type  { font-size: .7rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; opacity: .9; margin-bottom: 3px; }
         .mc-info .mc-title { font-size: .95rem; font-weight: 800; }
-        .mc-info .mc-sub   { font-size: .75rem; opacity: .85; margin-top: 2px; }
+        .mc-info .mc-sub   { font-size: .75rem; opacity: .9; margin-top: 2px; }
+        .book-mc-no-img { flex-direction: column; gap: 5px; }
+        .book-mc-no-img .no-img-icon { font-size: 2rem; }
+        .book-mc-no-img .no-img-txt { font-size: .65rem; font-weight: 700; color: rgba(255,255,255,.85); }
         .modal-done-btn {
             margin-top: 14px; width: 100%; padding: 13px; border-radius: 14px;
             border: none; font-size: .95rem; font-weight: 800; cursor: pointer;
-            background: linear-gradient(135deg, #81C784, #4CAF50); color: #fff; transition: transform .15s;
+            background: linear-gradient(135deg, #5C8E3F, #7BB05A); color: #fff;
+            transition: transform .15s;
+            font-family: 'yg-jalnan', sans-serif;
         }
-        .modal-done-btn:hover { transform: scale(1.02); }
-        .modal-done-btn.already { background: linear-gradient(135deg, #C8E6C9, #A5D6A7); color: #2E7D32; }
+        .modal-done-btn:active { transform: scale(.98); }
+        .modal-done-btn.already { background: linear-gradient(135deg, #B8D9A6, #98C783); color: #2E5A1F; }
 
-        /* ── Shimmer (modal thumb loading) ── */
-        .modal-card .mc-thumb {
-            background: linear-gradient(90deg, #f5ede3 25%, #ede0d0 50%, #f5ede3 75%);
-        }
-
-        /* ── Edit Overlay ── */
+        /* ── 영상 직접 고르기 패널 ── */
         .edit-overlay {
             display: none; position: fixed; inset: 0;
             background: rgba(0,0,0,.55); z-index: 300;
@@ -266,371 +486,172 @@
         }
         .edit-overlay.open { display: flex; }
         .edit-panel {
-            background: #fff; border-radius: 26px; width: 100%; max-width: 580px;
+            background: #fff; border-radius: 22px; width: 100%; max-width: 460px;
             box-shadow: 0 24px 64px rgba(0,0,0,.25); animation: popIn .2s ease;
             overflow: hidden; margin: auto;
         }
-
-        /* Edit header */
-        .edit-header { background: linear-gradient(135deg, #FF8C00, #FFB347); padding: 20px 22px 16px; color: #fff; }
+        .edit-header { background: linear-gradient(135deg, #6B4423, #8A5A33); padding: 18px 20px 14px; color: #fff; }
         .edit-header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-        .edit-header-title { font-size: 1.05rem; font-weight: 900; }
-        .edit-close-btn { background: rgba(255,255,255,.25); border: none; border-radius: 50%; width: 34px; height: 34px; font-size: 1rem; color: #fff; cursor: pointer; }
+        .edit-header-title { font-size: 1rem; font-weight: 900; }
+        .edit-close-btn { background: rgba(255,255,255,.25); border: none; border-radius: 50%; width: 32px; height: 32px; font-size: 1rem; color: #fff; cursor: pointer; }
         .day-nav { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
         .nav-btn {
-            background: rgba(255,255,255,.2); border: none; border-radius: 12px;
-            padding: 7px 14px; color: #fff; font-size: .82rem; font-weight: 800;
-            cursor: pointer; transition: background .2s; flex-shrink: 0;
+            background: rgba(255,255,255,.22); border: none; border-radius: 12px;
+            padding: 6px 12px; color: #fff; font-size: .78rem; font-weight: 800;
+            cursor: pointer; transition: background .15s; flex-shrink: 0;
+            font-family: 'yg-jalnan', sans-serif;
         }
-        .nav-btn:hover { background: rgba(255,255,255,.35); }
-        .nav-btn:disabled { opacity: .3; cursor: default; }
-        .day-dots { display: flex; gap: 4px; flex-wrap: wrap; justify-content: center; flex: 1; }
+        .nav-btn:active { background: rgba(255,255,255,.4); }
+        .nav-btn:disabled { opacity: .35; cursor: default; }
+        .day-dots { display: flex; gap: 3px; flex-wrap: wrap; justify-content: center; flex: 1; }
         .day-dot {
-            width: 24px; height: 24px; border-radius: 50%;
+            width: 22px; height: 22px; border-radius: 50%;
             background: rgba(255,255,255,.2); border: none; color: #fff;
-            font-size: .65rem; font-weight: 800; cursor: pointer; transition: background .15s;
+            font-size: .62rem; font-weight: 800; cursor: pointer;
             display: flex; align-items: center; justify-content: center;
+            font-family: 'yg-jalnan', sans-serif;
         }
-        .day-dot:hover  { background: rgba(255,255,255,.38); }
-        .day-dot.active { background: #fff; color: #FF8C00; }
+        .day-dot:active { background: rgba(255,255,255,.45); }
+        .day-dot.active { background: #fff; color: #6B4423; }
         .day-dot.has-custom { outline: 2px solid rgba(255,255,255,.7); }
 
-        /* Edit body */
-        .edit-body { padding: 18px 20px; display: flex; flex-direction: column; gap: 14px; }
-
-        .edit-section { border-radius: 18px; padding: 16px; }
-        .edit-section.book-sec { background: #FFF5E8; border: 1.5px solid #FFD9A8; }
-        .edit-section.vid-sec  { background: #E0F7FA; border: 1.5px solid #B2EBF2; }
-
-        .sec-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-        .sec-label { font-size: .78rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
-        .book-sec .sec-label { color: #E64A19; }
-        .vid-sec  .sec-label { color: #00695C; }
+        .edit-body { padding: 16px 18px; display: flex; flex-direction: column; gap: 12px; }
+        .edit-section { border-radius: 16px; padding: 14px; }
+        .edit-section.book-sec { background: #FCEDE6; border: 1.5px solid #F4C9B5; }
+        .edit-section.vid-sec  { background: #FAF1E2; border: 1.5px solid #E5C9A1; }
+        .sec-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .sec-label { font-size: .76rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
+        .book-sec .sec-label { color: #D24A38; }
+        .vid-sec  .sec-label { color: #B97640; }
         .yt-search-btn {
-            display: inline-flex; align-items: center; gap: 5px;
-            background: #FF0000; color: #fff; border: none; border-radius: 16px;
-            padding: 5px 12px; font-size: .72rem; font-weight: 800; cursor: pointer;
-            transition: opacity .2s; text-decoration: none;
+            display: inline-flex; align-items: center; gap: 4px;
+            background: #FF0000; color: #fff; border: none; border-radius: 14px;
+            padding: 5px 11px; font-size: .68rem; font-weight: 800;
+            cursor: pointer; text-decoration: none;
         }
-        .yt-search-btn:hover { opacity: .85; }
-
-        /* thumbnail preview */
         .thumb-preview-wrap {
-            margin-bottom: 10px; border-radius: 12px; overflow: hidden;
+            margin-bottom: 10px; border-radius: 10px; overflow: hidden;
             background: #f5f5f5; position: relative; display: none;
         }
         .thumb-preview-wrap.show { display: block; }
-        .thumb-preview-wrap img { width: 100%; display: block; border-radius: 12px; }
+        .thumb-preview-wrap img { width: 100%; display: block; }
         .thumb-preview-wrap .thumb-label {
             position: absolute; bottom: 0; left: 0; right: 0;
             background: rgba(0,0,0,.55); color: #fff;
-            font-size: .72rem; font-weight: 700; padding: 5px 10px;
-            border-radius: 0 0 12px 12px;
+            font-size: .68rem; font-weight: 700; padding: 4px 10px;
         }
-        .thumb-preview-wrap .thumb-error {
-            padding: 14px; text-align: center; font-size: .8rem; color: #aaa;
-        }
-
-        .field-row { display: flex; gap: 10px; margin-bottom: 10px; }
+        .field-row { display: flex; gap: 8px; margin-bottom: 9px; }
         .field-row:last-child { margin-bottom: 0; }
         .field-group { display: flex; flex-direction: column; gap: 4px; flex: 1; }
-        .field-group.emoji-group { flex: 0 0 68px; }
-        .field-label { font-size: .72rem; font-weight: 700; color: #555; }
+        .field-group.emoji-group { flex: 0 0 64px; }
+        .field-label { font-size: .68rem; font-weight: 700; color: #6B4423; }
         .field-input {
-            border: 1.5px solid #E0E0E0; border-radius: 10px;
-            padding: 9px 12px; font-size: .85rem; color: #333;
-            outline: none; transition: border-color .2s; width: 100%;
+            border: 1.5px solid #E0D5C2; border-radius: 10px;
+            padding: 9px 11px; font-size: .82rem; color: #2B1E12;
+            outline: none; width: 100%; box-sizing: border-box;
+            font-family: 'yg-jalnan', sans-serif;
+            background: #fff;
         }
-        .field-input:focus { border-color: #FF8C00; }
-        .url-row { display: flex; gap: 8px; align-items: flex-start; }
+        .field-input:focus { border-color: #6B4423; }
+        .url-row { display: flex; gap: 6px; align-items: flex-start; }
         .url-row .field-group { flex: 1; }
         .paste-btn {
-            margin-top: 0; padding: 9px 12px; border-radius: 10px;
-            border: 1.5px solid #ddd; background: #fff;
-            font-size: .8rem; font-weight: 700; cursor: pointer;
-            color: #FF8C00; transition: border-color .2s; white-space: nowrap; flex-shrink: 0;
+            padding: 9px 10px; border-radius: 10px;
+            border: 1.5px solid #E0D5C2; background: #fff;
+            font-size: .75rem; font-weight: 700; cursor: pointer;
+            color: #6B4423; white-space: nowrap; flex-shrink: 0;
             font-family: 'yg-jalnan', sans-serif;
         }
-        .paste-btn:hover { border-color: #FF8C00; }
-        .url-hint { font-size: .67rem; color: #bbb; margin-top: 3px; }
-
-        /* Edit footer */
-        .edit-footer { padding: 0 20px 20px; display: flex; gap: 10px; }
+        .url-hint { font-size: .62rem; color: #B5A695; margin-top: 3px; }
+        .edit-footer { padding: 0 18px 18px; display: flex; gap: 8px; }
         .save-btn {
-            flex: 1; padding: 13px; border-radius: 14px; border: none;
-            font-size: .95rem; font-weight: 800; cursor: pointer;
-            background: linear-gradient(135deg, #FF8C00, #FFB347); color: #fff; transition: transform .15s;
+            flex: 1; padding: 12px; border-radius: 12px; border: none;
+            font-size: .9rem; font-weight: 800; cursor: pointer;
+            background: linear-gradient(135deg, #6B4423, #8A5A33); color: #fff;
             font-family: 'yg-jalnan', sans-serif;
         }
-        .save-btn:hover { transform: scale(1.02); }
+        .save-btn:active { transform: scale(.98); }
         .reset-day-btn {
-            padding: 13px 16px; border-radius: 14px; border: 1.5px solid #ddd;
-            font-size: .82rem; font-weight: 700; cursor: pointer;
-            background: #fff; color: #aaa; transition: border-color .2s, color .2s;
+            padding: 12px 14px; border-radius: 12px; border: 1.5px solid #D5C7AC;
+            font-size: .76rem; font-weight: 700; cursor: pointer;
+            background: #fff; color: #8B6F5E;
+            font-family: 'yg-jalnan', sans-serif;
         }
-        .reset-day-btn:hover { border-color: #FF8C00; color: #FF8C00; }
+        .reset-day-btn:active { border-color: #6B4423; color: #6B4423; }
 
-        /* Toast */
+        /* ── 토스트 ── */
         .toast {
-            position: fixed; bottom: 30px; left: 50%;
+            position: fixed; bottom: 110px; left: 50%;
             transform: translateX(-50%) translateY(80px);
-            background: #222; color: #fff; border-radius: 22px;
-            padding: 10px 22px; font-size: .88rem; font-weight: 700;
-            z-index: 999; transition: transform .3s ease; white-space: nowrap;
+            background: #2B1E12; color: #fff; border-radius: 22px;
+            padding: 10px 22px; font-size: .85rem; font-weight: 700;
+            z-index: 999; transition: transform .3s ease;
+            white-space: nowrap; max-width: 90vw;
         }
         .toast.show { transform: translateX(-50%) translateY(0); }
 
-        /* Congrats */
-        .congrats { display: none; background: linear-gradient(135deg, #C8A97E, #FF8C00); border-radius: 22px; padding: 30px; text-align: center; color: #fff; margin-bottom: 16px; }
-        .congrats.show { display: block; }
-        .congrats .c-emoji { font-size: 3rem; }
-        .congrats .c-title { font-size: 1.6rem; font-weight: 900; margin: 8px 0 4px; }
-        .congrats .c-sub   { font-size: 1rem; opacity: .9; }
-
-        /* Signup */
-        .signup-box {
-            background: #fff; border-radius: 24px;
-            padding: 28px 24px; margin-bottom: 14px;
-            box-shadow: 0 6px 24px rgba(200,169,126,.18);
-            border: 2px solid #E8D5B7; text-align: center;
-        }
-        .signup-title { font-size: 1.2rem; font-weight: 900; color: #3D2B1F; margin-bottom: 6px; }
-        .signup-sub { font-size: .85rem; color: #8B6F5E; margin-bottom: 18px; line-height: 1.6; }
-        .signup-input {
-            display: block; width: 100%; border: 1.5px solid #E0E0E0; border-radius: 12px;
-            padding: 11px 14px; font-size: .9rem; outline: none; margin-bottom: 10px;
-            transition: border-color .2s; font-family: 'yg-jalnan', sans-serif;
-            box-sizing: border-box;
-        }
-        .signup-input:focus { border-color: #FF8C00; }
-        .signup-btn {
-            width: 100%; padding: 13px; border-radius: 14px; border: none;
-            background: linear-gradient(135deg, #FF8C00, #FFB347); color: #fff;
-            font-size: .95rem; font-weight: 800; cursor: pointer;
-            transition: transform .15s; font-family: 'yg-jalnan', sans-serif;
-        }
-        .signup-btn:hover { transform: scale(1.02); }
-
-        /* Register */
-        .register-box {
-            background: linear-gradient(135deg, #fff8f0, #fff);
-            border-radius: 24px; padding: 14px 24px 12px;
-            margin-bottom: 14px;
-            box-shadow: 0 6px 24px rgba(200,169,126,.22);
-            border: 2px solid #FFD9A8; text-align: center;
-        }
-        .register-emoji { font-size: 1.4rem; margin-bottom: 2px; }
-        .register-title { font-size: 1rem; font-weight: 900; color: #3D2B1F; margin-bottom: 2px; }
-        .register-sub { font-size: .8rem; color: #8B6F5E; margin-bottom: 8px; line-height: 1.4; }
-        .register-input {
-            display: block; width: 100%; border: 2px solid #E8D5B7; border-radius: 14px;
-            padding: 7px 16px; font-size: .9rem; outline: none; margin-bottom: 6px;
-            transition: border-color .2s; font-family: 'yg-jalnan', sans-serif;
-            box-sizing: border-box; text-align: center;
-        }
-        .register-input:focus { border-color: #FF8C00; }
-        .register-btn {
-            width: 100%; padding: 8px; border-radius: 14px; border: none;
-            background: linear-gradient(135deg, #FF8C00, #FFB347); color: #fff;
-            font-size: .9rem; font-weight: 800; cursor: pointer;
-            transition: transform .15s; font-family: 'yg-jalnan', sans-serif;
-        }
-        .register-btn:hover { transform: scale(1.02); }
-        .register-chips { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-bottom: 6px; }
-        .register-chip {
-            padding: 7px 16px; border-radius: 20px; border: 2px solid #E8D5B7;
-            background: #FFF5E8; color: #FF8C00; font-size: .85rem; font-weight: 700;
-            cursor: pointer; transition: all .15s; font-family: 'yg-jalnan', sans-serif;
-        }
-        .register-chip:hover { background: #FF8C00; color: #fff; border-color: #FF8C00; }
-
-        /* Footer */
-        footer { text-align: center; padding: 24px 0 18px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
-        .reset-btn { background: none; border: 1.5px solid #E0D5C8; border-radius: 20px; padding: 7px 18px; font-size: .8rem; color: #C8A97E; cursor: pointer; transition: border-color .2s, color .2s; font-family: 'yg-jalnan', sans-serif; }
-        .reset-btn:hover { border-color: #FF8C00; color: #FF8C00; }
-
-        /* ── Name Bar (상단 고정) ── */
-        .name-bar {
-            background: #fff;
-            border-bottom: 2px solid #E8D5B7;
-            padding: 10px 20px;
-            display: flex;
-            justify-content: center;
-        }
-        .name-bar-inner {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            max-width: 860px;
-            width: 100%;
-        }
-        .name-bar-label {
-            font-size: .85rem;
-            font-weight: 700;
-            color: #8B6F5E;
-            white-space: nowrap;
-        }
-        .name-bar-form {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex: 1;
-        }
-        .name-bar-input {
-            flex: 1;
-            max-width: 200px;
-            border: 1.5px solid #E0D5C8;
-            border-radius: 10px;
-            padding: 8px 12px;
-            font-size: .9rem;
-            font-family: 'yg-jalnan', sans-serif;
-            outline: none;
-        }
-        .name-bar-input:focus { border-color: #FF8C00; }
-        .name-bar-btn {
-            padding: 8px 16px;
-            border-radius: 10px;
-            border: none;
-            background: linear-gradient(135deg, #FF8C00, #FFB347);
-            color: #fff;
-            font-size: .85rem;
-            font-weight: 700;
-            cursor: pointer;
-            font-family: 'yg-jalnan', sans-serif;
-            white-space: nowrap;
-        }
-        .name-bar-done {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            flex: 1;
-        }
-        .name-bar-name {
-            font-size: .92rem;
-            font-weight: 700;
-            color: #FF8C00;
-        }
-        .name-bar-change {
-            background: none;
-            border: 1.5px solid #E8D5B7;
-            border-radius: 8px;
-            padding: 5px 12px;
-            font-size: .78rem;
-            color: #8B6F5E;
-            cursor: pointer;
-            font-family: 'yg-jalnan', sans-serif;
-        }
-        .name-bar-change:hover { border-color: #FF8C00; color: #FF8C00; }
-
-        @media (max-width: 560px) {
-            .hero-title { font-size: 1.9rem; }
-            .hero { padding: 40px 20px 52px; }
-            .quick-menu { gap: 8px; }
-            .qm-btn { padding: 14px 6px 11px; }
-            .qm-icon { font-size: 1.5rem; }
-            .today-cards { grid-template-columns: 1fr; }
-            .week-grid { gap: 5px; }
-            .day-tile { padding: 0; }
-            .tile-cover { height: 56px; }
-            .tile-body { padding: 4px 3px 6px; }
-            .tile-num { font-size: 1rem; }
-            .tile-btn { font-size: .54rem; }
-            .field-row { flex-direction: column; }
-            .field-group.emoji-group { flex: 1; }
-        }
         /* ── 이름 등록 모달 ── */
         .name-overlay {
             display: none; position: fixed; inset: 0;
-            background: rgba(0,0,0,.52); z-index: 300;
+            background: rgba(0,0,0,.52); z-index: 400;
             align-items: center; justify-content: center;
+            padding: 20px;
         }
         .name-overlay.open { display: flex; }
         .name-modal {
-            background: #fff; border-radius: 28px;
-            padding: 36px 28px 28px; max-width: 360px; width: 92%;
-            box-shadow: 0 24px 64px rgba(0,0,0,.22); text-align: center;
-            animation: popIn .2s ease;
+            background: #fff; border-radius: 24px;
+            padding: 32px 24px 24px; max-width: 340px; width: 100%;
+            box-shadow: 0 24px 64px rgba(0,0,0,.22);
+            text-align: center; animation: popIn .2s ease;
         }
-        .name-modal-emoji { font-size: 3rem; margin-bottom: 12px; }
-        .name-modal-title { font-size: 1.4rem; font-weight: 900; color: #3D2B1F; margin-bottom: 6px; font-family: 'yg-jalnan', sans-serif; }
-        .name-modal-sub { font-size: .88rem; color: #aaa; margin-bottom: 18px; line-height: 1.6; }
-        .existing-users { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 14px; }
+        .name-modal-emoji { font-size: 2.6rem; margin-bottom: 10px; }
+        .name-modal-title { font-size: 1.3rem; font-weight: 900; color: #3D2B1F; margin-bottom: 6px; }
+        .name-modal-sub { font-size: .82rem; color: #8B6F5E; margin-bottom: 16px; line-height: 1.6; font-weight: 600; }
+        .existing-users { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-bottom: 12px; }
         .user-chip {
-            padding: 8px 18px; border-radius: 20px; border: 2px solid #E8D5B7;
-            background: #FFF5E8; color: #FF8C00; font-size: .88rem; font-weight: 700;
-            cursor: pointer; transition: all .15s; font-family: 'yg-jalnan', sans-serif;
+            padding: 7px 16px; border-radius: 18px; border: 1.5px solid #E5DBC8;
+            background: #FBF7EE; color: #6B4423; font-size: .85rem; font-weight: 700;
+            cursor: pointer; transition: all .12s;
+            font-family: 'yg-jalnan', sans-serif;
         }
-        .user-chip:hover { background: #FF8C00; color: #fff; border-color: #FF8C00; }
+        .user-chip:active { background: #6B4423; color: #fff; border-color: #6B4423; }
         .name-input {
-            width: 100%; border: 2px solid #E8D5B7; border-radius: 12px;
-            padding: 13px 16px; font-size: 1rem; outline: none; text-align: center;
-            margin-bottom: 12px; font-family: 'yg-jalnan', sans-serif; transition: border-color .2s;
+            width: 100%; border: 1.5px solid #E5DBC8; border-radius: 12px;
+            padding: 12px 14px; font-size: .95rem; outline: none;
+            text-align: center; margin-bottom: 10px;
+            font-family: 'yg-jalnan', sans-serif;
+            background: #FBF7EE; box-sizing: border-box;
         }
-        .name-input:focus { border-color: #FF8C00; }
+        .name-input:focus { border-color: #6B4423; background: #fff; }
         .name-start-btn {
-            width: 100%; padding: 14px; border-radius: 14px; border: none;
-            background: linear-gradient(135deg, #FF8C00, #FFB347);
-            color: #fff; font-size: 1rem; font-weight: 800; cursor: pointer;
+            width: 100%; padding: 13px; border-radius: 14px; border: none;
+            background: linear-gradient(135deg, #6B4423, #8A5A33);
+            color: #fff; font-size: .95rem; font-weight: 800;
+            cursor: pointer; font-family: 'yg-jalnan', sans-serif;
+        }
+        .name-start-btn:active { transform: scale(.98); }
+        .name-cancel-btn {
+            margin-top: 8px;
+            background: none; border: none;
+            color: #8B6F5E; font-size: .8rem; cursor: pointer;
             font-family: 'yg-jalnan', sans-serif;
         }
-        .name-start-btn:hover { opacity: .88; }
-        /* hero 이름 영역 */
-        .hero-name-area { margin-top: 18px; position: relative; z-index: 1; }
-        .hero-name-form { display: flex; flex-direction: column; align-items: center; gap: 10px; }
-        .hero-name-row  { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
-        .hero-name-input {
-            padding: 11px 16px; border-radius: 22px;
-            border: 2px solid rgba(255,255,255,.65);
-            background: rgba(255,255,255,.22); color: #fff;
-            font-size: .95rem; outline: none; width: 170px; text-align: center;
-            font-family: 'yg-jalnan', sans-serif;
+
+        /* ── 모바일 미세조정 ── */
+        @media (max-width: 380px) {
+            .greet-title { font-size: 1.3rem; }
+            .cat-value { font-size: .82rem; }
+            .cat-card.progress .cat-value { font-size: 1.1rem; }
+            .challenge-title { font-size: .95rem; }
+            .tile-cover { height: 44px; }
+            .tile-num { font-size: .9rem; }
         }
-        .hero-name-input::placeholder { color: rgba(255,255,255,.75); }
-        .hero-name-input:focus { border-color: #fff; background: rgba(255,255,255,.32); }
-        .hero-name-btn {
-            padding: 11px 22px; border-radius: 22px; border: none;
-            background: #fff; color: #FF8C00;
-            font-size: .95rem; font-weight: 800; cursor: pointer;
-            font-family: 'yg-jalnan', sans-serif; white-space: nowrap;
-        }
-        .hero-name-chips { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
-        .hero-chip {
-            padding: 5px 14px; border-radius: 16px;
-            border: 1.5px solid rgba(255,255,255,.5);
-            background: rgba(255,255,255,.15); color: #fff;
-            font-size: .8rem; font-weight: 700; cursor: pointer;
-            font-family: 'yg-jalnan', sans-serif;
-        }
-        .hero-chip:hover { background: rgba(255,255,255,.32); }
-        .hero-name-done {
-            display: none; align-items: center; justify-content: center; gap: 10px;
-            color: rgba(255,255,255,.95); font-size: .92rem;
-        }
-        .hero-switch-btn {
-            background: rgba(255,255,255,.22); border: none; border-radius: 10px;
-            padding: 4px 12px; color: rgba(255,255,255,.9); font-size: .78rem;
-            cursor: pointer; font-weight: 700;
-        }
-        .hero-switch-btn:hover { background: rgba(255,255,255,.38); }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 </head>
 <body>
 
-<!-- ── Hero Banner ── -->
-<div class="hero">
-    <div class="hero-blob1"></div>
-    <div class="hero-blob2"></div>
-    <div class="hero-blob3"></div>
-    <div class="hero-title-wrap">
-        <img class="hero-char-img" src="character.png" alt="엄마와 아이들 캐릭터">
-        <div class="hero-title">소시네엄마표영어</div>
-    </div>
-    <div class="hero-sub">매일 영어 그림책 + 영상으로<br>친해지는 2주 플랜 🎯</div>
-
-    <div class="hero-wave"></div>
-</div>
-
-<!-- 이름 등록 모달 -->
+<!-- ── 이름 등록 모달 ── -->
 <div class="name-overlay" id="nameOverlay">
     <div class="name-modal">
         <div class="name-modal-emoji">👋</div>
@@ -640,93 +661,136 @@
         <input class="name-input" id="nameInput" placeholder="이름 입력" maxlength="10"
             onkeydown="if(event.key==='Enter') registerName()">
         <button class="name-start-btn" onclick="registerName()">시작하기 🚀</button>
+        <button class="name-cancel-btn" id="nameCancelBtn" onclick="closeNameModal()" style="display:none">닫기</button>
     </div>
 </div>
 
-<!-- 이름 카드: 항상 표시, 상태에 따라 내용 변경 -->
-<div class="register-box" id="registerSection" style="max-width:860px;margin:16px auto 0;padding-left:16px;padding-right:16px;box-sizing:border-box;">
-    <!-- 미등록 상태 -->
-    <div id="registerForm">
-        <div class="register-emoji">👋</div>
-        <div class="register-title">안녕하세요! 이름을 알려주세요</div>
-        <div class="register-sub">이름을 등록하면 2주 동안<br>내 학습 기록이 저장돼요</div>
-        <div class="register-chips" id="registerChips"></div>
-        <input class="register-input" id="registerNameInput" type="text" placeholder="이름 입력 (예: 소시엄마)"
-            maxlength="10" onkeydown="if(event.key==='Enter') doRegister()">
-        <button class="register-btn" onclick="doRegister()">시작하기 🚀</button>
-    </div>
-    <!-- 등록 완료 상태 -->
-    <div id="registerDone" style="display:none">
-        <div class="register-emoji">🌟</div>
-        <div class="register-title" id="registerDoneName"></div>
-        <div class="register-sub">오늘도 영어 함께 해봐요!</div>
-        <button class="register-btn" style="background:linear-gradient(135deg,#C8A97E,#a07850);margin-top:4px" onclick="switchUser()">이름 변경</button>
-    </div>
-</div>
+<!-- ── 메인 앱 ── -->
+<div class="app">
 
-<!-- ── Quick Menu ── -->
-<div class="quick-menu-wrap">
-    <div class="quick-menu">
-        <button class="qm-btn" onclick="openModal(todayDayNum())">
-            <span class="qm-icon">📖</span>
-            <span class="qm-label">오늘 학습</span>
-        </button>
-        <button class="qm-btn" onclick="document.getElementById('progressSection').scrollIntoView({behavior:'smooth'})">
-            <span class="qm-icon">📊</span>
-            <span class="qm-label">진도 확인</span>
-        </button>
-    </div>
-</div>
+  <!-- 홈 뷰 -->
+  <div class="view view-home" id="viewHome">
 
-<div class="container">
+    <!-- 통합 상단 카드: 인사 + 14일 챌린지 + Day -->
+    <div class="hero-card" onclick="openModal(todayDayNum())">
+        <div class="hero-badge">🔥 소시네 엄마표영어 14일 챌린지</div>
+        <div class="hero-sub">아이와 함께하는 14일 영어 한 페이지 🌱</div>
 
-    <div id="mainContent">
-
-    <div class="today-box">
-        <div class="today-tag">⭐ 오늘의 영어</div>
-        <div class="today-heading" id="todayHeading">Day 1</div>
-        <div class="today-cards" id="todayCards"></div>
-    </div>
-
-    <div class="progress-box" id="progressSection">
-        <div class="progress-stars" id="progressStars">🌱</div>
-        <div class="progress-info">
-            <div class="progress-text" id="progressText">0 / 14일 완료</div>
-            <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+        <div class="hero-meta">
+            <div>
+                <div class="hero-day-label">오늘은</div>
+                <div class="hero-day">Day <span id="heroDayNum">1</span><small>/ 14</small></div>
+            </div>
+            <div class="hero-meta-right">
+                <div class="hero-dday">D<span id="challengeDDay">1</span></div>
+                <div class="hero-dday-sub">째 진행중</div>
+            </div>
         </div>
-        <div class="progress-pct" id="progressPct">0%</div>
+
+        <div class="hero-dots" id="challengeDots"></div>
+
+        <div class="hero-cta-bottom">👆 탭하여 오늘 학습 시작</div>
     </div>
 
+    <!-- 진도 요약 카드 -->
+    <div class="stats-card" onclick="scrollToGrid()">
+        <div class="stats-left">
+            <div class="stats-icon" id="progressStars">🌱</div>
+            <div class="stats-body">
+                <div class="stats-text" id="progressText">0 / 14일 완료</div>
+                <div class="stats-bar"><div class="stats-fill" id="progressFill" style="width:0%"></div></div>
+            </div>
+        </div>
+        <div class="stats-right">
+            <span id="progressPct">0%</span> ›
+        </div>
+    </div>
+
+    <!-- 그림책 가로 스크롤 -->
+    <div class="scroll-section">
+        <div class="scroll-head">
+            <div class="scroll-title">📚 그림책 모음</div>
+            <div class="scroll-more">14편</div>
+        </div>
+        <div class="scroll-row books" id="bookScrollRow"></div>
+    </div>
+
+    <!-- 영상 가로 스크롤 -->
+    <div class="scroll-section">
+        <div class="scroll-head">
+            <div class="scroll-title">🎬 영상 모음</div>
+            <div class="scroll-more">14편</div>
+        </div>
+        <div class="scroll-row videos" id="videoScrollRow"></div>
+    </div>
+
+    <!-- 축하 (14일 완주) -->
     <div class="congrats" id="congratsBox">
         <div class="c-emoji">🎉🎊🏆</div>
         <div class="c-title">2주 완주! 대단해요!</div>
         <div class="c-sub">우리 아이 영어와 정말 친해졌어요 💕</div>
     </div>
 
-    <div class="week-section">
-        <div class="week-label">📅 1주차</div>
+    <footer>
+        <button class="reset-btn" onclick="resetPlan()">🔄 플랜 처음부터 다시 시작</button>
+    </footer>
+
+  </div><!-- /.view-home -->
+
+  <!-- 진도 뷰 -->
+  <div class="view view-grid" id="viewGrid" style="display:none">
+    <div class="grid-section" id="gridSection">
+        <div class="grid-head">
+            <div class="grid-title">📅 14일 진도표</div>
+            <div class="grid-more">Day 1-14</div>
+        </div>
+        <div class="week-label">1주차 (Day 1-7)</div>
         <div class="week-grid" id="grid1"></div>
-    </div>
-    <div class="week-section">
-        <div class="week-label">📅 2주차</div>
+        <div class="week-label" style="margin-top:14px">2주차 (Day 8-14)</div>
         <div class="week-grid" id="grid2"></div>
     </div>
+  </div>
 
-    <!-- 신청 섹션 -->
-    <div class="signup-box">
+  <!-- 소식 뷰 -->
+  <div class="view view-signup" id="viewSignup" style="display:none">
+    <div class="signup-card" id="signupCard">
         <div class="signup-title">📬 소식 받기</div>
         <div class="signup-sub">새 플랜 업데이트 소식을<br>제일 먼저 받아보세요!</div>
         <input class="signup-input" id="signupEmail" type="email" placeholder="이메일 주소">
         <button class="signup-btn" onclick="submitSignup()">신청하기 ✉️</button>
     </div>
+  </div>
 
-    <footer>
-        <button class="reset-btn" onclick="resetPlan()">🔄 플랜 처음부터 다시 시작</button>
-        <button class="reset-btn" onclick="resetAllCustom()">🗑️ 내가 고른 영상 전체 초기화</button>
-    </footer>
+    <!-- 백워드 호환: 기존 ID 자리 (숨김) -->
+    <div style="display:none">
+        <span id="todayHeading"></span>
+        <div id="todayCards"></div>
+    </div>
+</div><!-- /.app -->
 
-    </div><!-- /mainContent -->
-</div>
+<!-- ── 하단 탭바 ── -->
+<nav class="tabbar">
+    <button class="tab-btn active" data-view="home" onclick="switchView('home')">
+        <span class="tab-icon">🏠</span>
+        <span>홈</span>
+    </button>
+    <button class="tab-btn" onclick="openModal(todayDayNum())">
+        <span class="tab-icon">📖</span>
+        <span>학습</span>
+    </button>
+    <button class="tab-btn" data-view="grid" onclick="switchView('grid')">
+        <span class="tab-icon">📊</span>
+        <span>진도</span>
+    </button>
+    <button class="tab-btn" data-view="signup" onclick="switchView('signup')">
+        <span class="tab-icon">📬</span>
+        <span>소식</span>
+    </button>
+    <button class="tab-btn" onclick="showNameModal()">
+        <span class="tab-icon">👤</span>
+        <span>MY</span>
+    </button>
+</nav>
 
 <!-- View Modal -->
 <div class="overlay" id="overlay" onclick="overlayClick(event)">
@@ -743,111 +807,89 @@
 <!-- Edit Panel -->
 <div class="edit-overlay" id="editOverlay" onclick="editOverlayClick(event)">
     <div class="edit-panel">
-
         <div class="edit-header">
             <div class="edit-header-top">
                 <div class="edit-header-title">✏️ 내가 직접 영상 고르기</div>
                 <button class="edit-close-btn" onclick="closeEdit()">✕</button>
             </div>
             <div class="day-nav">
-                <button class="nav-btn" id="prevBtn" onclick="editGoDay(editDay-1)">◀ 이전</button>
+                <button class="nav-btn" id="prevBtn" onclick="editGoDay(editDay-1)">◀</button>
                 <div class="day-dots" id="dayDots"></div>
-                <button class="nav-btn" id="nextBtn" onclick="editGoDay(editDay+1)">다음 ▶</button>
+                <button class="nav-btn" id="nextBtn" onclick="editGoDay(editDay+1)">▶</button>
             </div>
         </div>
-
         <div class="edit-body">
-
-            <!-- 📚 그림책 섹션 -->
             <div class="edit-section book-sec">
                 <div class="sec-head">
-                    <div class="sec-label">📚 영어 그림책 영상</div>
-                    <a id="bookSearchBtn" href="#" target="_blank" class="yt-search-btn">
-                        ▶ YouTube 검색
-                    </a>
+                    <div class="sec-label">📚 영어 그림책</div>
+                    <a id="bookSearchBtn" href="#" target="_blank" class="yt-search-btn">▶ YouTube 검색</a>
                 </div>
-
-                <!-- 썸네일 미리보기 -->
                 <div class="thumb-preview-wrap" id="bookThumbWrap">
                     <img id="bookThumbImg" src="" alt="썸네일">
                     <div class="thumb-label">📚 선택한 그림책 영상 미리보기</div>
                 </div>
-
                 <div class="field-row">
                     <div class="field-group">
                         <div class="field-label">제목</div>
-                        <input class="field-input" id="eBookTitle" type="text" placeholder="그림책 제목 입력">
+                        <input class="field-input" id="eBookTitle" type="text" placeholder="그림책 제목">
                     </div>
                     <div class="field-group emoji-group">
                         <div class="field-label">이모지</div>
                         <input class="field-input" id="eBookEmoji" type="text" placeholder="📚" maxlength="4">
                     </div>
                 </div>
-
                 <div class="field-group">
-                    <div class="field-label">YouTube 링크 붙여넣기</div>
+                    <div class="field-label">YouTube 링크</div>
                     <div class="url-row">
                         <div class="field-group">
                             <input class="field-input" id="eBookUrl" type="url"
-                                placeholder="https://www.youtube.com/watch?v=..."
-                                oninput="onUrlInput('book')">
-                            <div class="url-hint">유튜브에서 영상 주소를 복사해 붙여넣으세요</div>
+                                placeholder="https://youtube.com/..." oninput="onUrlInput('book')">
+                            <div class="url-hint">유튜브 영상 주소를 붙여넣으세요</div>
                         </div>
-                        <button class="paste-btn" onclick="pasteUrl('eBookUrl')">📋 붙여넣기</button>
+                        <button class="paste-btn" onclick="pasteUrl('eBookUrl')">📋</button>
                     </div>
                 </div>
             </div>
-
-            <!-- 🎬 영어 영상 섹션 -->
             <div class="edit-section vid-sec">
                 <div class="sec-head">
-                    <div class="sec-label">🎬 영어 영상 (5~10분)</div>
-                    <a id="vidSearchBtn" href="#" target="_blank" class="yt-search-btn">
-                        ▶ YouTube 검색
-                    </a>
+                    <div class="sec-label">🎬 영어 영상</div>
+                    <a id="vidSearchBtn" href="#" target="_blank" class="yt-search-btn">▶ YouTube 검색</a>
                 </div>
-
-                <!-- 썸네일 미리보기 -->
                 <div class="thumb-preview-wrap" id="vidThumbWrap">
                     <img id="vidThumbImg" src="" alt="썸네일">
                     <div class="thumb-label">🎬 선택한 영상 미리보기</div>
                 </div>
-
                 <div class="field-row">
                     <div class="field-group">
                         <div class="field-label">제목</div>
-                        <input class="field-input" id="eVidTitle" type="text" placeholder="영상 제목 입력">
+                        <input class="field-input" id="eVidTitle" type="text" placeholder="영상 제목">
                     </div>
                     <div class="field-group emoji-group">
                         <div class="field-label">이모지</div>
                         <input class="field-input" id="eVidEmoji" type="text" placeholder="🎬" maxlength="4">
                     </div>
                 </div>
-
                 <div class="field-row">
                     <div class="field-group">
                         <div class="field-label">영상 길이 (선택)</div>
                         <input class="field-input" id="eVidDur" type="text" placeholder="예: 약 7분">
                     </div>
                 </div>
-
                 <div class="field-group">
-                    <div class="field-label">YouTube 링크 붙여넣기</div>
+                    <div class="field-label">YouTube 링크</div>
                     <div class="url-row">
                         <div class="field-group">
                             <input class="field-input" id="eVidUrl" type="url"
-                                placeholder="https://www.youtube.com/watch?v=..."
-                                oninput="onUrlInput('vid')">
-                            <div class="url-hint">유튜브에서 영상 주소를 복사해 붙여넣으세요</div>
+                                placeholder="https://youtube.com/..." oninput="onUrlInput('vid')">
+                            <div class="url-hint">유튜브 영상 주소를 붙여넣으세요</div>
                         </div>
-                        <button class="paste-btn" onclick="pasteUrl('eVidUrl')">📋 붙여넣기</button>
+                        <button class="paste-btn" onclick="pasteUrl('eVidUrl')">📋</button>
                     </div>
                 </div>
             </div>
         </div>
-
         <div class="edit-footer">
-            <button class="reset-day-btn" onclick="resetDayCustom()">기본값으로</button>
+            <button class="reset-day-btn" onclick="resetDayCustom()">기본값</button>
             <button class="save-btn" onclick="saveDay()">Day <span id="saveDayNum">1</span> 저장 ✓</button>
         </div>
     </div>
@@ -855,6 +897,8 @@
 
 <div class="toast" id="toast"></div>
 
+<script src="/__env.js"></script>
+<script src="/lib/supabase.js"></script>
 <script>
 /* ── Default schedule ── */
 const OL = 'https://covers.openlibrary.org/b/id/';
@@ -910,20 +954,17 @@ let activeDay = null;
 let editDay   = 1;
 let currentUser = '';
 
-/* ── 사용자 프로필 ── */
+/* ── 사용자 키 ── */
 function userKey(k) { return `ep_${currentUser}_${k}`; }
 
-function showHeroDone(name) {}
-function showHeroForm() {}
-function updateNameBar(name) {}
-
+/* ── 이름 모달 ── */
 function showNameModal() {
     const users = JSON.parse(localStorage.getItem('ep_users') || '[]');
     const existingEl = document.getElementById('existingUsers');
     existingEl.innerHTML = '';
     if (users.length > 0) {
         document.getElementById('nameModalTitle').textContent = '누구세요? 👀';
-        document.getElementById('nameModalSub').textContent = '이름을 선택하거나 새로 입력해주세요';
+        document.getElementById('nameModalSub').innerHTML = '이름을 선택하거나<br>새로 입력해주세요';
         users.forEach(u => {
             const btn = document.createElement('button');
             btn.className = 'user-chip';
@@ -931,20 +972,38 @@ function showNameModal() {
             btn.onclick = () => selectUser(u);
             existingEl.appendChild(btn);
         });
+    } else {
+        document.getElementById('nameModalTitle').textContent = '처음 오셨군요!';
+        document.getElementById('nameModalSub').innerHTML = '이름을 입력하면 2주 동안<br>내 진도를 기억해줘요';
     }
     document.getElementById('nameInput').value = '';
+    document.getElementById('nameCancelBtn').style.display = currentUser ? 'block' : 'none';
     document.getElementById('nameOverlay').classList.add('open');
 }
 
-function selectUser(name) {
+function closeNameModal() {
+    document.getElementById('nameOverlay').classList.remove('open');
+}
+
+async function selectUser(name) {
     currentUser = name;
     localStorage.setItem('ep_currentUser', name);
     document.getElementById('nameOverlay').classList.remove('open');
-    loadUserData();
+
+    const remote = await loadFromSupabase(name);
+    if (remote) {
+        startDate = new Date(remote.start_date);
+        done   = new Set(remote.done_days || []);
+        custom = remote.custom_content || {};
+        localStorage.setItem(userKey('start'), startDate.toISOString());
+        localStorage.setItem(userKey('done'),   JSON.stringify([...done]));
+        localStorage.setItem(userKey('custom'), JSON.stringify(custom));
+    } else {
+        loadUserData();
+        saveToSupabase();
+    }
+    updateGreet(name);
     render();
-    showHeroDone(name);
-    updateRegisterSection(name);
-    updateNameBar(name);
 }
 
 function registerName() {
@@ -958,62 +1017,12 @@ function registerName() {
     selectUser(name);
 }
 
-function doRegister() {
-    const name = document.getElementById('registerNameInput').value.trim();
-    if (!name) { document.getElementById('registerNameInput').focus(); return; }
-    const users = JSON.parse(localStorage.getItem('ep_users') || '[]');
-    if (!users.includes(name)) {
-        users.push(name);
-        localStorage.setItem('ep_users', JSON.stringify(users));
-    }
-    selectUser(name);
+function updateGreet(name) {
+    const el = document.getElementById('greetName');
+    if (el) el.textContent = name || '엄마';
 }
 
-function updateRegisterSection(name) {
-    const form      = document.getElementById('registerForm');
-    const input     = document.getElementById('registerNameInput');
-    const chips     = document.getElementById('registerChips');
-    const emoji     = form.querySelector('.register-emoji');
-    const title     = form.querySelector('.register-title');
-    const sub       = form.querySelector('.register-sub');
-    const btn       = form.querySelector('.register-btn');
-
-    form.style.display = 'block';
-    document.getElementById('registerDone').style.display = 'none';
-
-    if (name) {
-        emoji.textContent   = '🌟';
-        title.textContent   = name + ' 님, 환영해요!';
-        sub.innerHTML       = '이름을 변경하려면 아래에 입력하세요';
-        input.value         = name;
-        input.placeholder   = '새 이름 입력';
-        btn.textContent     = '변경하기 ✓';
-        chips.innerHTML     = '';
-    } else {
-        emoji.textContent   = '👋';
-        title.textContent   = '안녕하세요! 이름을 알려주세요';
-        sub.innerHTML       = '이름을 등록하면 2주 동안<br>내 학습 기록이 저장돼요';
-        input.value         = '';
-        input.placeholder   = '이름 입력 (예: 소시엄마)';
-        btn.textContent     = '시작하기 🚀';
-        const users = JSON.parse(localStorage.getItem('ep_users') || '[]');
-        chips.innerHTML = '';
-        users.forEach(u => {
-            const c = document.createElement('button');
-            c.className = 'register-chip';
-            c.textContent = u;
-            c.onclick = () => selectUser(u);
-            chips.appendChild(c);
-        });
-    }
-}
-
-function switchUser() {
-    showHeroForm();
-    updateRegisterSection(null);
-}
-
-/* ── Storage ── */
+/* ── 저장 / 로드 ── */
 function loadUserData() {
     const s = localStorage.getItem(userKey('start'));
     startDate = s ? new Date(s) : (() => { const d = new Date(); d.setHours(0,0,0,0); return d; })();
@@ -1027,8 +1036,37 @@ function load() {
     if (!currentUser) return;
     loadUserData();
 }
-function saveDone()   { localStorage.setItem(userKey('done'),   JSON.stringify([...done])); }
-function saveCustom() { localStorage.setItem(userKey('custom'), JSON.stringify(custom)); }
+function saveDone()   {
+    localStorage.setItem(userKey('done'), JSON.stringify([...done]));
+    saveToSupabase();
+}
+function saveCustom() {
+    localStorage.setItem(userKey('custom'), JSON.stringify(custom));
+    saveToSupabase();
+}
+
+/* ── Supabase ── */
+async function loadFromSupabase(name) {
+    if (!window.__supabase) return null;
+    try {
+        const { data } = await window.__supabase
+            .from('plans').select('*').eq('user_id', name).maybeSingle();
+        return data || null;
+    } catch(e) { return null; }
+}
+
+async function saveToSupabase() {
+    if (!window.__supabase || !currentUser) return;
+    try {
+        await window.__supabase.from('plans').upsert({
+            user_id: currentUser,
+            start_date: startDate.toISOString(),
+            done_days: [...done],
+            custom_content: custom,
+            updated_at: new Date().toISOString()
+        }, { onConflict: 'user_id' });
+    } catch(e) {}
+}
 
 /* ── Data ── */
 function getData(d) {
@@ -1053,121 +1091,138 @@ function getData(d) {
 }
 function hasCustom(d) { return !!custom[d]; }
 
-/* ── YouTube utils ── */
+/* ── YouTube ── */
 function getYtId(url) {
     if (!url) return null;
     const m = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([^&\n?#]{11})/);
     return m ? m[1] : null;
 }
-function thumbUrl(videoId) {
-    return `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
-}
+function thumbUrl(id) { return `https://img.youtube.com/vi/${id}/hqdefault.jpg`; }
 
-/* ── Today ── */
 function todayDayNum() {
     const now = new Date(); now.setHours(0,0,0,0);
     return Math.min(Math.max(Math.floor((now - startDate) / 86400000) + 1, 1), 14);
 }
 
-/* ── Render helpers ── */
-function thumbHtml(url, type, coverUrl) {
-    const id = getYtId(url);
-    const isBook = type === 'book';
-    const noImgInner = isBook
-        ? `<div class="no-img-icon">📚</div><div class="no-img-txt">이미지 없음</div>`
-        : `<div class="no-img-icon">🎬</div>`;
-    const fbCls = isBook ? 'no-thumb book-no-img' : 'no-thumb';
-    const uid = 'th' + Math.random().toString(36).substr(2, 8);
-
-    if (coverUrl) {
-        // 책 표지 → YouTube 썸네일 → 이미지 없음 순으로 폴백
-        return `<div class="thumb-wrap">
-            <img src="${coverUrl}" data-ytid="${id || ''}"
-                onerror="coverFallback(this,'${uid}')" alt="책 표지">
-            <div id="${uid}" class="${fbCls}" style="display:none">${noImgInner}</div>
-        </div>`;
-    }
-    if (id) {
-        return `<div class="thumb-wrap">
-            <img src="${thumbUrl(id)}" alt="썸네일"
-                onerror="tileImgError(this,'${uid}')">
-            <div id="${uid}" class="${fbCls}" style="display:none">${noImgInner}</div>
-        </div>`;
-    }
-    return `<div class="thumb-wrap"><div class="${fbCls}">${noImgInner}</div></div>`;
-}
-
-function coverFallback(img, noImgId) {
-    const ytid = img.dataset.ytid;
-    if (ytid) {
-        img.onerror = () => {
-            img.style.display = 'none';
-            document.getElementById(noImgId).style.display = 'flex';
-        };
-        img.src = thumbUrl(ytid);
-    } else {
-        img.style.display = 'none';
-        document.getElementById(noImgId).style.display = 'flex';
-    }
-}
-
-function coverFallbackModal(img, noImgId, thumbId) {
-    const wrap = document.getElementById(thumbId);
-    const ytid = img.dataset.ytid;
-    if (ytid) {
-        img.onload  = () => { if (wrap) wrap.classList.add('img-ready'); };
-        img.onerror = () => {
-            if (wrap) wrap.classList.add('img-ready');
-            img.style.display = 'none';
-            document.getElementById(noImgId).style.display = 'flex';
-        };
-        img.src = thumbUrl(ytid);
-    } else {
-        if (wrap) wrap.classList.add('img-ready');
-        img.style.display = 'none';
-        document.getElementById(noImgId).style.display = 'flex';
-    }
-}
-
-/* ── Main render ── */
+/* ── 메인 렌더 ── */
 function render() {
     const td = todayDayNum();
     const t  = getData(td);
-
-    document.getElementById('todayHeading').textContent =
-        `Day ${td} — ${t.book.emoji} 그림책  +  ${t.vid.emoji} 영상`;
-
-    document.getElementById('todayCards').innerHTML = `
-        <a href="${t.book.url}" target="_blank" class="big-card book-card">
-            ${thumbHtml(t.book.url, 'book', t.book.cover)}
-            <div class="card-info">
-                <div class="type-label">📚 영어 그림책</div>
-                <div class="card-name">${t.book.emoji} ${t.book.title}</div>
-                ${t.book.author ? `<div class="card-meta">by ${t.book.author}</div>` : ''}
-                <span class="watch-btn">▶ YouTube에서 보기</span>
-            </div>
-        </a>
-        <a href="${t.vid.url}" target="_blank" class="big-card vid-card">
-            ${thumbHtml(t.vid.url, 'vid')}
-            <div class="card-info">
-                <div class="type-label">🎬 영어 영상</div>
-                <div class="card-name">${t.vid.emoji} ${t.vid.title}</div>
-                <div class="card-meta">${t.vid.dur}</div>
-                <span class="watch-btn">▶ YouTube에서 보기</span>
-            </div>
-        </a>
-    `;
-
-    const n   = done.size;
+    const n  = done.size;
     const pct = Math.round((n / 14) * 100);
+
+    // Hero card
+    document.getElementById('heroDayNum').textContent = td;
+
+    // 그림책 / 영상 가로 스크롤
+    renderScrollRow('bookScrollRow', 'book', td);
+    renderScrollRow('videoScrollRow', 'vid',  td);
+
+    // D-day + dots
+    document.getElementById('challengeDDay').textContent = td;
+    let dotsHtml = '';
+    for (let i = 1; i <= 14; i++) {
+        let cls = 'hero-dot';
+        if (done.has(i))      cls += ' done';
+        else if (i === td)    cls += ' today';
+        dotsHtml += `<div class="${cls}"></div>`;
+    }
+    document.getElementById('challengeDots').innerHTML = dotsHtml;
+
+    // 진도 카드
     document.getElementById('progressText').textContent = `${n} / 14일 완료`;
     document.getElementById('progressFill').style.width = pct + '%';
     document.getElementById('progressPct').textContent  = pct + '%';
     document.getElementById('progressStars').textContent = STARS[Math.min(n, 13)];
     document.getElementById('congratsBox').classList.toggle('show', n === 14);
 
+    // 그리드
     renderGrid('grid1', 1, 7, td);
     renderGrid('grid2', 8, 14, td);
+
+    // 오늘 카드를 가로 스크롤 가운데로
+    requestAnimationFrame(scrollTodayIntoView);
+}
+
+function truncate(s, max) {
+    if (!s) return '';
+    return s.length > max ? s.slice(0, max) + '…' : s;
+}
+
+function renderScrollRow(rowId, type, td) {
+    const el = document.getElementById(rowId);
+    let html = '';
+    for (let d = 1; d <= 14; d++) {
+        const s = getData(d);
+        const item = type === 'book' ? s.book : s.vid;
+        const isDone = done.has(d);
+        const isToday = d === td;
+        const isFuture = d > td;
+        const cls = ['scroll-card',
+            isToday ? 'today' : '',
+            isDone ? 'done' : '',
+            isFuture ? 'future' : ''
+        ].filter(Boolean).join(' ');
+        const ytId = getYtId(item.url);
+
+        let thumbHtml;
+        if (type === 'book' && item.cover) {
+            thumbHtml = `<img src="${item.cover}" data-ytid="${ytId||''}" alt=""
+                onerror="scrollThumbFallback(this,'${type}')">`;
+        } else if (ytId) {
+            thumbHtml = `<img src="${thumbUrl(ytId)}" alt=""
+                onerror="this.style.display='none'; this.parentElement.innerHTML += '<div class=&quot;no-thumb&quot;>${type==='book'?'📚':'🎬'}</div>'">`;
+        } else {
+            thumbHtml = `<div class="no-thumb">${type === 'book' ? '📚' : '🎬'}</div>`;
+        }
+
+        const metaText = (type === 'vid' && item.dur) ? item.dur : `Day ${d}`;
+
+        html += `
+            <a href="${item.url}" target="_blank" class="${cls}" data-day="${d}">
+                <div class="scroll-thumb">
+                    ${thumbHtml}
+                    <div class="day-badge">Day ${d}</div>
+                    <div class="done-check">✓</div>
+                    <div class="play-overlay"><div class="play-icon">▶</div></div>
+                </div>
+                <div class="scroll-info">
+                    <div class="scroll-info-title">${item.emoji} ${item.title}</div>
+                    <div class="scroll-info-meta">${metaText}</div>
+                </div>
+            </a>
+        `;
+    }
+    el.innerHTML = html;
+}
+
+function scrollThumbFallback(img, type) {
+    const ytid = img.dataset.ytid;
+    if (ytid) {
+        img.onerror = () => {
+            img.style.display = 'none';
+            const noThumb = document.createElement('div');
+            noThumb.className = 'no-thumb';
+            noThumb.textContent = type === 'book' ? '📚' : '🎬';
+            img.parentElement.appendChild(noThumb);
+        };
+        img.src = thumbUrl(ytid);
+    } else {
+        img.style.display = 'none';
+        const noThumb = document.createElement('div');
+        noThumb.className = 'no-thumb';
+        noThumb.textContent = type === 'book' ? '📚' : '🎬';
+        img.parentElement.appendChild(noThumb);
+    }
+}
+
+function scrollTodayIntoView() {
+    document.querySelectorAll('.scroll-row').forEach(row => {
+        const todayCard = row.querySelector('.scroll-card.today');
+        if (!todayCard) return;
+        const offset = todayCard.offsetLeft - 18;
+        row.scrollLeft = Math.max(0, offset);
+    });
 }
 
 function renderGrid(id, from, to, td) {
@@ -1178,29 +1233,22 @@ function renderGrid(id, from, to, td) {
         const isToday  = d === td;
         const isDone   = done.has(d);
         const isFuture = d > td;
-        const isCust   = hasCustom(d);
         const cls = ['day-tile',
-            isToday  ? 'today'      : '',
-            isDone   ? 'done'       : '',
-            isFuture ? 'future'     : '',
-            isCust   ? 'custom-set' : ''
+            isToday  ? 'today'  : '',
+            isDone   ? 'done'   : '',
+            isFuture ? 'future' : ''
         ].filter(Boolean).join(' ');
-        const tileYtId = getYtId(s.vid.url);
         const coverHtml = s.book.cover
-            ? `<img src="${s.book.cover}" alt="책표지">`
+            ? `<img src="${s.book.cover}" alt="">`
             : '📚';
-        const vidBadge = tileYtId ? `<div class="tile-vid-badge">🎬</div>` : '';
+        const checkIcon = isDone ? '✅' : isToday ? '⭐' : (isFuture ? '·' : '○');
         html += `
             <div class="${cls}" onclick="openModal(${d})">
-                <div class="tile-cover">${coverHtml}${vidBadge}</div>
+                <div class="tile-cover">${coverHtml}</div>
                 <div class="tile-body">
-                    <div class="tile-label">Day</div>
+                    <div class="tile-label">DAY</div>
                     <div class="tile-num">${d}</div>
-                    <div class="tile-check">${isDone ? '✅' : isToday ? '⭐' : '○'}</div>
-                    <div class="tile-custom-dot"></div>
-                    <button class="tile-btn" onclick="event.stopPropagation();toggleDay(${d})">
-                        ${isDone ? '완료됨!' : '완료 체크'}
-                    </button>
+                    <div class="tile-check">${checkIcon}</div>
                 </div>
             </div>
         `;
@@ -1208,13 +1256,35 @@ function renderGrid(id, from, to, td) {
     el.innerHTML = html;
 }
 
-/* ── View Modal ── */
+/* ── 빠른 액션 ── */
+function switchView(view) {
+    const views = ['home', 'grid', 'signup'];
+    views.forEach(v => {
+        const el = document.getElementById('view' + v.charAt(0).toUpperCase() + v.slice(1));
+        if (el) el.style.display = (v === view) ? 'block' : 'none';
+    });
+    document.querySelectorAll('.tab-btn[data-view]').forEach(t => {
+        t.classList.toggle('active', t.dataset.view === view);
+    });
+    window.scrollTo({top: 0, behavior:'smooth'});
+}
+function scrollToGrid()   { switchView('grid'); }
+function scrollToSignup() { switchView('signup'); }
+function goHome()         { switchView('home'); }
+function toggleTodayDone() {
+    const d = todayDayNum();
+    const wasDone = done.has(d);
+    toggleDay(d);
+    showToast(wasDone ? '완료 해제했어요' : `Day ${d} 완료! 🎉`);
+}
+
+/* ── 모달 ── */
 function openModal(d) {
     activeDay = d;
     const s      = getData(d);
-    const isDone  = done.has(d);
-    const bookId  = getYtId(s.book.url);
-    const vidId   = getYtId(s.vid.url);
+    const isDone = done.has(d);
+    const bookId = getYtId(s.book.url);
+    const vidId  = getYtId(s.vid.url);
 
     document.getElementById('mTitle').textContent = `Day ${d}`;
     document.getElementById('mCards').innerHTML = `
@@ -1273,7 +1343,47 @@ function toggleDay(d) {
     saveDone(); render();
 }
 
-/* ── Edit Panel ── */
+/* ── 책 커버 폴백 ── */
+function coverFallbackModal(img, noImgId, thumbId) {
+    const wrap = document.getElementById(thumbId);
+    const ytid = img.dataset.ytid;
+    if (ytid) {
+        img.onload  = () => { if (wrap) wrap.classList.add('img-ready'); };
+        img.onerror = () => {
+            if (wrap) wrap.classList.add('img-ready');
+            img.style.display = 'none';
+            document.getElementById(noImgId).style.display = 'flex';
+        };
+        img.src = thumbUrl(ytid);
+    } else {
+        if (wrap) wrap.classList.add('img-ready');
+        img.style.display = 'none';
+        document.getElementById(noImgId).style.display = 'flex';
+    }
+}
+
+function modalImgError(img, wrapId, isBook) {
+    const wrap = document.getElementById(wrapId);
+    if (wrap) wrap.classList.add('img-ready');
+    img.style.display = 'none';
+    const fb = document.createElement('div');
+    fb.className = isBook ? 'mc-no-thumb book-mc-no-img' : 'mc-no-thumb';
+    if (isBook) {
+        const icon = document.createElement('div');
+        icon.className = 'no-img-icon';
+        icon.textContent = '📚';
+        const txt = document.createElement('div');
+        txt.className = 'no-img-txt';
+        txt.textContent = '이미지 없음';
+        fb.appendChild(icon);
+        fb.appendChild(txt);
+    } else {
+        fb.textContent = '🎬';
+    }
+    if (img.parentElement) img.parentElement.appendChild(fb);
+}
+
+/* ── 영상 직접 고르기 패널 ── */
 function openEdit(d) {
     document.getElementById('editOverlay').classList.add('open');
     editGoDay(d);
@@ -1289,7 +1399,6 @@ function editGoDay(d) {
     document.getElementById('nextBtn').disabled = d === 14;
     document.getElementById('saveDayNum').textContent = d;
 
-    // Dots
     const dots = document.getElementById('dayDots');
     dots.innerHTML = '';
     for (let i = 1; i <= 14; i++) {
@@ -1297,7 +1406,6 @@ function editGoDay(d) {
         dots.innerHTML += `<button class="${cls}" onclick="editGoDay(${i})">${i}</button>`;
     }
 
-    // Fill form
     const def = DEFAULTS[d - 1];
     const c   = custom[d] || {};
 
@@ -1314,18 +1422,15 @@ function editGoDay(d) {
     document.getElementById('eVidDur').value    = c.vidDur   ?? def.vid.dur;
     document.getElementById('eVidUrl').value    = vidUrl;
 
-    // YouTube search buttons
     document.getElementById('bookSearchBtn').href =
         `https://www.youtube.com/results?search_query=${encodeURIComponent(bookTitle + ' read aloud')}`;
     document.getElementById('vidSearchBtn').href =
         `https://www.youtube.com/results?search_query=${encodeURIComponent(vidTitle + ' kids english')}`;
 
-    // Thumbnails
     updateThumb('book', bookUrl);
     updateThumb('vid',  vidUrl);
 }
 
-/* ── Thumbnail preview ── */
 function updateThumb(type, url) {
     const wrap = document.getElementById(type === 'book' ? 'bookThumbWrap' : 'vidThumbWrap');
     const img  = document.getElementById(type === 'book' ? 'bookThumbImg'  : 'vidThumbImg');
@@ -1343,7 +1448,6 @@ function updateThumb(type, url) {
 function onUrlInput(type) {
     const url = document.getElementById(type === 'book' ? 'eBookUrl' : 'eVidUrl').value;
     updateThumb(type, url);
-    // Update search button if title field is empty
     if (type === 'book') {
         const t = document.getElementById('eBookTitle').value || DEFAULTS[editDay-1].book.title;
         document.getElementById('bookSearchBtn').href =
@@ -1366,7 +1470,6 @@ async function pasteUrl(inputId) {
     }
 }
 
-/* ── Save / Reset ── */
 function saveDay() {
     const d = editDay;
     const def = DEFAULTS[d - 1];
@@ -1415,7 +1518,7 @@ function resetPlan() {
     loadUserData(); render();
 }
 
-/* ── Toast ── */
+/* ── 토스트 ── */
 let toastTimer;
 function showToast(msg) {
     const t = document.getElementById('toast');
@@ -1425,7 +1528,7 @@ function showToast(msg) {
     toastTimer = setTimeout(() => t.classList.remove('show'), 2400);
 }
 
-/* ── Image preloader ── */
+/* ── 이미지 프리로드 ── */
 function preloadImages() {
     function addPreload(url) {
         const link = document.createElement('link');
@@ -1446,56 +1549,45 @@ function preloadImages() {
     });
 }
 
-/* ── Signup ── */
-function submitSignup() {
+/* ── 가입 ── */
+async function submitSignup() {
     const email = document.getElementById('signupEmail').value.trim();
     if (!email) { showToast('이메일을 입력해주세요'); return; }
-    window.location.href = 'mailto:mina3912@naver.com?subject=소식 신청&body=신청 이메일: ' + encodeURIComponent(email);
+    if (window.__supabase) {
+        const { error } = await window.__supabase.from('signups').insert({ name: email });
+        if (error) { showToast('저장 오류, 다시 시도해주세요'); return; }
+    }
     showToast('신청 완료! 감사합니다 💕');
     document.getElementById('signupEmail').value = '';
 }
 
-function tileImgError(img, noImgId) {
-    img.style.display = 'none';
-    const el = document.getElementById(noImgId);
-    if (el) el.style.display = 'flex';
-}
-
-function modalImgError(img, wrapId, isBook) {
-    const wrap = document.getElementById(wrapId);
-    if (wrap) wrap.classList.add('img-ready');
-    img.style.display = 'none';
-    const fb = document.createElement('div');
-    fb.className = isBook ? 'mc-no-thumb book-mc-no-img' : 'mc-no-thumb';
-    if (isBook) {
-        const icon = document.createElement('div');
-        icon.className = 'no-img-icon';
-        icon.textContent = '📚';
-        const txt = document.createElement('div');
-        txt.className = 'no-img-txt';
-        txt.textContent = '이미지 없음';
-        fb.appendChild(icon);
-        fb.appendChild(txt);
-    } else {
-        fb.textContent = '🎬';
-    }
-    if (img.parentElement) img.parentElement.appendChild(fb);
-}
-
+/* ── 부팅 ── */
 load();
 if (!currentUser) {
     done = new Set();
     custom = {};
     startDate = new Date(); startDate.setHours(0, 0, 0, 0);
-    updateRegisterSection(null);
-    updateNameBar(null);
+    updateGreet(null);
+    showNameModal();
 } else {
-    showHeroDone(currentUser);
-    updateRegisterSection(currentUser);
-    updateNameBar(currentUser);
+    updateGreet(currentUser);
 }
 render();
 preloadImages();
+
+// Supabase 동기화
+if (currentUser) {
+    loadFromSupabase(currentUser).then(remote => {
+        if (!remote) return;
+        startDate = new Date(remote.start_date);
+        done   = new Set(remote.done_days || []);
+        custom = remote.custom_content || {};
+        localStorage.setItem(userKey('start'), startDate.toISOString());
+        localStorage.setItem(userKey('done'),   JSON.stringify([...done]));
+        localStorage.setItem(userKey('custom'), JSON.stringify(custom));
+        render();
+    });
+}
 </script>
 </body>
 </html>
