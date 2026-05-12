@@ -1197,7 +1197,8 @@ function renderScrollRow(rowId, type, td) {
             // 1순위: YouTube 썸네일 (가장 안정적)
             const altCover = (type === 'book' && item.cover) ? item.cover : '';
             thumbHtml = `<img src="${thumbUrl(ytId)}" data-alt="${altCover}" alt=""
-                onerror="scrollThumbFallback(this,'${fallbackEmoji}')">`;
+                onerror="scrollThumbFallback(this,'${fallbackEmoji}')"
+                onload="checkThumb(this,'${fallbackEmoji}')">`;
         } else if (type === 'book' && item.cover) {
             thumbHtml = `<img src="${item.cover}" alt=""
                 onerror="scrollThumbFallback(this,'${fallbackEmoji}')">`;
@@ -1231,10 +1232,17 @@ function scrollThumbFallback(img, fallbackEmoji) {
     if (altCover && img.src !== altCover) {
         img.dataset.alt = '';
         img.onerror = () => showNoThumb(img, fallbackEmoji);
+        img.onload  = null;
         img.src = altCover;
         return;
     }
     showNoThumb(img, fallbackEmoji);
+}
+function checkThumb(img, fallbackEmoji) {
+    // YouTube가 삭제/비공개 영상에 대해 200 OK로 120x90 placeholder 회색 이미지를 돌려주는 케이스 처리
+    if (img.naturalWidth > 0 && img.naturalHeight > 0 && img.naturalHeight <= 90 && img.naturalWidth <= 120) {
+        scrollThumbFallback(img, fallbackEmoji);
+    }
 }
 function showNoThumb(img, emoji) {
     img.style.display = 'none';
@@ -1271,7 +1279,8 @@ function renderGrid(id, from, to, td) {
         if (bookYtId) {
             const altCover = s.book.cover || '';
             coverHtml = `<img src="${thumbUrl(bookYtId)}" data-alt="${altCover}" alt=""
-                onerror="scrollThumbFallback(this,'📚')">`;
+                onerror="scrollThumbFallback(this,'📚')"
+                onload="checkThumb(this,'📚')">`;
         } else if (s.book.cover) {
             coverHtml = `<img src="${s.book.cover}" alt=""
                 onerror="scrollThumbFallback(this,'📚')">`;
