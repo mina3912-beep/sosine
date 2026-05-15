@@ -923,8 +923,8 @@
 
 <div class="toast" id="toast"></div>
 
-<script src="/__env.js"></script>
-<script src="/lib/supabase.js"></script>
+<script src="__env.js"></script>
+<script src="lib/supabase.js"></script>
 <script>
 /* ── Default schedule ── */
 const OL = 'https://covers.openlibrary.org/b/id/';
@@ -937,7 +937,7 @@ const DEFAULTS = [
     vid:{title:"Bluey — Keepy Uppy", emoji:"🐕", dur:"약 7분", url:"https://www.youtube.com/watch?v=xWyjy7SyirA"} },
   { day:3,
     book:{title:"Where Is the Green Sheep?", author:"Mem Fox", emoji:"🐑", url:"https://youtu.be/1GOICFvkIFw", cover:OL+"113648-L.jpg"},
-    vid:{title:"Ben & Holly — Nanny Plum is Sea Sick", emoji:"🧚", dur:"약 5분", url:"https://www.youtube.com/watch?v=_FtXf0uS33I"} },
+    vid:{title:"Ben & Holly — The Royal Fairy Picnic", emoji:"🧚", dur:"약 11분", url:"https://www.youtube.com/watch?v=l1jh9TPnYUU"} },
   { day:4,
     book:{title:"Pete the Cat: I Love My White Shoes", author:"Eric Litwin", emoji:"🐱", url:"https://www.youtube.com/watch?v=cDNFHf8v6vc", cover:"https://img.youtube.com/vi/cDNFHf8v6vc/hqdefault.jpg"},
     vid:{title:"PAW Patrol — Pups & the Pirate Treasure", emoji:"🐾", dur:"약 11분", url:"https://www.youtube.com/watch?v=hc4hH7JMV_g"} },
@@ -952,7 +952,7 @@ const DEFAULTS = [
     vid:{title:"Bluey — Keepy Uppy / Magic Xylophone", emoji:"🎵", dur:"약 11분", url:"https://www.youtube.com/watch?v=EJkn-r-rJJY"} },
   { day:8,
     book:{title:"Twenty-Four Robbers", author:"Audrey Wood", emoji:"🎭", url:"https://youtu.be/mQtnDfgRT6A", cover:OL+"2110684-L.jpg"},
-    vid:{title:"Ben & Holly — Nanny Plum Makes Sandwiches", emoji:"🥪", dur:"약 5분", url:"https://www.youtube.com/watch?v=P9qo3Bq5wJE"} },
+    vid:{title:"Ben & Holly — Holly's Magic Wand", emoji:"🪄", dur:"약 11분", url:"https://www.youtube.com/watch?v=Kmw12eUP4MM"} },
   { day:9,
     book:{title:"Far Far Away", author:"John Segal", emoji:"🏰", url:"https://youtu.be/rqKdvJgW_cw", cover:OL+"9870173-L.jpg"},
     vid:{title:"PAW Patrol — Pups Save a Walrus", emoji:"🦭", dur:"약 11분", url:"https://www.youtube.com/watch?v=cS-BGJ9E8XA"} },
@@ -967,7 +967,7 @@ const DEFAULTS = [
     vid:{title:"Bluey — Camping (Jean-Luc)", emoji:"⛺", dur:"약 7분", url:"https://www.youtube.com/watch?v=0X0wXilvHYU"} },
   { day:13,
     book:{title:"Faster, Faster! Nice and Slow!", author:"Nick Sharratt", emoji:"🐢", url:"https://www.youtube.com/watch?v=xtF3l0Foorg", cover:"https://img.youtube.com/vi/xtF3l0Foorg/hqdefault.jpg"},
-    vid:{title:"Ben & Holly — Nanny Plum's Magic Clean Up", emoji:"✨", dur:"약 5분", url:"https://www.youtube.com/watch?v=HD6K5iQMz-A"} },
+    vid:{title:"Ben & Holly — Daisy and Poppy", emoji:"🌼", dur:"약 11분", url:"https://www.youtube.com/watch?v=k34jPDO0Kzo"} },
   { day:14,
     book:{title:"The Doghouse", author:"Jan Thomas", emoji:"🏠", url:"https://www.youtube.com/watch?v=frzg2C-5D0o", cover:"https://img.youtube.com/vi/frzg2C-5D0o/hqdefault.jpg"},
     vid:{title:"PAW Patrol — Pups Save the Penguins", emoji:"🐧", dur:"약 6분", url:"https://www.youtube.com/watch?v=z1vXJVI2L5M"} },
@@ -1267,7 +1267,7 @@ function renderScrollRow(rowId, type, td) {
         const metaText = (type === 'vid' && item.dur) ? item.dur : `Day ${d}`;
 
         html += `
-            <a href="${item.url}" target="_blank" class="${cls}" data-day="${d}">
+            <a href="${item.url}" target="_blank" class="${cls}" data-day="${d}" onclick="markDayDone(${d})">
                 <div class="scroll-thumb">
                     ${thumbHtml}
                     <div class="day-badge">Day ${d}</div>
@@ -1392,7 +1392,7 @@ function openModal(d) {
 
     document.getElementById('mTitle').textContent = `Day ${d}`;
     document.getElementById('mCards').innerHTML = `
-        <a href="${s.book.url}" target="_blank" class="modal-card book-card">
+        <a href="${s.book.url}" target="_blank" class="modal-card book-card" onclick="markDayDone(${d})">
             <div class="mc-thumb" id="mcthumb_b${d}">
                 ${s.book.cover
                     ? `<img src="${s.book.cover}" data-ytid="${bookId||''}" fetchpriority="high"
@@ -1414,7 +1414,7 @@ function openModal(d) {
                 </div>
             </div>
         </a>
-        <a href="${s.vid.url}" target="_blank" class="modal-card vid-card">
+        <a href="${s.vid.url}" target="_blank" class="modal-card vid-card" onclick="markDayDone(${d})">
             <div class="mc-thumb" id="mcthumb_v${d}">
                 ${vidId
                     ? `<img src="${thumbUrl(vidId)}" fetchpriority="high" alt="썸네일"
@@ -1445,6 +1445,16 @@ function toggleDay(d) {
     const completing = !done.has(d);
     completing ? done.add(d) : done.delete(d);
     saveDone(); render();
+}
+function markDayDone(d) {
+    if (done.has(d)) return;
+    done.add(d);
+    saveDone(); render();
+    if (activeDay === d) {
+        const btn = document.getElementById('mDoneBtn');
+        if (btn) { btn.textContent = '✅ 오늘 완료했어요!'; btn.className = 'modal-done-btn already'; }
+    }
+    showToast(`Day ${d} 완료! 🎉`);
 }
 
 /* ── 책 커버 폴백 ── */
