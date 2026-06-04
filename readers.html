@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>마인크래프트 리더스 6권</title>
+
+    <style>
+        @font-face {
+            font-family: 'yg-jalnan';
+            src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'yg-jalnan', 'Segoe UI', sans-serif;
+            background: #EFE6D5;
+            min-height: 100vh;
+            color: #2B1E12;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .app {
+            max-width: 480px;
+            margin: 0 auto;
+            background: #F4EFE2;
+            min-height: 100vh;
+            padding: 22px 18px 30px;
+            position: relative;
+        }
+        @media (min-width: 481px) {
+            .app {
+                border-left: 1px solid #E5DBC2;
+                border-right: 1px solid #E5DBC2;
+                box-shadow: 0 0 30px rgba(0,0,0,.05);
+            }
+        }
+
+        /* ── 상단 히어로 카드 (마인크래프트 톤) ── */
+        .hero-card {
+            background: linear-gradient(135deg, #5C8E3F 0%, #3A6F28 100%);
+            border-radius: 22px;
+            padding: 22px 22px 20px;
+            margin: 4px 0 20px;
+            color: #fff;
+            box-shadow: 0 8px 22px rgba(92,142,63,.32);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-card::after {
+            content: "";
+            position: absolute;
+            right: -20px; bottom: -20px;
+            width: 140px; height: 140px;
+            background: rgba(255,255,255,.07);
+            border-radius: 28px;
+            transform: rotate(18deg);
+        }
+        .hero-badge {
+            display: inline-block;
+            background: rgba(255,255,255,.22);
+            border-radius: 14px;
+            padding: 4px 12px;
+            font-size: .72rem; font-weight: 800;
+            margin-bottom: 11px;
+        }
+        .hero-title {
+            font-size: 1.45rem; font-weight: 900;
+            line-height: 1.3; margin-bottom: 6px;
+            position: relative; z-index: 1;
+        }
+        .hero-sub {
+            font-size: .82rem; opacity: .9;
+            font-weight: 600; line-height: 1.5;
+            position: relative; z-index: 1;
+        }
+
+        /* ── 카드 그리드 ── */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .reader-card {
+            background: #fff;
+            border-radius: 16px;
+            overflow: hidden;
+            text-decoration: none;
+            color: inherit;
+            box-shadow: 0 4px 12px rgba(170,140,110,.14);
+            border: 1.5px solid #EAE0CC;
+            transition: transform .12s, box-shadow .15s;
+            display: flex; flex-direction: column;
+        }
+        .reader-card:active {
+            transform: scale(.97);
+            box-shadow: 0 2px 6px rgba(170,140,110,.18);
+        }
+        .reader-cover {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background: #ECE2D2;
+            position: relative;
+            overflow: hidden;
+        }
+        .reader-cover img {
+            position: absolute; inset: 0;
+            width: 100%; height: 100%;
+            object-fit: cover; display: block;
+        }
+        .reader-cover .play-badge {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 42px; height: 42px;
+            border-radius: 50%;
+            background: rgba(0,0,0,.55);
+            color: #fff;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.1rem;
+            backdrop-filter: blur(2px);
+            pointer-events: none;
+        }
+        .reader-cover .dur-badge {
+            position: absolute;
+            bottom: 6px; right: 6px;
+            font-size: .6rem;
+            background: rgba(0,0,0,.65);
+            color: #fff;
+            border-radius: 4px;
+            padding: 2px 6px;
+            font-weight: 700;
+        }
+        .reader-body {
+            padding: 10px 12px 12px;
+            text-align: left;
+            flex: 1;
+            display: flex; flex-direction: column;
+            justify-content: space-between;
+            gap: 6px;
+        }
+        .reader-title {
+            font-size: .82rem;
+            font-weight: 800;
+            color: #2B1E12;
+            line-height: 1.32;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            min-height: 2.2em;
+        }
+        .reader-cta {
+            font-size: .68rem;
+            color: #5C8E3F;
+            font-weight: 800;
+        }
+
+        /* ── 푸터 ── */
+        footer {
+            text-align: center;
+            padding: 22px 0 4px;
+            font-size: .72rem;
+            color: #8B6F5E;
+            font-weight: 700;
+        }
+        .back-link {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 8px 18px;
+            border-radius: 18px;
+            border: 1.5px solid #D5C7AC;
+            color: #8B6F5E;
+            text-decoration: none;
+            font-size: .76rem;
+            font-weight: 700;
+            transition: border-color .15s, color .15s;
+        }
+        .back-link:hover, .back-link:active {
+            border-color: #6B4423;
+            color: #6B4423;
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+
+        <div class="hero-card">
+            <div class="hero-badge">📚 READERS</div>
+            <div class="hero-title">마인크래프트 리더스 6권</div>
+            <div class="hero-sub">표지를 누르면 유튜브 읽어주는 영상으로 이동해요</div>
+        </div>
+
+        <div class="grid" id="readerGrid"></div>
+
+        <footer>
+            ▶ 새 탭에서 유튜브가 열려요
+        </footer>
+
+    </div>
+
+    <script>
+        const READERS = [
+            { title: "Escape from the Nether!", ytId: "0OyW61wlKpQ" },
+            { title: "Mobs in the Mansion!",    ytId: "QrytPbWF0TQ" },
+            { title: "Mobs in the Overworld",   ytId: "nBqWtAnNxPc" },
+            { title: "Survival Mode",           ytId: "N4DYlMZtQdI" },
+            { title: "The Sky’s the Limit!",    ytId: "XvZSx4CSiF4" },
+            { title: "Trouble Brewing",         ytId: "poMzXpdDRbc" },
+        ];
+
+        function thumbUrl(id) {
+            return `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
+        }
+        function watchUrl(id) {
+            return `https://www.youtube.com/watch?v=${id}`;
+        }
+
+        const grid = document.getElementById('readerGrid');
+        grid.innerHTML = READERS.map(r => `
+            <a class="reader-card"
+               href="${watchUrl(r.ytId)}"
+               target="_blank"
+               rel="noopener noreferrer"
+               aria-label="${r.title} 유튜브에서 보기">
+                <div class="reader-cover">
+                    <img src="${thumbUrl(r.ytId)}" alt="${r.title} 표지" loading="lazy">
+                    <div class="play-badge">▶</div>
+                </div>
+                <div class="reader-body">
+                    <div class="reader-title">${r.title}</div>
+                </div>
+            </a>
+        `).join('');
+    </script>
+</body>
+</html>
