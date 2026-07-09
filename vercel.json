@@ -1,6 +1,7 @@
 {
   "outputDirectory": ".",
   "rewrites": [
+    { "source": "/reading", "destination": "/reading.html" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
