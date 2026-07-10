@@ -2,6 +2,7 @@
   "outputDirectory": ".",
   "rewrites": [
     { "source": "/reading", "destination": "/reading.html" },
+    { "source": "/planner", "destination": "/여름방학플래너.html" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }

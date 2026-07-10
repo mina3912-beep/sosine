@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>소시네 여름방학 생활계획표</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+<style>
+  @page { size: A4 landscape; margin: 10mm 12mm; }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Jua', 'Noto Sans KR', 'Segoe UI', sans-serif;
+    background: #FBF6EF;
+    color: #3D2B1F;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .sheet { width: 277mm; margin: 0 auto; }
+
+  /* ── Header ── */
+  .header {
+    background: linear-gradient(135deg, #FF8C00 0%, #FFB347 65%, #FFC875 100%);
+    border-radius: 20px;
+    padding: 14px 22px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: ''; position: absolute; top: -30px; right: -20px;
+    width: 110px; height: 110px; border-radius: 50%;
+    background: rgba(255,255,255,.15);
+  }
+  .header-title {
+    font-family: 'Jua', sans-serif;
+    font-size: 21pt; color: #fff;
+    text-shadow: 1.5px 2.5px 0 rgba(150,70,0,.22);
+    position: relative; z-index: 1;
+    letter-spacing: -0.5px;
+  }
+  .header-title .sub { font-size: 10pt; color: rgba(255,255,255,.92); font-family: 'Noto Sans KR', sans-serif; font-weight: 700; display: block; margin-top: 3px; }
+
+  .header-fields {
+    display: flex; gap: 14px; position: relative; z-index: 1;
+  }
+  .hf-item {
+    background: rgba(255,255,255,.92); border-radius: 12px;
+    padding: 6px 14px; font-size: 9.5pt; font-weight: 700; color: #8B6F5E;
+    display: flex; align-items: center; gap: 6px; white-space: nowrap;
+  }
+  .hf-item .line { display: inline-block; min-width: 60px; border-bottom: 1.5px solid #C8A97E; height: 12px; }
+
+  /* ── Goal box ── */
+  .goal-box {
+    background: #fff; border: 2px solid #E8D5B7; border-radius: 16px;
+    padding: 10px 18px; margin-bottom: 10px;
+    display: flex; align-items: center; gap: 12px;
+    box-shadow: 0 3px 10px rgba(200,169,126,.16);
+  }
+  .goal-label {
+    font-size: 10pt; font-weight: 800; color: #FF8C00;
+    white-space: nowrap; flex-shrink: 0;
+  }
+  .goal-line { flex: 1; border-bottom: 1.5px dashed #E8D5B7; height: 16px; }
+
+  /* ── Main table ── */
+  table.plan { width: 100%; border-collapse: collapse; table-layout: fixed; }
+  table.plan th, table.plan td {
+    border: 1.5px solid #EAD9C5;
+    text-align: center;
+    vertical-align: middle;
+    padding: 5px 3px;
+  }
+  table.plan { border-radius: 14px; overflow: hidden; }
+
+  col.item-col { width: 15%; }
+
+  thead th {
+    background: linear-gradient(135deg, #FFB347, #FFC875);
+    color: #fff; font-size: 10pt; font-weight: 800;
+    padding: 8px 3px;
+  }
+  thead th.item-th { background: #C8A97E; }
+  thead th .day-en { display: block; font-size: 6.5pt; font-weight: 700; opacity: .85; letter-spacing: .5px; }
+
+  tbody th {
+    background: #FFF5E8; font-size: 9.5pt; font-weight: 800; color: #8B6F5E;
+    text-align: left; padding-left: 10px;
+  }
+  tbody th .icon { margin-right: 5px; }
+
+  tbody td { height: 15mm; background: #fff; }
+  tbody tr:nth-child(even) td { background: #FFFDF9; }
+
+  .check-cell { font-size: 12pt; color: #E8D5B7; }
+
+  .diary-row th { vertical-align: top; padding-top: 8px; }
+  .diary-row td { height: 20mm; vertical-align: top; text-align: left; padding: 6px 8px; font-size: 8pt; color: #C8A97E; }
+
+  /* ── Footer ── */
+  .footer {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-top: 10px;
+  }
+  .footer-note { font-size: 8.5pt; color: #B8A38C; font-weight: 700; }
+  .stamp-box {
+    display: flex; align-items: center; gap: 8px;
+  }
+  .stamp-label { font-size: 9pt; font-weight: 800; color: #8B6F5E; }
+  .stamp-circle {
+    width: 26mm; height: 12mm; border: 2px dashed #E8D5B7; border-radius: 10px;
+  }
+</style>
+</head>
+<body>
+
+<div class="sheet">
+
+  <div class="header">
+    <div class="header-title">
+      🌻 소시네 여름방학 생활계획표
+      <span class="sub">SOSINE SUMMER PLANNER</span>
+    </div>
+    <div class="header-fields">
+      <div class="hf-item">이름 <span class="line"></span></div>
+      <div class="hf-item">몇째 주 <span class="line" style="min-width:30px"></span> 주차</div>
+      <div class="hf-item">기간 <span class="line"></span> ~ <span class="line"></span></div>
+    </div>
+  </div>
+
+  <div class="goal-box">
+    <div class="goal-label">🎯 이번 주 목표</div>
+    <div class="goal-line"></div>
+  </div>
+
+  <table class="plan">
+    <colgroup>
+      <col class="item-col">
+      <col><col><col><col><col><col><col>
+    </colgroup>
+    <thead>
+      <tr>
+        <th class="item-th">항목</th>
+        <th>월<span class="day-en">MON</span></th>
+        <th>화<span class="day-en">TUE</span></th>
+        <th>수<span class="day-en">WED</span></th>
+        <th>목<span class="day-en">THU</span></th>
+        <th>금<span class="day-en">FRI</span></th>
+        <th>토<span class="day-en">SAT</span></th>
+        <th>일<span class="day-en">SUN</span></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th><span class="icon">⏰</span>기상 시간</th>
+        <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+      </tr>
+      <tr>
+        <th><span class="icon">🌙</span>취침 시간</th>
+        <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+      </tr>
+      <tr>
+        <th><span class="icon">📖</span>독서 (책 제목)</th>
+        <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+      </tr>
+      <tr>
+        <th><span class="icon">🔤</span>영어 학습</th>
+        <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+      </tr>
+      <tr>
+        <th><span class="icon">✏️</span>방학 숙제</th>
+        <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+      </tr>
+      <tr>
+        <th><span class="icon">🏃</span>운동 / 바깥놀이</th>
+        <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+      </tr>
+      <tr>
+        <th><span class="icon">🧹</span>방 정리정돈</th>
+        <td class="check-cell">☐</td><td class="check-cell">☐</td><td class="check-cell">☐</td><td class="check-cell">☐</td><td class="check-cell">☐</td><td class="check-cell">☐</td><td class="check-cell">☐</td>
+      </tr>
+      <tr>
+        <th><span class="icon">💧</span>물 8잔 마시기</th>
+        <td class="check-cell">☐</td><td class="check-cell">☐</td><td class="check-cell">☐</td><td class="check-cell">☐</td><td class="check-cell">☐</td><td class="check-cell">☐</td><td class="check-cell">☐</td>
+      </tr>
+      <tr>
+        <th><span class="icon">⭐</span>오늘 하루 평가</th>
+        <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+      </tr>
+      <tr class="diary-row">
+        <th><span class="icon">💬</span>한 줄 일기</th>
+        <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="footer">
+    <div class="footer-note">별점은 잘한 정도만큼 별을 그려보세요 (⭐~⭐⭐⭐⭐⭐)</div>
+    <div class="stamp-box">
+      <div class="stamp-label">부모님 확인</div>
+      <div class="stamp-circle"></div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>소시네 여름방학 미션표</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+<style>
+  @page { size: A4 landscape; margin: 16mm 14mm; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Jua', 'Noto Sans KR', 'Helvetica Neue', Arial, sans-serif;
+    background: #EDEDED; color: #333;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+    padding: 14px 0 40px;
+  }
+
+  .sheet { width: 269mm; margin: 0 auto; background: #fff; }
+
+  .toolbar { width: 269mm; margin: 0 auto 10px; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .toolbar .controls { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #666; font-weight: 700; }
+  .toolbar input[type="number"] { width: 58px; font-size: 13px; font-family: inherit; padding: 5px 6px; border: 1px solid #ccc; border-radius: 6px; }
+  .btns { display: flex; gap: 8px; }
+  .btn { font-family: inherit; font-size: 13px; font-weight: 800; cursor: pointer; border: none; border-radius: 20px; padding: 9px 18px; background: linear-gradient(135deg, #FF8C00, #FFB347); color: #fff; box-shadow: 0 3px 10px rgba(200,140,0,.28); }
+  .btn.secondary { background: #fff; color: #666; border: 1px solid #ccc; }
+  @media print { .toolbar, .no-print { display: none !important; } body { padding: 0; background: #fff; } .sheet { width: 269mm; } }
+
+  [contenteditable="true"] { outline: none; }
+  [contenteditable="true"]:hover { background: #FAFAFA; }
+  [contenteditable="true"]:focus { background: #F5F8FF; box-shadow: 0 0 0 1.5px #9DB8FF inset; }
+
+  .title-row { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 8px; }
+  .title-main { font-size: 16pt; font-weight: 800; color: #333; }
+  .title-sub { font-size: 9pt; color: #999; font-weight: 600; }
+
+  table.mission { width: 100%; border-collapse: collapse; table-layout: fixed; }
+  table.mission th, table.mission td { border: 1px solid #DDD; text-align: center; }
+  .label-col { width: 34mm; }
+  thead th { padding: 6px 1px 10px; font-size: 9pt; font-weight: 700; color: #333; }
+  thead .mission-head { text-align: left; padding-left: 8px; font-size: 13pt; }
+  thead .day-num { display: block; font-size: 11pt; font-weight: 800; }
+  thead .day-wd { display: block; font-size: 7.5pt; color: #999; }
+  thead th.sun .day-num, thead th.sun .day-wd { color: #C2603D; }
+  thead th.sat .day-num, thead th.sat .day-wd { color: #5B6BBF; }
+
+  tbody td { height: 15mm; }
+  tbody td.check-cell input[type="checkbox"] { width: 16px; height: 16px; accent-color: #666; }
+  tbody td.mission-name { text-align: left; padding: 0 8px; font-size: 12pt; }
+
+  .row-actions { display: flex; align-items: center; gap: 6px; }
+  .del-row { font-size: 7pt; color: #ccc; cursor: pointer; flex-shrink: 0; }
+  .del-row:hover { color: #e05; }
+
+  .add-row-line { margin-top: 8px; }
+  .add-row-btn { font-size: 8.5pt; color: #999; font-weight: 700; cursor: pointer; }
+  .add-row-btn:hover { color: #FF8C00; }
+</style>
+</head>
+<body>
+
+<div class="toolbar no-print">
+  <div class="controls">
+    연도 <input type="number" id="yearInput" value="2026">
+    월 <input type="number" id="monthInput" value="7" min="1" max="12">
+    <button class="btn secondary" onclick="buildTable()">표 생성</button>
+  </div>
+  <div class="btns">
+    <button class="btn secondary" onclick="location.reload()">전체 초기화</button>
+    <button class="btn" onclick="window.print()">🖨️ 인쇄하기</button>
+  </div>
+</div>
+
+<div class="sheet">
+  <div class="title-row">
+    <div class="title-main">하루 체크리스트</div>
+    <div class="title-sub" id="monthSub">2026년 7월</div>
+  </div>
+
+  <table class="mission" id="missionTable">
+    <colgroup></colgroup>
+    <thead><tr></tr></thead>
+    <tbody></tbody>
+  </table>
+
+  <div class="add-row-line no-print">
+    <span class="add-row-btn" onclick="addMissionRow()">+ 미션 추가</span>
+  </div>
+</div>
+
+<script>
+  const WD = ['일','월','화','수','목','금','토'];
+  const DEFAULT_MISSIONS = ['독서 (30분)', '영어 학습', '수학 연산', '학원/과외 숙제', '태권도·줄넘기', '일기 쓰기', '방 정리정돈', '물 마시기', '준비물 챙기기'];
+
+  function buildTable() {
+    const year = parseInt(document.getElementById('yearInput').value, 10);
+    const month = parseInt(document.getElementById('monthInput').value, 10);
+    document.getElementById('monthSub').textContent = year + '년 ' + month + '월';
+
+    const daysInMonth = new Date(year, month, 0).getDate();
+    const table = document.getElementById('missionTable');
+    const colgroup = table.querySelector('colgroup');
+    const theadRow = table.querySelector('thead tr');
+    const tbody = table.querySelector('tbody');
+
+    colgroup.innerHTML = '<col class="label-col">';
+    theadRow.innerHTML = '<th class="mission-head">미션</th>';
+
+    for (let d = 1; d <= daysInMonth; d++) {
+      const wd = new Date(year, month - 1, d).getDay();
+      colgroup.innerHTML += '<col>';
+      const th = document.createElement('th');
+      th.className = wd === 0 ? 'sun' : wd === 6 ? 'sat' : '';
+      th.innerHTML = '<span class="day-num">' + d + '</span><span class="day-wd">' + WD[wd] + '</span>';
+      theadRow.appendChild(th);
+    }
+
+    tbody.innerHTML = '';
+    DEFAULT_MISSIONS.forEach(name => addMissionRow(name, daysInMonth));
+  }
+
+  function addMissionRow(name, daysInMonth) {
+    const table = document.getElementById('missionTable');
+    const tbody = table.querySelector('tbody');
+    const days = daysInMonth || table.querySelectorAll('thead th').length - 1;
+
+    const tr = document.createElement('tr');
+    const nameCell = document.createElement('td');
+    nameCell.className = 'mission-name';
+    nameCell.innerHTML = '<div class="row-actions"><span class="del-row no-print" onclick="this.closest(\'tr\').remove()">✕</span><span contenteditable="true">' + (name || '&nbsp;') + '</span></div>';
+    tr.appendChild(nameCell);
+
+    for (let i = 0; i < days; i++) {
+      const td = document.createElement('td');
+      td.className = 'check-cell';
+      td.innerHTML = '<input type="checkbox">';
+      tr.appendChild(td);
+    }
+    tbody.appendChild(tr);
+  }
+
+  buildTable();
+</script>
+
+</body>
+</html>

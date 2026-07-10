@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>소시네 여름방학 한달계획표</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+<style>
+  @page { size: A4 landscape; margin: 16mm 14mm; }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Jua', 'Noto Sans KR', 'Helvetica Neue', Arial, sans-serif;
+    background: #EDEDED;
+    color: #333;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    padding: 14px 0 40px;
+  }
+
+  .sheet { width: 269mm; margin: 0 auto; background: #fff; }
+
+  /* ── Toolbar (screen only) ── */
+  .toolbar {
+    width: 269mm; margin: 0 auto 10px; display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  }
+  .toolbar .controls { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #666; font-weight: 700; }
+  .toolbar input[type="number"] {
+    width: 58px; font-size: 13px; font-family: inherit; padding: 5px 6px;
+    border: 1px solid #ccc; border-radius: 6px;
+  }
+  .btns { display: flex; gap: 8px; }
+  .btn {
+    font-family: inherit; font-size: 13px; font-weight: 800; cursor: pointer;
+    border: none; border-radius: 20px; padding: 9px 18px;
+    background: linear-gradient(135deg, #FF8C00, #FFB347); color: #fff;
+    box-shadow: 0 3px 10px rgba(200,140,0,.28);
+  }
+  .btn.secondary { background: #fff; color: #666; border: 1px solid #ccc; }
+  @media print { .toolbar, .no-print { display: none !important; } body { padding: 0; background: #fff; } .sheet { width: 269mm; } }
+
+  [contenteditable="true"] { outline: none; }
+  [contenteditable="true"]:hover { background: #FAFAFA; }
+  [contenteditable="true"]:focus { background: #F5F8FF; box-shadow: 0 0 0 1.5px #9DB8FF inset; }
+
+  /* ── Title ── */
+  .title-row { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 10px; }
+  .title-left { display: flex; align-items: center; gap: 8px; font-size: 10pt; color: #999; font-weight: 600; }
+  .title-left .fill { border-bottom: 1px solid #ccc; padding: 0 3px; min-width: 40px; text-align: center; }
+  .month-label {
+    font-size: 28pt; font-weight: 400; letter-spacing: 5px; color: #333;
+  }
+
+  /* ── Calendar table ── */
+  table.cal { width: 100%; border-collapse: collapse; table-layout: fixed; }
+  table.cal td { border: 1px solid #DDDDDD; height: 25mm; vertical-align: top; }
+
+  thead th {
+    font-size: 10.5pt; font-weight: 700; text-align: left; color: #333;
+    padding: 3px 2px 6px 6px;
+  }
+  thead th.sun { color: #C2603D; text-decoration: underline; text-underline-offset: 3px; }
+  thead th.sat { color: #5B6BBF; text-decoration: underline; text-underline-offset: 3px; }
+
+  tbody td { padding: 4px 6px; position: relative; }
+  .date-num { font-size: 11pt; color: #444; font-weight: 400; }
+  .date-num.sun { color: #C2603D; }
+  .date-num.sat { color: #5B6BBF; }
+  .date-num.other-month { color: #ccc; }
+
+  .task-row { display: flex; align-items: center; gap: 5px; margin-top: 3px; border-radius: 3px; padding: 1px 2px; }
+  .task-row input[type="checkbox"] { flex-shrink: 0; width: 10px; height: 10px; accent-color: #777; }
+  .color-dot {
+    width: 9px; height: 9px; border-radius: 2px; flex-shrink: 0; cursor: pointer;
+    border: 1px solid #ddd; background: #fff;
+  }
+  .task-text {
+    flex: 1; font-size: 9pt; line-height: 1.3; min-height: 11pt; word-break: break-word; color: #333;
+  }
+  .add-row-btn {
+    font-size: 8pt; color: #bbb; font-weight: 700; cursor: pointer; margin-top: 3px; display: inline-block;
+  }
+  .add-row-btn:hover { color: #FF8C00; }
+
+  .footer { font-size: 7.5pt; color: #aaa; margin-top: 5px; text-align: right; }
+</style>
+</head>
+<body>
+
+<div class="toolbar no-print">
+  <div class="controls">
+    연도 <input type="number" id="yearInput" value="2026">
+    월 <input type="number" id="monthInput" value="7" min="1" max="12">
+    <button class="btn secondary" onclick="buildCalendar()">달력 생성</button>
+  </div>
+  <div class="btns">
+    <button class="btn secondary" onclick="location.reload()">전체 초기화</button>
+    <button class="btn" onclick="window.print()">🖨️ 인쇄하기</button>
+  </div>
+</div>
+
+<div class="sheet">
+
+  <div class="title-row">
+    <div class="title-left">이름 <span class="fill" contenteditable="true">&nbsp;</span></div>
+    <div class="month-label" id="monthLabel">JULY</div>
+  </div>
+
+  <table class="cal">
+    <colgroup><col><col><col><col><col><col><col></colgroup>
+    <thead>
+      <tr>
+        <th class="sun">일요일</th>
+        <th>월요일</th><th>화요일</th><th>수요일</th><th>목요일</th><th>금요일</th>
+        <th class="sat">토요일</th>
+      </tr>
+    </thead>
+    <tbody id="calBody"></tbody>
+  </table>
+
+  <div class="footer">칸을 클릭해 자유롭게 일정을 적어보세요.</div>
+
+</div>
+
+<script>
+  const MONTH_NAMES = ['JANUARY','FEBRUARY','MARCH','APRIL','MAY','JUNE','JULY','AUGUST','SEPTEMBER','OCTOBER','NOVEMBER','DECEMBER'];
+
+  const PALETTE = ['#fff', '#DCF3D6', '#FCE1E8', '#FFF3B8', '#DCE8FF', '#EADCFF', '#E6E6E6'];
+
+  function cycleColor(dot) {
+    const row = dot.parentElement;
+    const idx = (parseInt(dot.dataset.idx || '0', 10) + 1) % PALETTE.length;
+    dot.dataset.idx = idx;
+    const color = PALETTE[idx];
+    dot.style.background = color;
+    row.style.background = color;
+  }
+
+  function makeTaskRow() {
+    const row = document.createElement('div');
+    row.className = 'task-row';
+    const dot = document.createElement('span');
+    dot.className = 'color-dot no-print';
+    dot.dataset.idx = '0';
+    dot.onclick = function () { cycleColor(this); };
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    const text = document.createElement('span');
+    text.className = 'task-text';
+    text.contentEditable = 'true';
+    text.innerHTML = '&nbsp;';
+    row.appendChild(dot);
+    row.appendChild(checkbox);
+    row.appendChild(text);
+    return row;
+  }
+
+  function addRow(btn) {
+    btn.parentElement.insertBefore(makeTaskRow(), btn);
+  }
+
+  function buildCalendar() {
+    const year = parseInt(document.getElementById('yearInput').value, 10);
+    const month = parseInt(document.getElementById('monthInput').value, 10);
+    document.getElementById('monthLabel').textContent = MONTH_NAMES[month - 1];
+
+    const firstDay = new Date(year, month - 1, 1).getDay();
+    const daysInMonth = new Date(year, month, 0).getDate();
+    const totalCells = Math.ceil((firstDay + daysInMonth) / 7) * 7;
+
+    const body = document.getElementById('calBody');
+    body.innerHTML = '';
+    let dateCounter = 1;
+    const DEFAULT_ROWS = 2;
+
+    for (let r = 0; r < totalCells / 7; r++) {
+      const tr = document.createElement('tr');
+      for (let c = 0; c < 7; c++) {
+        const cellIndex = r * 7 + c;
+        const td = document.createElement('td');
+        const isInMonth = cellIndex >= firstDay && dateCounter <= daysInMonth;
+
+        const num = document.createElement('div');
+        num.className = 'date-num' + (c === 0 ? ' sun' : c === 6 ? ' sat' : '');
+        num.textContent = isInMonth ? dateCounter : '';
+        td.appendChild(num);
+
+        if (isInMonth) {
+          for (let i = 0; i < DEFAULT_ROWS; i++) td.appendChild(makeTaskRow());
+          const addBtn = document.createElement('span');
+          addBtn.className = 'add-row-btn no-print';
+          addBtn.textContent = '+ 추가';
+          addBtn.onclick = function () { addRow(this); };
+          td.appendChild(addBtn);
+        }
+
+        if (isInMonth) dateCounter++;
+        tr.appendChild(td);
+      }
+      body.appendChild(tr);
+    }
+  }
+
+  buildCalendar();
+</script>
+
+</body>
+</html>

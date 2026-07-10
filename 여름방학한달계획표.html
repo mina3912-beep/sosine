@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>소시네 여름방학 한달계획표</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+<style>
+  @page { size: A4 landscape; margin: 10mm 12mm; }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Jua', 'Noto Sans KR', 'Segoe UI', sans-serif;
+    background: #FBF6EF;
+    color: #3D2B1F;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .sheet { width: 277mm; margin: 0 auto; }
+
+  /* ── Header ── */
+  .header {
+    background: linear-gradient(135deg, #FF8C00 0%, #FFB347 65%, #FFC875 100%);
+    border-radius: 20px;
+    padding: 12px 22px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: ''; position: absolute; top: -30px; right: -20px;
+    width: 110px; height: 110px; border-radius: 50%;
+    background: rgba(255,255,255,.15);
+  }
+  .header-title {
+    font-family: 'Jua', sans-serif;
+    font-size: 20pt; color: #fff;
+    text-shadow: 1.5px 2.5px 0 rgba(150,70,0,.22);
+    position: relative; z-index: 1;
+    letter-spacing: -0.5px;
+  }
+  .header-title .sub { font-size: 9.5pt; color: rgba(255,255,255,.92); font-family: 'Noto Sans KR', sans-serif; font-weight: 700; display: block; margin-top: 3px; }
+
+  .header-fields { display: flex; gap: 12px; position: relative; z-index: 1; }
+  .hf-item {
+    background: rgba(255,255,255,.92); border-radius: 12px;
+    padding: 6px 14px; font-size: 9.5pt; font-weight: 700; color: #8B6F5E;
+    display: flex; align-items: center; gap: 6px; white-space: nowrap;
+  }
+  .hf-item .line { display: inline-block; min-width: 50px; border-bottom: 1.5px solid #C8A97E; height: 12px; }
+
+  /* ── Goal + legend row ── */
+  .top-row { display: flex; gap: 10px; margin-bottom: 8px; }
+  .goal-box {
+    flex: 1; background: #fff; border: 2px solid #E8D5B7; border-radius: 16px;
+    padding: 8px 16px; display: flex; align-items: center; gap: 12px;
+    box-shadow: 0 3px 10px rgba(200,169,126,.16);
+  }
+  .goal-label { font-size: 9.5pt; font-weight: 800; color: #FF8C00; white-space: nowrap; flex-shrink: 0; }
+  .goal-line { flex: 1; border-bottom: 1.5px dashed #E8D5B7; height: 14px; }
+
+  .legend-box {
+    background: #FFF5E8; border: 2px solid #E8D5B7; border-radius: 16px;
+    padding: 8px 16px; display: flex; align-items: center; gap: 10px;
+    font-size: 8.3pt; font-weight: 700; color: #8B6F5E; white-space: nowrap;
+  }
+  .legend-box span.tag { color: #C8A97E; font-weight: 800; }
+
+  /* ── Calendar table ── */
+  table.cal { width: 100%; height: 152mm; border-collapse: collapse; table-layout: fixed; }
+  table.cal th, table.cal td {
+    border: 1.5px solid #EAD9C5;
+  }
+  thead th {
+    background: linear-gradient(135deg, #FFB347, #FFC875);
+    color: #fff; font-size: 10pt; font-weight: 800;
+    padding: 6px 3px; text-align: center;
+  }
+  thead th .day-en { display: block; font-size: 6.5pt; font-weight: 700; opacity: .85; letter-spacing: .5px; }
+  thead th.sat { background: linear-gradient(135deg, #6EC6FF, #8ED8FF); }
+  thead th.sun { background: linear-gradient(135deg, #FF8FA3, #FFB0BE); }
+
+  tbody td {
+    background: #fff;
+    vertical-align: top;
+    padding: 4px 5px;
+    position: relative;
+  }
+  tbody tr:nth-child(even) td { background: #FFFDF9; }
+
+  .date-num {
+    display: inline-block;
+    width: 16px; height: 16px; line-height: 16px;
+    border: 1.3px solid #E8D5B7; border-radius: 50%;
+    text-align: center; font-size: 7.5pt; font-weight: 800; color: #C8A97E;
+  }
+  .icon-row { float: right; font-size: 7pt; letter-spacing: 1px; color: #E8D5B7; }
+  .cell-lines { margin-top: 4px; }
+  .cell-lines .l { border-bottom: 1px dashed #F0E4D2; height: 8.5px; }
+
+  /* ── Footer ── */
+  .footer {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-top: 8px;
+  }
+  .footer-note { font-size: 8.3pt; color: #B8A38C; font-weight: 700; }
+  .stamp-box { display: flex; align-items: center; gap: 8px; }
+  .stamp-label { font-size: 9pt; font-weight: 800; color: #8B6F5E; }
+  .stamp-circle { width: 24mm; height: 11mm; border: 2px dashed #E8D5B7; border-radius: 10px; }
+</style>
+</head>
+<body>
+
+<div class="sheet">
+
+  <div class="header">
+    <div class="header-title">
+      🌻 소시네 여름방학 한달계획표
+      <span class="sub">SOSINE MONTHLY PLANNER</span>
+    </div>
+    <div class="header-fields">
+      <div class="hf-item">이름 <span class="line"></span></div>
+      <div class="hf-item"><span class="line" style="min-width:26px"></span> 월</div>
+    </div>
+  </div>
+
+  <div class="top-row">
+    <div class="goal-box">
+      <div class="goal-label">🎯 이번 달 목표</div>
+      <div class="goal-line"></div>
+    </div>
+    <div class="legend-box">
+      <span class="tag">완료 표시</span> 📖독서 &nbsp;🔤영어 &nbsp;✏️숙제 &nbsp;🏃운동
+    </div>
+  </div>
+
+  <table class="cal">
+    <colgroup>
+      <col><col><col><col><col><col><col>
+    </colgroup>
+    <thead>
+      <tr>
+        <th>월<span class="day-en">MON</span></th>
+        <th>화<span class="day-en">TUE</span></th>
+        <th>수<span class="day-en">WED</span></th>
+        <th>목<span class="day-en">THU</span></th>
+        <th>금<span class="day-en">FRI</span></th>
+        <th class="sat">토<span class="day-en">SAT</span></th>
+        <th class="sun">일<span class="day-en">SUN</span></th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- 6 weeks x 7 days, blank date circles for the student to fill in -->
+      <tr>
+        <td><span class="date-num">&nbsp;</span><span class="icon-row">📖🔤✏️🏃</span><div class="cell-lines"><div class="l"></div><div class="l"></div></div></td>
+        <td><span class="date-num">&nbsp;</span><span class="icon-row">📖🔤✏️🏃</span><div class="cell-lines"><div class="l"></div><div class="l"></div></div></td>
+        <td><span class="date-num">&nbsp;</span><span class="icon-row">📖🔤✏️🏃</span><div class="cell-lines"><div class="l"></div><div class="l"></div></div></td>
+        <td><span class="date-num">&nbsp;</span><span class="icon-row">📖🔤✏️🏃</span><div class="cell-lines"><div class="l"></div><div class="l"></div></div></td>
+        <td><span class="date-num">&nbsp;</span><span class="icon-row">📖🔤✏️🏃</span><div class="cell-lines"><div class="l"></div><div class="l"></div></div></td>
+        <td><span class="date-num">&nbsp;</span><span class="icon-row">📖🔤✏️🏃</span><div class="cell-lines"><div class="l"></div><div class="l"></div></div></td>
+        <td><span class="date-num">&nbsp;</span><span class="icon-row">📖🔤✏️🏃</span><div class="cell-lines"><div class="l"></div><div class="l"></div></div></td>
+      </tr>
+      <tr>
+        <td><span class="date-num">&nbsp;</span><span class="icon-row">📖🔤✏️🏃</span><div class="cell-lines"><div class="l"></div><div class="l"></div></div></td>
+        <td><span class="date-num">&nbsp;</span><span class="icon-row">📖🔤✏️🏃</span><div class="cell-lines"><div class="l"></div><div class="l"></div></div></td>
+        <td><span class="date-num">&nbsp;</span><span class="icon-row">📖🔤✏️🏃</span><div class="cell-lines"><div class="l"></div><div class="l"></div></div></td>
+        <td><span class="date-num">&nbsp;</span><span class="icon-row">📖🔤✏️🏃</span><div class="cell-lines"><div class="l"></div><div class="l"></div></div></td>
+        <td><span class="date-num">&nbsp;</span><span class="icon-row">📖🔤✏️🏃</span><div class="cell-lines"><div class="l"></div><div class="l"></div></div></td>
+        <td><span class="date-num">&nbsp;</span><span class="icon-row">📖🔤✏️🏃</span><div class="cell-lines"><div class="l"></div><div class="l"></div></div></td>
+        <td><span class="date-num">&nbsp;</span><span class="icon-row">📖🔤✏️🏃</span><div class="cell-lines"><div class="l"></div><div class="l"></div></div></td>
+      </tr>
+      <tr>
+        <td><span class="date-num">&nbsp;</span><span class="icon-row">📖🔤✏️🏃</span><div class="cell-lines"><div class="l"></div><div class="l"></div></div></td>
+        <td><span class="date-num">&nbsp;</span><span class="icon-row">📖🔤✏️🏃</span><div class="cell-lines"><div class="l"></div><div class="l"></div></div></td>
+        <td><span class="date-num">&nbsp;</span><span class="icon-row">📖🔤✏️🏃</span><div class="cell-lines"><div class="l"></div><div class="l"></div></div></td>
+        <td><span class="date-num">&nbsp;</span><span class="icon-row">📖🔤✏️🏃</span><div class="cell-lines"><div class="l"></div><div class="l"></div></div></td>
+        <td><span class="date-num">&nbsp;</span><span class="icon-row">📖🔤✏️🏃</span><div class="cell-lines"><div class="l"></div><div class="l"></div></div></td>
+        <td><span class="date-num">&nbsp;</span><span class="icon-row">📖🔤✏️🏃</span><div class="cell-lines"><div class="l"></div><div class="l"></div></div></td>
+        <td><span class="date-num">&nbsp;</span><span class="icon-row">📖🔤✏️🏃</span><div class="cell-lines"><div class="l"></div><div class="l"></div></div></td>
+      </tr>
+      <tr>
+        <td><span class="date-num">&nbsp;</span><span class="icon-row">📖🔤✏️🏃</span><div class="cell-lines"><div class="l"></div><div class="l"></div></div></td>
+        <td><span class="date-num">&nbsp;</span><span class="icon-row">📖🔤✏️🏃</span><div class="cell-lines"><div class="l"></div><div class="l"></div></div></td>
+        <td><span class="date-num">&nbsp;</span><span class="icon-row">📖🔤✏️🏃</span><div class="cell-lines"><div class="l"></div><div class="l"></div></div></td>
+        <td><span class="date-num">&nbsp;</span><span class="icon-row">📖🔤✏️🏃</span><div class="cell-lines"><div class="l"></div><div class="l"></div></div></td>
+        <td><span class="date-num">&nbsp;</span><span class="icon-row">📖🔤✏️🏃</span><div class="cell-lines"><div class="l"></div><div class="l"></div></div></td>
+        <td><span class="date-num">&nbsp;</span><span class="icon-row">📖🔤✏️🏃</span><div class="cell-lines"><div class="l"></div><div class="l"></div></div></td>
+        <td><span class="date-num">&nbsp;</span><span class="icon-row">📖🔤✏️🏃</span><div class="cell-lines"><div class="l"></div><div class="l"></div></div></td>
+      </tr>
+      <tr>
+        <td><span class="date-num">&nbsp;</span><span class="icon-row">📖🔤✏️🏃</span><div class="cell-lines"><div class="l"></div><div class="l"></div></div></td>
+        <td><span class="date-num">&nbsp;</span><span class="icon-row">📖🔤✏️🏃</span><div class="cell-lines"><div class="l"></div><div class="l"></div></div></td>
+        <td><span class="date-num">&nbsp;</span><span class="icon-row">📖🔤✏️🏃</span><div class="cell-lines"><div class="l"></div><div class="l"></div></div></td>
+        <td><span class="date-num">&nbsp;</span><span class="icon-row">📖🔤✏️🏃</span><div class="cell-lines"><div class="l"></div><div class="l"></div></div></td>
+        <td><span class="date-num">&nbsp;</span><span class="icon-row">📖🔤✏️🏃</span><div class="cell-lines"><div class="l"></div><div class="l"></div></div></td>
+        <td><span class="date-num">&nbsp;</span><span class="icon-row">📖🔤✏️🏃</span><div class="cell-lines"><div class="l"></div><div class="l"></div></div></td>
+        <td><span class="date-num">&nbsp;</span><span class="icon-row">📖🔤✏️🏃</span><div class="cell-lines"><div class="l"></div><div class="l"></div></div></td>
+      </tr>
+      <tr>
+        <td><span class="date-num">&nbsp;</span><span class="icon-row">📖🔤✏️🏃</span><div class="cell-lines"><div class="l"></div><div class="l"></div></div></td>
+        <td><span class="date-num">&nbsp;</span><span class="icon-row">📖🔤✏️🏃</span><div class="cell-lines"><div class="l"></div><div class="l"></div></div></td>
+        <td><span class="date-num">&nbsp;</span><span class="icon-row">📖🔤✏️🏃</span><div class="cell-lines"><div class="l"></div><div class="l"></div></div></td>
+        <td><span class="date-num">&nbsp;</span><span class="icon-row">📖🔤✏️🏃</span><div class="cell-lines"><div class="l"></div><div class="l"></div></div></td>
+        <td><span class="date-num">&nbsp;</span><span class="icon-row">📖🔤✏️🏃</span><div class="cell-lines"><div class="l"></div><div class="l"></div></div></td>
+        <td><span class="date-num">&nbsp;</span><span class="icon-row">📖🔤✏️🏃</span><div class="cell-lines"><div class="l"></div><div class="l"></div></div></td>
+        <td><span class="date-num">&nbsp;</span><span class="icon-row">📖🔤✏️🏃</span><div class="cell-lines"><div class="l"></div><div class="l"></div></div></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="footer">
+    <div class="footer-note">완료한 항목의 아이콘에 동그라미 쳐보세요!</div>
+    <div class="stamp-box">
+      <div class="stamp-label">부모님 확인</div>
+      <div class="stamp-circle"></div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

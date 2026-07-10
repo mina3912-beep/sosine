@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>소시네 여름방학 하루계획표</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+<style>
+  @page { size: A4 landscape; margin: 10mm 12mm; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Jua', 'Noto Sans KR', 'Helvetica Neue', Arial, sans-serif;
+    background: #EDEDED; color: #333;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+    padding: 14px 0 40px;
+  }
+
+  .page-wrap { width: 273mm; margin: 0 auto; background: #fff; }
+
+  .toolbar { width: 273mm; margin: 0 auto 10px; display: flex; align-items: center; justify-content: flex-end; gap: 8px; }
+  .btn { font-family: inherit; font-size: 13px; font-weight: 800; cursor: pointer; border: none; border-radius: 20px; padding: 9px 18px; background: linear-gradient(135deg, #FF8C00, #FFB347); color: #fff; box-shadow: 0 3px 10px rgba(200,140,0,.28); }
+  .btn.secondary { background: #fff; color: #666; border: 1px solid #ccc; }
+  @media print { .toolbar, .no-print { display: none !important; } body { padding: 0; background: #fff; } .page-wrap { width: 273mm; } }
+
+  [contenteditable="true"] { outline: none; }
+  [contenteditable="true"]:hover { background: #FAFAFA; }
+  [contenteditable="true"]:focus { background: #F5F8FF; box-shadow: 0 0 0 1.5px #9DB8FF inset; }
+
+  /* ── Cut hint + vertical cut line ── */
+  .cut-hint { text-align: center; font-size: 8pt; color: #bbb; font-weight: 700; margin-bottom: 6px; }
+  .row-wrap { display: flex; align-items: stretch; }
+  .half-block { flex: 1; min-width: 0; padding: 0 8px; }
+  .cut-line-v { width: 16px; flex-shrink: 0; position: relative; border-left: 1.5px dashed #ccc; }
+  .cut-line-v .scissors-v { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #fff; font-size: 11px; padding: 3px 1px; }
+
+  /* ── Half block content ── */
+  .top-row { display: flex; justify-content: flex-start; align-items: flex-end; border-bottom: 2px solid #333; padding-bottom: 6px; margin-bottom: 8px; }
+  .date-label { font-size: 7.5pt; color: #999; font-weight: 700; letter-spacing: 1px; margin-bottom: 1px; }
+  .date-big { font-size: 22pt; font-weight: 300; letter-spacing: .5px; color: #333; display: flex; gap: 3px; }
+  .date-big .fill { border-bottom: 1px solid #ccc; min-width: 60px; text-align: center; }
+
+  .cols { display: flex; gap: 8px; margin-bottom: 8px; }
+  .col.tasks-col { flex: 1; min-width: 0; }
+  .col.time-col { flex: 0 0 46mm; }
+  .col-title { font-size: 8pt; font-weight: 800; color: #333; border-bottom: 1.5px solid #333; padding-bottom: 2px; margin-bottom: 3px; }
+
+  .task-row { display: flex; align-items: flex-start; gap: 7px; padding: 8px 3px; border-bottom: 1px dotted #eee; }
+  .task-row input[type="checkbox"] { margin-top: 3px; width: 11px; height: 11px; accent-color: #666; }
+  .task-text { flex: 1; font-size: 10pt; min-height: 13pt; color: #333; }
+  .add-btn { font-size: 7pt; color: #bbb; font-weight: 700; cursor: pointer; margin-top: 4px; display: inline-block; }
+  .add-btn:hover { color: #FF8C00; }
+
+  table.timegrid { width: 100%; border-collapse: collapse; table-layout: fixed; }
+  table.timegrid td { border: 1px solid #E2E2E2; }
+  table.timegrid td.hourlabel { width: 8mm; font-size: 5.8pt; color: #999; font-weight: 700; text-align: left; padding: 0 2px; border-left: none; }
+  table.timegrid td.gridcell { height: 5.2mm; }
+
+  .quick-row { display: flex; gap: 10px; border: 1px solid #ddd; border-radius: 6px; padding: 9px 12px; margin-bottom: 10px; font-size: 8pt; flex-wrap: wrap; }
+  .quick-item { display: flex; align-items: center; gap: 5px; }
+  .quick-q { font-weight: 700; color: #444; white-space: nowrap; }
+  .toggle-group { display: flex; gap: 3px; }
+  .toggle-opt { border: 1.3px solid #ccc; border-radius: 10px; padding: 1px 6px; cursor: pointer; color: #999; font-weight: 700; }
+  .toggle-opt.selected { border-color: #FF8C00; color: #FF8C00; }
+  .study-time { display: flex; align-items: center; gap: 3px; font-weight: 700; color: #444; }
+  .study-time .fill { border-bottom: 1px solid #ccc; min-width: 18px; text-align: center; }
+
+  .memo-box { min-height: 32mm; font-size: 8.2pt; line-height: 1.9; border-top: 1.5px solid #333; padding-top: 5px; background: repeating-linear-gradient(to bottom, transparent, transparent 9.6mm, #ccc 9.6mm, #ccc 10mm); color: #333; }
+</style>
+</head>
+<body>
+
+<div class="toolbar no-print">
+  <button class="btn secondary" onclick="location.reload()">전체 초기화</button>
+  <button class="btn" onclick="window.print()">🖨️ 인쇄하기</button>
+</div>
+
+<div class="page-wrap">
+  <div class="cut-hint">가운데 점선을 잘라 반으로 나눠 쓰세요 ✂️</div>
+  <div class="row-wrap">
+    <div class="half-block" id="block-0"></div>
+    <div class="cut-line-v"><span class="scissors-v">✂️</span></div>
+    <div class="half-block" id="block-1"></div>
+  </div>
+</div>
+
+<script>
+  const SLOTS_PER_HOUR = 6;
+  const HOURS = [7,8,9,10,11,12,1,2,3,4,5,6,7,8,9,10,11];
+  const TASK_ROWS = 6;
+
+  function buildDayBlock(container, idx) {
+    container.innerHTML =
+      '<div class="top-row">' +
+        '<div>' +
+          '<div class="date-label">DATE</div>' +
+          '<div class="date-big">' +
+            '<span class="fill" contenteditable="true">&nbsp;</span>월' +
+            '<span class="fill" style="min-width:26px" contenteditable="true">&nbsp;</span>일' +
+            ' (<span class="fill" style="min-width:16px" contenteditable="true">&nbsp;</span>)' +
+          '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="cols">' +
+        '<div class="col tasks-col" id="taskCol-' + idx + '">' +
+          '<div class="col-title">오늘의 할 일</div>' +
+        '</div>' +
+        '<div class="col time-col">' +
+          '<div class="col-title">타임트랙</div>' +
+          '<table class="timegrid"><tbody id="timeGridBody-' + idx + '"></tbody></table>' +
+        '</div>' +
+      '</div>' +
+      '<div class="quick-row">' +
+        '<div class="quick-item"><span class="quick-q">숙제 했나요?</span><div class="toggle-group">' +
+          '<span class="toggle-opt" onclick="dayToggle(this)">예</span><span class="toggle-opt" onclick="dayToggle(this)">아니오</span>' +
+        '</div></div>' +
+        '<div class="quick-item"><span class="quick-q">책 읽었나요?</span><div class="toggle-group">' +
+          '<span class="toggle-opt" onclick="dayToggle(this)">예</span><span class="toggle-opt" onclick="dayToggle(this)">아니오</span>' +
+        '</div></div>' +
+        '<div class="quick-item study-time">공부 시간 <span class="fill" contenteditable="true">&nbsp;</span>시간 <span class="fill" contenteditable="true">&nbsp;</span>분</div>' +
+      '</div>' +
+      '<div class="memo-box" contenteditable="true">&nbsp;</div>';
+
+    const taskCol = document.getElementById('taskCol-' + idx);
+    for (let i = 0; i < TASK_ROWS; i++) taskCol.appendChild(makeTaskRow());
+    const taskAdd = document.createElement('span');
+    taskAdd.className = 'add-btn no-print';
+    taskAdd.textContent = '+ 할 일 추가';
+    taskAdd.onclick = function () { addTaskRow(this); };
+    taskCol.appendChild(taskAdd);
+
+    buildTimeGrid(idx);
+  }
+
+  function dayToggle(el) {
+    el.parentElement.querySelectorAll('.toggle-opt').forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+  }
+  function makeTaskRow() {
+    const row = document.createElement('div');
+    row.className = 'task-row';
+    row.innerHTML = '<input type="checkbox"><span class="task-text" contenteditable="true">&nbsp;</span>';
+    return row;
+  }
+  function addTaskRow(btn) { btn.parentElement.insertBefore(makeTaskRow(), btn); }
+
+  function buildTimeGrid(idx) {
+    const body = document.getElementById('timeGridBody-' + idx);
+    HOURS.forEach(h => {
+      const tr = document.createElement('tr');
+      const labelTd = document.createElement('td');
+      labelTd.className = 'hourlabel';
+      labelTd.textContent = h;
+      tr.appendChild(labelTd);
+      for (let s = 0; s < SLOTS_PER_HOUR; s++) {
+        const td = document.createElement('td');
+        td.className = 'gridcell';
+        tr.appendChild(td);
+      }
+      body.appendChild(tr);
+    });
+  }
+
+  buildDayBlock(document.getElementById('block-0'), 0);
+  buildDayBlock(document.getElementById('block-1'), 1);
+</script>
+
+</body>
+</html>
