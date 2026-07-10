@@ -20,7 +20,8 @@
     padding: 14px 0 40px;
   }
 
-  .sheet { width: 269mm; margin: 0 auto; background: #fff; }
+  .scale-outer { width: 100%; height: 178mm; overflow: hidden; }
+  .sheet { width: 269mm; margin: 0 auto; background: #fff; transform-origin: top center; }
 
   /* ── Toolbar (screen only) ── */
   .toolbar {
@@ -101,27 +102,29 @@
   </div>
 </div>
 
-<div class="sheet">
+<div class="scale-outer" id="scaleOuter">
+  <div class="sheet" id="pageWrap">
 
-  <div class="title-row">
-    <div class="title-left">이름 <span class="fill" contenteditable="true">&nbsp;</span></div>
-    <div class="month-label" id="monthLabel">JULY</div>
+    <div class="title-row">
+      <div class="title-left">이름 <span class="fill" contenteditable="true">&nbsp;</span></div>
+      <div class="month-label" id="monthLabel">JULY</div>
+    </div>
+
+    <table class="cal">
+      <colgroup><col><col><col><col><col><col><col></colgroup>
+      <thead>
+        <tr>
+          <th class="sun">일요일</th>
+          <th>월요일</th><th>화요일</th><th>수요일</th><th>목요일</th><th>금요일</th>
+          <th class="sat">토요일</th>
+        </tr>
+      </thead>
+      <tbody id="calBody"></tbody>
+    </table>
+
+    <div class="footer">칸을 클릭해 자유롭게 일정을 적어보세요.</div>
+
   </div>
-
-  <table class="cal">
-    <colgroup><col><col><col><col><col><col><col></colgroup>
-    <thead>
-      <tr>
-        <th class="sun">일요일</th>
-        <th>월요일</th><th>화요일</th><th>수요일</th><th>목요일</th><th>금요일</th>
-        <th class="sat">토요일</th>
-      </tr>
-    </thead>
-    <tbody id="calBody"></tbody>
-  </table>
-
-  <div class="footer">칸을 클릭해 자유롭게 일정을 적어보세요.</div>
-
 </div>
 
 <script>
@@ -159,7 +162,21 @@
 
   function addRow(btn) {
     btn.parentElement.insertBefore(makeTaskRow(), btn);
+    fitToScreen();
   }
+
+  function fitToScreen() {
+    const outer = document.getElementById('scaleOuter');
+    const inner = document.getElementById('pageWrap');
+    inner.style.transform = 'scale(1)';
+    const availableW = outer.clientWidth - 4;
+    const availableH = outer.clientHeight;
+    const naturalW = inner.offsetWidth;
+    const naturalH = inner.offsetHeight;
+    const scale = Math.min(1, availableW / naturalW, availableH / naturalH);
+    inner.style.transform = 'scale(' + scale + ')';
+  }
+  window.addEventListener('resize', fitToScreen);
 
   function buildCalendar() {
     const year = parseInt(document.getElementById('yearInput').value, 10);
@@ -201,6 +218,7 @@
       }
       body.appendChild(tr);
     }
+    fitToScreen();
   }
 
   buildCalendar();

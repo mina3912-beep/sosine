@@ -17,7 +17,8 @@
     padding: 14px 0 40px;
   }
 
-  .sheet { width: 269mm; margin: 0 auto; background: #fff; }
+  .scale-outer { width: 100%; height: 178mm; overflow: hidden; }
+  .sheet { width: 269mm; margin: 0 auto; background: #fff; transform-origin: top center; }
 
   .toolbar { width: 269mm; margin: 0 auto 10px; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
   .toolbar .controls { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #666; font-weight: 700; }
@@ -72,26 +73,28 @@
   </div>
 </div>
 
-<div class="sheet">
-  <div class="title-row">
-    <div class="title-main">하루 체크리스트</div>
-    <div class="title-sub" id="monthSub">2026년 7월</div>
-  </div>
+<div class="scale-outer" id="scaleOuter">
+  <div class="sheet" id="pageWrap">
+    <div class="title-row">
+      <div class="title-main">하루 체크리스트</div>
+      <div class="title-sub" id="monthSub">2026년 7월</div>
+    </div>
 
-  <table class="mission" id="missionTable">
-    <colgroup></colgroup>
-    <thead><tr></tr></thead>
-    <tbody></tbody>
-  </table>
+    <table class="mission" id="missionTable">
+      <colgroup></colgroup>
+      <thead><tr></tr></thead>
+      <tbody></tbody>
+    </table>
 
-  <div class="add-row-line no-print">
-    <span class="add-row-btn" onclick="addMissionRow()">+ 미션 추가</span>
+    <div class="add-row-line no-print">
+      <span class="add-row-btn" onclick="addMissionRow()">+ 미션 추가</span>
+    </div>
   </div>
 </div>
 
 <script>
   const WD = ['일','월','화','수','목','금','토'];
-  const DEFAULT_MISSIONS = ['독서 (30분)', '영어 학습', '수학 연산', '학원/과외 숙제', '태권도·줄넘기', '일기 쓰기', '방 정리정돈', '물 마시기', '준비물 챙기기'];
+  const DEFAULT_MISSION_ROWS = 9;
 
   function buildTable() {
     const year = parseInt(document.getElementById('yearInput').value, 10);
@@ -117,7 +120,7 @@
     }
 
     tbody.innerHTML = '';
-    DEFAULT_MISSIONS.forEach(name => addMissionRow(name, daysInMonth));
+    for (let i = 0; i < DEFAULT_MISSION_ROWS; i++) addMissionRow('', daysInMonth);
   }
 
   function addMissionRow(name, daysInMonth) {
@@ -138,7 +141,21 @@
       tr.appendChild(td);
     }
     tbody.appendChild(tr);
+    fitToScreen();
   }
+
+  function fitToScreen() {
+    const outer = document.getElementById('scaleOuter');
+    const inner = document.getElementById('pageWrap');
+    inner.style.transform = 'scale(1)';
+    const availableW = outer.clientWidth - 4;
+    const availableH = outer.clientHeight;
+    const naturalW = inner.offsetWidth;
+    const naturalH = inner.offsetHeight;
+    const scale = Math.min(1, availableW / naturalW, availableH / naturalH);
+    inner.style.transform = 'scale(' + scale + ')';
+  }
+  window.addEventListener('resize', fitToScreen);
 
   buildTable();
 </script>

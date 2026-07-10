@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>소시네 여름방학 과목체크표</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+<style>
+  @page { size: A4 landscape; margin: 10mm 12mm; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Jua', 'Noto Sans KR', 'Helvetica Neue', Arial, sans-serif;
+    background: #EDEDED; color: #333;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+    padding: 14px 0 40px;
+  }
+
+  .scale-outer { width: 100%; height: 190mm; overflow: hidden; }
+  .page-wrap { width: 273mm; margin: 0 auto; background: #fff; transform-origin: top center; }
+
+  .toolbar { width: 273mm; margin: 0 auto 10px; display: flex; align-items: center; justify-content: flex-end; gap: 8px; }
+  .btn { font-family: inherit; font-size: 13px; font-weight: 800; cursor: pointer; border: none; border-radius: 20px; padding: 9px 18px; background: linear-gradient(135deg, #FF8C00, #FFB347); color: #fff; box-shadow: 0 3px 10px rgba(200,140,0,.28); }
+  .btn.secondary { background: #fff; color: #666; border: 1px solid #ccc; }
+  @media print { .toolbar, .no-print { display: none !important; } body { padding: 0; background: #fff; } .page-wrap { width: 273mm; } }
+
+  [contenteditable="true"] { outline: none; }
+  [contenteditable="true"]:hover { background: #FAFAFA; }
+  [contenteditable="true"]:focus { background: #F5F8FF; box-shadow: 0 0 0 1.5px #9DB8FF inset; }
+
+  /* ── Cut hint + vertical cut line ── */
+  .cut-hint { text-align: center; font-size: 8pt; color: #bbb; font-weight: 700; margin-bottom: 6px; }
+  .row-wrap { display: flex; align-items: stretch; }
+  .half-block { flex: 1; min-width: 0; padding: 0 8px; }
+  .cut-line-v { width: 16px; flex-shrink: 0; position: relative; border-left: 1.5px dashed #ccc; }
+  .cut-line-v .scissors-v { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #fff; font-size: 11px; padding: 3px 1px; }
+
+  /* ── Header ── */
+  .top-row { display: flex; justify-content: flex-start; align-items: flex-end; border-bottom: 2px solid #333; padding-bottom: 10px; margin-bottom: 12px; }
+  .date-label { font-size: 8pt; color: #999; font-weight: 700; letter-spacing: 1px; margin-bottom: 2px; }
+  .date-big { font-size: 23pt; font-weight: 400; color: #333; display: flex; gap: 3px; }
+  .date-big .fill { border-bottom: 1px solid #ccc; min-width: 42px; text-align: center; }
+
+  .goal-box { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+  .goal-label { font-size: 11.5pt; font-weight: 800; color: #FF8C00; white-space: nowrap; }
+  .goal-line { flex: 1; border-bottom: 1.5px dashed #ccc; min-height: 22px; font-size: 11.5pt; padding: 0 4px; }
+
+  /* ── Quick fill ── */
+  .quick-fill { display: flex; gap: 6px; margin-bottom: 10px; }
+  .quick-fill-input { flex: 1; font-family: inherit; font-size: 9.5pt; padding: 7px 10px; border: 1.5px solid #ccc; border-radius: 8px; }
+  .quick-fill-btn { background: linear-gradient(135deg, #FF8C00, #FFB347); color: #fff; font-size: 9pt; font-weight: 800; padding: 7px 14px; border-radius: 16px; cursor: pointer; white-space: nowrap; border: none; font-family: inherit; }
+  .quick-fill-hint { font-size: 7.5pt; color: #bbb; margin: -6px 0 8px; }
+
+  /* ── Table ── */
+  table.subj { width: 100%; border-collapse: collapse; table-layout: fixed; margin-bottom: 12px; }
+  table.subj th, table.subj td { border: 1px solid #ddd; }
+  col.col-subject { width: 26mm; }
+  col.col-check { width: 16mm; }
+  thead th { background: #F3EFE6; font-size: 11pt; font-weight: 800; color: #333; padding: 8px 4px; }
+  tbody td { padding: 4px 8px; height: 11mm; vertical-align: middle; }
+  td.subject-cell { font-size: 11.5pt; font-weight: 700; color: #333; }
+  td.content-cell { font-size: 11pt; color: #333; }
+  td.check-cell { text-align: center; }
+  td.check-cell input[type="checkbox"] { width: 18px; height: 18px; accent-color: #FF8C00; }
+
+  .row-actions { display: flex; align-items: center; gap: 5px; }
+  .del-row { font-size: 8pt; color: #ccc; cursor: pointer; flex-shrink: 0; }
+  .del-row:hover { color: #e05; }
+  .add-row-line { margin-bottom: 14px; }
+  .add-row-btn { font-size: 9.5pt; color: #999; font-weight: 700; cursor: pointer; }
+  .add-row-btn:hover { color: #FF8C00; }
+
+  /* ── Footer ── */
+  .footer-row { display: flex; gap: 14px; border: 1px solid #ddd; border-radius: 8px; padding: 14px 18px; flex-wrap: wrap; align-items: center; }
+  .footer-item { display: flex; align-items: center; gap: 6px; }
+  .footer-label { font-size: 11pt; font-weight: 800; color: #444; white-space: nowrap; }
+  .footer-item .fill { border-bottom: 1px solid #ccc; min-width: 24px; text-align: center; font-size: 11pt; }
+
+  .mood-group { display: flex; align-items: center; gap: 10px; margin-left: auto; }
+  .mood-opt { font-size: 25px; cursor: pointer; border-radius: 50%; padding: 3px 6px; border: 2px solid transparent; }
+  .mood-opt.selected { border-color: #FF8C00; background: #FFF7EC; }
+
+  /* ── Gratitude journal ── */
+  .gratitude-box { margin-top: 12px; }
+  .gratitude-label { font-size: 11pt; font-weight: 800; color: #444; margin-bottom: 5px; }
+  .gratitude-line { border-bottom: 1px dashed #ccc; min-height: 18px; font-size: 10.5pt; padding: 2px 3px; margin-bottom: 5px; }
+</style>
+</head>
+<body>
+
+<div class="toolbar no-print">
+  <button class="btn secondary" onclick="location.reload()">전체 초기화</button>
+  <button class="btn" onclick="window.print()">🖨️ 인쇄하기</button>
+</div>
+
+<div class="scale-outer" id="scaleOuter">
+  <div class="page-wrap" id="pageWrap">
+    <div class="cut-hint no-print">가운데 점선을 잘라 반으로 나눠 쓰세요 ✂️</div>
+    <div class="row-wrap">
+      <div class="half-block" id="block-0"></div>
+      <div class="cut-line-v"><span class="scissors-v">✂️</span></div>
+      <div class="half-block" id="block-1"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const SUBJECT_ROWS = 8;
+
+  function selectMood(el) {
+    el.parentElement.querySelectorAll('.mood-opt').forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+  }
+
+  function makeSubjectRow() {
+    const tr = document.createElement('tr');
+
+    const subjectTd = document.createElement('td');
+    subjectTd.className = 'subject-cell';
+    subjectTd.innerHTML = '<div class="row-actions"><span class="del-row no-print" onclick="this.closest(\'tr\').remove()">✕</span><span contenteditable="true">&nbsp;</span></div>';
+    tr.appendChild(subjectTd);
+
+    const contentTd = document.createElement('td');
+    contentTd.className = 'content-cell';
+    contentTd.contentEditable = 'true';
+    contentTd.innerHTML = '&nbsp;';
+    tr.appendChild(contentTd);
+
+    const checkTd = document.createElement('td');
+    checkTd.className = 'check-cell';
+    checkTd.innerHTML = '<input type="checkbox">';
+    tr.appendChild(checkTd);
+
+    return tr;
+  }
+
+  function addSubjectRow(idx) {
+    document.getElementById('subjBody-' + idx).appendChild(makeSubjectRow());
+    fitToScreen();
+  }
+
+  const SUBJECT_KEYWORDS = [
+    ['영어', ['영어', '단어', '파닉스', '리딩', '알파벳', '영단어', '영어책', '영어일기', '영작']],
+    ['수학', ['수학', '연산', '문제집', '구구단', '도형', '사고력']],
+    ['국어', ['국어', '한글책', '받아쓰기', '맞춤법', '일기쓰기', '일기']],
+    ['사회', ['사회']],
+    ['과학', ['과학', '실험']],
+    ['독서', ['독서', '책읽기', '책 읽기']],
+    ['운동', ['태권도', '줄넘기', '운동', '축구', '수영']],
+  ];
+
+  function classifySubject(text) {
+    for (const [subject, keywords] of SUBJECT_KEYWORDS) {
+      if (keywords.some(k => text.includes(k))) return subject;
+    }
+    return '';
+  }
+
+  function quickFill(idx) {
+    const input = document.getElementById('quickFillInput-' + idx);
+    const items = input.value.split(/[,\n、]+/).map(s => s.trim()).filter(Boolean);
+    if (!items.length) return;
+
+    const body = document.getElementById('subjBody-' + idx);
+    body.innerHTML = '';
+    items.forEach(item => {
+      const row = makeSubjectRow();
+      row.querySelector('.subject-cell span[contenteditable]').textContent = classifySubject(item);
+      row.querySelector('.content-cell').textContent = item;
+      body.appendChild(row);
+    });
+    input.value = '';
+    fitToScreen();
+  }
+
+  function buildBlock(container, idx) {
+    container.innerHTML =
+      '<div class="top-row">' +
+        '<div>' +
+          '<div class="date-label">DATE</div>' +
+          '<div class="date-big">' +
+            '<span class="fill" contenteditable="true">&nbsp;</span>월' +
+            '<span class="fill" contenteditable="true">&nbsp;</span>일' +
+          '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="goal-box">' +
+        '<div class="goal-label">🎯 오늘의 목표</div>' +
+        '<div class="goal-line" contenteditable="true">&nbsp;</div>' +
+      '</div>' +
+      '<div class="quick-fill no-print">' +
+        '<input type="text" class="quick-fill-input" id="quickFillInput-' + idx + '" placeholder="예: 영어단어 외우기, 한글책 읽기, 연산, 리딩서 풀기">' +
+        '<button type="button" class="quick-fill-btn" onclick="quickFill(' + idx + ')">✨ 자동으로 채우기</button>' +
+      '</div>' +
+      '<div class="quick-fill-hint no-print">쉼표(,)나 줄바꿈으로 구분해서 오늘 할 일을 적으면 과목을 자동으로 구분해서 표에 채워줘요.</div>' +
+      '<table class="subj">' +
+        '<colgroup><col class="col-subject"><col><col class="col-check"></colgroup>' +
+        '<thead><tr><th>과목</th><th>내용</th><th>체크</th></tr></thead>' +
+        '<tbody id="subjBody-' + idx + '"></tbody>' +
+      '</table>' +
+      '<div class="add-row-line no-print">' +
+        '<span class="add-row-btn" onclick="addSubjectRow(' + idx + ')">+ 과목 추가</span>' +
+      '</div>' +
+      '<div class="footer-row">' +
+        '<div class="footer-item">' +
+          '<span class="footer-label">총 공부시간</span>' +
+          '<span class="fill" contenteditable="true">&nbsp;</span>시간' +
+          '<span class="fill" contenteditable="true">&nbsp;</span>분' +
+        '</div>' +
+        '<div class="mood-group">' +
+          '<span class="footer-label">오늘 어땠어?</span>' +
+          '<span class="mood-opt" onclick="selectMood(this)">😞</span>' +
+          '<span class="mood-opt" onclick="selectMood(this)">😐</span>' +
+          '<span class="mood-opt" onclick="selectMood(this)">😊</span>' +
+        '</div>' +
+      '</div>' +
+      '<div class="gratitude-box">' +
+        '<div class="gratitude-label">💛 오늘의 감사일기</div>' +
+        '<div class="gratitude-line" contenteditable="true">&nbsp;</div>' +
+        '<div class="gratitude-line" contenteditable="true">&nbsp;</div>' +
+      '</div>';
+
+    for (let i = 0; i < SUBJECT_ROWS; i++) addSubjectRow(idx);
+  }
+
+  buildBlock(document.getElementById('block-0'), 0);
+  buildBlock(document.getElementById('block-1'), 1);
+
+  function fitToScreen() {
+    const outer = document.getElementById('scaleOuter');
+    const inner = document.getElementById('pageWrap');
+    inner.style.transform = 'scale(1)';
+    const availableW = outer.clientWidth - 4;
+    const availableH = outer.clientHeight;
+    const naturalW = inner.offsetWidth;
+    const naturalH = inner.offsetHeight;
+    const scale = Math.min(1, availableW / naturalW, availableH / naturalH);
+    inner.style.transform = 'scale(' + scale + ')';
+  }
+  window.addEventListener('resize', fitToScreen);
+  window.addEventListener('load', fitToScreen);
+  fitToScreen();
+</script>
+
+</body>
+</html>

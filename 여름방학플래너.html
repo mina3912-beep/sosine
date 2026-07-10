@@ -25,12 +25,14 @@
   @page landscape-b { size: A4 landscape; margin: 16mm 14mm; }
   @page landscape-c { size: A4 landscape; margin: 14mm 14mm; }
   @page landscape-d { size: A4 landscape; margin: 10mm 12mm; }
+  @page landscape-e { size: A4 landscape; margin: 10mm 12mm; }
 
   .page-section { page-break-before: always; padding-top: 26px; }
   #daySection    { page: landscape-d; }
   #missionSection{ page: landscape-b; }
   #monthSection  { page: landscape-a; }
   #weekSection   { page: landscape-c; }
+  #subjectSection{ page: landscape-e; }
 
   .section-tag {
     max-width: 900px; margin: 0 auto 8px; font-size: 12px; font-weight: 800;
@@ -41,7 +43,7 @@
   .menu { max-width: 900px; margin: 0 auto 24px; background: #fff; border-radius: 14px; padding: 20px 24px; box-shadow: 0 2px 14px rgba(0,0,0,.06); }
   .menu h1 { font-size: 17px; font-weight: 800; color: #333; margin-bottom: 4px; }
   .menu .desc { font-size: 12.5px; color: #999; margin-bottom: 16px; }
-  .cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 16px; }
+  .cards { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 16px; }
   .card {
     border: 2px solid #E5E5E5; border-radius: 12px; padding: 14px 10px; text-align: center;
     cursor: pointer; user-select: none; transition: border-color .15s, background .15s;
@@ -67,7 +69,8 @@
   }
 
   /* ══════════ DAY SECTION ══════════ */
-  #daySection .page-wrap { width: 273mm; margin: 0 auto; background: #fff; }
+  #daySection .scale-outer { width: 100%; height: 190mm; overflow: hidden; }
+  #daySection .page-wrap { width: 273mm; margin: 0 auto; background: #fff; transform-origin: top center; }
   #daySection .cut-hint { text-align: center; font-size: 8pt; color: #bbb; font-weight: 700; margin-bottom: 6px; }
   #daySection .row-wrap { display: flex; align-items: stretch; }
   #daySection .half-block { flex: 1; min-width: 0; padding: 0 8px; }
@@ -100,8 +103,51 @@
   #daySection .study-time .fill { border-bottom: 1px solid #ccc; min-width: 18px; text-align: center; }
   #daySection .memo-box { min-height: 32mm; font-size: 8.2pt; line-height: 1.9; border-top: 1.5px solid #333; padding-top: 5px; background: repeating-linear-gradient(to bottom, transparent, transparent 9.6mm, #ccc 9.6mm, #ccc 10mm); color: #333; }
 
+  /* ══════════ SUBJECT CHECK SECTION ══════════ */
+  #subjectSection .scale-outer { width: 100%; height: 190mm; overflow: hidden; }
+  #subjectSection .page-wrap { width: 273mm; margin: 0 auto; background: #fff; transform-origin: top center; }
+  #subjectSection .cut-hint { text-align: center; font-size: 8pt; color: #bbb; font-weight: 700; margin-bottom: 6px; }
+  #subjectSection .row-wrap { display: flex; align-items: stretch; }
+  #subjectSection .half-block { flex: 1; min-width: 0; padding: 0 8px; }
+  #subjectSection .cut-line-v { width: 16px; flex-shrink: 0; position: relative; border-left: 1.5px dashed #ccc; }
+  #subjectSection .cut-line-v .scissors-v { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #fff; font-size: 11px; padding: 3px 1px; }
+  #subjectSection .top-row { display: flex; justify-content: flex-start; align-items: flex-end; border-bottom: 2px solid #333; padding-bottom: 10px; margin-bottom: 12px; }
+  #subjectSection .date-label { font-size: 8pt; color: #999; font-weight: 700; letter-spacing: 1px; margin-bottom: 2px; }
+  #subjectSection .date-big { font-size: 23pt; font-weight: 400; color: #333; display: flex; gap: 3px; }
+  #subjectSection .date-big .fill { border-bottom: 1px solid #ccc; min-width: 42px; text-align: center; }
+  #subjectSection .goal-box { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+  #subjectSection .goal-label { font-size: 11.5pt; font-weight: 800; color: #FF8C00; white-space: nowrap; }
+  #subjectSection .goal-line { flex: 1; border-bottom: 1.5px dashed #ccc; min-height: 22px; font-size: 11.5pt; padding: 0 4px; }
+  #subjectSection table.subj { width: 100%; border-collapse: collapse; table-layout: fixed; margin-bottom: 12px; }
+  #subjectSection table.subj th, #subjectSection table.subj td { border: 1px solid #ddd; }
+  #subjectSection col.col-subject { width: 26mm; }
+  #subjectSection col.col-check { width: 16mm; }
+  #subjectSection thead th { background: #F3EFE6; font-size: 11pt; font-weight: 800; color: #333; padding: 8px 4px; }
+  #subjectSection tbody td { padding: 4px 8px; height: 11mm; vertical-align: middle; }
+  #subjectSection td.subject-cell { font-size: 11.5pt; font-weight: 700; color: #333; }
+  #subjectSection td.content-cell { font-size: 11pt; color: #333; }
+  #subjectSection td.check-cell { text-align: center; }
+  #subjectSection td.check-cell input[type="checkbox"] { width: 18px; height: 18px; accent-color: #FF8C00; }
+  #subjectSection .row-actions { display: flex; align-items: center; gap: 5px; }
+  #subjectSection .del-row { font-size: 8pt; color: #ccc; cursor: pointer; flex-shrink: 0; }
+  #subjectSection .del-row:hover { color: #e05; }
+  #subjectSection .add-row-line { margin-bottom: 14px; }
+  #subjectSection .add-row-btn { font-size: 9.5pt; color: #999; font-weight: 700; cursor: pointer; }
+  #subjectSection .add-row-btn:hover { color: #FF8C00; }
+  #subjectSection .footer-row { display: flex; gap: 14px; border: 1px solid #ddd; border-radius: 8px; padding: 14px 18px; flex-wrap: wrap; align-items: center; }
+  #subjectSection .footer-item { display: flex; align-items: center; gap: 6px; }
+  #subjectSection .footer-label { font-size: 11pt; font-weight: 800; color: #444; white-space: nowrap; }
+  #subjectSection .footer-item .fill { border-bottom: 1px solid #ccc; min-width: 24px; text-align: center; font-size: 11pt; }
+  #subjectSection .mood-group { display: flex; align-items: center; gap: 10px; margin-left: auto; }
+  #subjectSection .mood-opt { font-size: 25px; cursor: pointer; border-radius: 50%; padding: 3px 6px; border: 2px solid transparent; }
+  #subjectSection .mood-opt.selected { border-color: #FF8C00; background: #FFF7EC; }
+  #subjectSection .gratitude-box { margin-top: 12px; }
+  #subjectSection .gratitude-label { font-size: 11pt; font-weight: 800; color: #444; margin-bottom: 5px; }
+  #subjectSection .gratitude-line { border-bottom: 1px dashed #ccc; min-height: 18px; font-size: 10.5pt; padding: 2px 3px; margin-bottom: 5px; }
+
   /* ══════════ MISSION SECTION ══════════ */
-  #missionSection .sheet { width: 269mm; margin: 0 auto; background: #fff; }
+  #missionSection .scale-outer { width: 100%; height: 178mm; overflow: hidden; }
+  #missionSection .sheet { width: 269mm; margin: 0 auto; background: #fff; transform-origin: top center; }
   #missionSection .title-row { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 8px; }
   #missionSection .title-main { font-size: 16pt; font-weight: 800; color: #333; }
   #missionSection .title-sub { font-size: 9pt; color: #999; font-weight: 600; }
@@ -125,7 +171,8 @@
   #missionSection .add-row-btn:hover { color: #FF8C00; }
 
   /* ══════════ MONTH CALENDAR SECTION ══════════ */
-  #monthSection .sheet { width: 269mm; margin: 0 auto; background: #fff; }
+  #monthSection .scale-outer { width: 100%; height: 178mm; overflow: hidden; }
+  #monthSection .sheet { width: 269mm; margin: 0 auto; background: #fff; transform-origin: top center; }
   #monthSection .title-row { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 10px; }
   #monthSection .title-left { display: flex; align-items: center; gap: 8px; font-size: 10pt; color: #999; font-weight: 600; }
   #monthSection .title-left .fill { border-bottom: 1px solid #ccc; padding: 0 3px; min-width: 40px; text-align: center; }
@@ -169,6 +216,16 @@
   #weekSection .subj-table td.row-label { font-size: 8.5pt; font-weight: 800; color: #333; background: #FAFAFA; }
   #weekSection .subj-table td.subj-cell { height: 20mm; vertical-align: top; padding: 4px 6px; text-align: left; }
   #weekSection .subj-table td.subj-cell .subj-text { font-size: 8pt; line-height: 1.6; color: #333; min-height: 100%; white-space: pre-wrap; }
+
+  /* ── Global quick fill ── */
+  .quick-fill-global { display: flex; gap: 8px; margin-bottom: 14px; }
+  .quick-fill-global textarea {
+    flex: 1; font-family: inherit; font-size: 13px; padding: 10px 12px;
+    border: 1.5px solid #ccc; border-radius: 10px; resize: vertical; min-height: 44px;
+  }
+  .quick-fill-global .btn { align-self: flex-start; white-space: nowrap; }
+  .quick-fill-hint-global { font-size: 11px; color: #bbb; margin: -8px 0 14px; }
+  #fillTargetLabel { color: #FF8C00; font-weight: 700; }
 </style>
 </head>
 <body>
@@ -176,6 +233,13 @@
 <div class="menu no-print">
   <h1>🌻 소시네 여름방학 플래너</h1>
   <div class="desc">사용할 계획표를 골라주세요. 선택한 것만 화면에 나오고, 인쇄도 선택한 것만 돼요.</div>
+
+  <div class="quick-fill-global">
+    <textarea id="globalQuickFillInput" placeholder="예: 영어단어 외우기, 한글책 읽기, 연산, 리딩서 풀기"></textarea>
+    <button class="btn" onclick="globalQuickFill()">✨ 선택한 계획표에 채우기</button>
+  </div>
+  <div class="quick-fill-hint-global">쉼표(,)나 줄바꿈으로 구분해서 적고 아래에서 계획표를 선택한 뒤 누르면, 하루계획표·체크리스트·플래너에 자동으로 나눠 들어가요. (월간달력·주간시간표는 아직 지원 안 해요)</div>
+  <div class="quick-fill-hint-global" id="fillTargetLabel">다음엔 왼쪽 칸에 채워져요</div>
 
   <div class="cards">
     <label class="card on" id="cardDay">
@@ -202,6 +266,12 @@
       <span class="name">주간시간표</span>
       <span class="sub">시간대별 요일표</span>
     </label>
+    <label class="card on" id="cardSubject">
+      <input type="checkbox" checked onchange="toggleSection('subject', this.checked)">
+      <span class="icon">📚</span>
+      <span class="name">플래너</span>
+      <span class="sub">과목·내용·체크</span>
+    </label>
   </div>
 
   <div class="menu-controls">
@@ -221,12 +291,14 @@
 <!-- ══════════ DAY ══════════ -->
 <div id="daySection" class="page-section">
   <div class="section-tag no-print">1. 하루계획표</div>
-  <div class="page-wrap">
-    <div class="cut-hint no-print">가운데 점선을 잘라 반으로 나눠 쓰세요 ✂️</div>
-    <div class="row-wrap">
-      <div class="half-block" id="dayBlock-0"></div>
-      <div class="cut-line-v"><span class="scissors-v">✂️</span></div>
-      <div class="half-block" id="dayBlock-1"></div>
+  <div class="scale-outer" id="dayScaleOuter">
+    <div class="page-wrap" id="dayPageWrap">
+      <div class="cut-hint no-print">가운데 점선을 잘라 반으로 나눠 쓰세요 ✂️</div>
+      <div class="row-wrap">
+        <div class="half-block" id="dayBlock-0"></div>
+        <div class="cut-line-v"><span class="scissors-v">✂️</span></div>
+        <div class="half-block" id="dayBlock-1"></div>
+      </div>
     </div>
   </div>
 </div>
@@ -234,18 +306,20 @@
 <!-- ══════════ MISSION ══════════ -->
 <div id="missionSection" class="page-section">
   <div class="section-tag no-print">2. 하루 체크리스트</div>
-  <div class="sheet">
-    <div class="title-row">
-      <div class="title-main">하루 체크리스트</div>
-      <div class="title-sub" id="monthSub">2026년 7월</div>
-    </div>
-    <table class="mission" id="missionTable">
-      <colgroup></colgroup>
-      <thead><tr></tr></thead>
-      <tbody></tbody>
-    </table>
-    <div class="add-row-line no-print">
-      <span class="add-row-btn" onclick="missionAddRow()">+ 미션 추가</span>
+  <div class="scale-outer" id="missionScaleOuter">
+    <div class="sheet" id="missionPageWrap">
+      <div class="title-row">
+        <div class="title-main">하루 체크리스트</div>
+        <div class="title-sub" id="monthSub">2026년 7월</div>
+      </div>
+      <table class="mission" id="missionTable">
+        <colgroup></colgroup>
+        <thead><tr></tr></thead>
+        <tbody></tbody>
+      </table>
+      <div class="add-row-line no-print">
+        <span class="add-row-btn" onclick="missionAddRow()">+ 미션 추가</span>
+      </div>
     </div>
   </div>
 </div>
@@ -253,23 +327,25 @@
 <!-- ══════════ MONTH CALENDAR ══════════ -->
 <div id="monthSection" class="page-section">
   <div class="section-tag no-print">3. 월간달력</div>
-  <div class="sheet">
-    <div class="title-row">
-      <div class="title-left">이름 <span class="fill" contenteditable="true">&nbsp;</span></div>
-      <div class="month-label" id="monthLabel">JULY</div>
+  <div class="scale-outer" id="monthScaleOuter">
+    <div class="sheet" id="monthPageWrap">
+      <div class="title-row">
+        <div class="title-left">이름 <span class="fill" contenteditable="true">&nbsp;</span></div>
+        <div class="month-label" id="monthLabel">JULY</div>
+      </div>
+      <table class="cal">
+        <colgroup><col><col><col><col><col><col><col></colgroup>
+        <thead>
+          <tr>
+            <th class="sun">일요일</th>
+            <th>월요일</th><th>화요일</th><th>수요일</th><th>목요일</th><th>금요일</th>
+            <th class="sat">토요일</th>
+          </tr>
+        </thead>
+        <tbody id="calBody"></tbody>
+      </table>
+      <div class="footer">칸을 클릭해 자유롭게 일정을 적어보세요.</div>
     </div>
-    <table class="cal">
-      <colgroup><col><col><col><col><col><col><col></colgroup>
-      <thead>
-        <tr>
-          <th class="sun">일요일</th>
-          <th>월요일</th><th>화요일</th><th>수요일</th><th>목요일</th><th>금요일</th>
-          <th class="sat">토요일</th>
-        </tr>
-      </thead>
-      <tbody id="calBody"></tbody>
-    </table>
-    <div class="footer">칸을 클릭해 자유롭게 일정을 적어보세요.</div>
   </div>
 </div>
 
@@ -306,11 +382,26 @@
   </div>
 </div>
 
+<!-- ══════════ SUBJECT CHECK ══════════ -->
+<div id="subjectSection" class="page-section">
+  <div class="section-tag no-print">5. 플래너</div>
+  <div class="scale-outer" id="scScaleOuter">
+    <div class="page-wrap" id="scPageWrap">
+      <div class="cut-hint no-print">가운데 점선을 잘라 반으로 나눠 쓰세요 ✂️</div>
+      <div class="row-wrap">
+        <div class="half-block" id="scBlock-0"></div>
+        <div class="cut-line-v"><span class="scissors-v">✂️</span></div>
+        <div class="half-block" id="scBlock-1"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
   /* ── section visibility ── */
   function toggleSection(key, on) {
-    const map = { day: 'daySection', mission: 'missionSection', month: 'monthSection', week: 'weekSection' };
-    const cardMap = { day: 'cardDay', mission: 'cardMission', month: 'cardMonth', week: 'cardWeek' };
+    const map = { day: 'daySection', mission: 'missionSection', month: 'monthSection', week: 'weekSection', subject: 'subjectSection' };
+    const cardMap = { day: 'cardDay', mission: 'cardMission', month: 'cardMonth', week: 'cardWeek', subject: 'cardSubject' };
     document.getElementById(map[key]).style.display = on ? '' : 'none';
     document.getElementById(cardMap[key]).classList.toggle('on', on);
   }
@@ -330,7 +421,7 @@
     row.innerHTML = '<input type="checkbox"><span class="task-text" contenteditable="true">&nbsp;</span>';
     return row;
   }
-  function dayAddTaskRow(btn) { btn.parentElement.insertBefore(dayMakeTaskRow(), btn); }
+  function dayAddTaskRow(btn) { btn.parentElement.insertBefore(dayMakeTaskRow(), btn); fitDayToScreen(); }
 
   function dayBuildTimeGrid(idx) {
     const body = document.getElementById('timeGridBody-' + idx);
@@ -395,11 +486,25 @@
   function buildDaySection() {
     buildDayBlock(document.getElementById('dayBlock-0'), 0);
     buildDayBlock(document.getElementById('dayBlock-1'), 1);
+    fitDayToScreen();
   }
+
+  function fitDayToScreen() {
+    const outer = document.getElementById('dayScaleOuter');
+    const inner = document.getElementById('dayPageWrap');
+    inner.style.transform = 'scale(1)';
+    const availableW = outer.clientWidth - 4;
+    const availableH = outer.clientHeight;
+    const naturalW = inner.offsetWidth;
+    const naturalH = inner.offsetHeight;
+    const scale = Math.min(1, availableW / naturalW, availableH / naturalH);
+    inner.style.transform = 'scale(' + scale + ')';
+  }
+  window.addEventListener('resize', fitDayToScreen);
 
   /* ── MISSION ── */
   const WD = ['일','월','화','수','목','금','토'];
-  const DEFAULT_MISSIONS = ['독서 (30분)', '영어 학습', '수학 연산', '학원/과외 숙제', '태권도·줄넘기', '일기 쓰기', '방 정리정돈', '물 마시기', '준비물 챙기기'];
+  const DEFAULT_MISSION_ROWS = 9;
 
   function buildMissionTable(year, month) {
     document.getElementById('monthSub').textContent = year + '년 ' + month + '월';
@@ -422,7 +527,7 @@
     }
 
     tbody.innerHTML = '';
-    DEFAULT_MISSIONS.forEach(name => missionAddRow(name, daysInMonth));
+    for (let i = 0; i < DEFAULT_MISSION_ROWS; i++) missionAddRow('', daysInMonth);
   }
 
   function missionAddRow(name, daysInMonth) {
@@ -443,7 +548,21 @@
       tr.appendChild(td);
     }
     tbody.appendChild(tr);
+    fitMissionToScreen();
   }
+
+  function fitMissionToScreen() {
+    const outer = document.getElementById('missionScaleOuter');
+    const inner = document.getElementById('missionPageWrap');
+    inner.style.transform = 'scale(1)';
+    const availableW = outer.clientWidth - 4;
+    const availableH = outer.clientHeight;
+    const naturalW = inner.offsetWidth;
+    const naturalH = inner.offsetHeight;
+    const scale = Math.min(1, availableW / naturalW, availableH / naturalH);
+    inner.style.transform = 'scale(' + scale + ')';
+  }
+  window.addEventListener('resize', fitMissionToScreen);
 
   /* ── MONTH CALENDAR ── */
   const MONTH_NAMES = ['JANUARY','FEBRUARY','MARCH','APRIL','MAY','JUNE','JULY','AUGUST','SEPTEMBER','OCTOBER','NOVEMBER','DECEMBER'];
@@ -475,7 +594,20 @@
     row.appendChild(text);
     return row;
   }
-  function monthAddRow(btn) { btn.parentElement.insertBefore(monthMakeTaskRow(), btn); }
+  function monthAddRow(btn) { btn.parentElement.insertBefore(monthMakeTaskRow(), btn); fitMonthToScreen(); }
+
+  function fitMonthToScreen() {
+    const outer = document.getElementById('monthScaleOuter');
+    const inner = document.getElementById('monthPageWrap');
+    inner.style.transform = 'scale(1)';
+    const availableW = outer.clientWidth - 4;
+    const availableH = outer.clientHeight;
+    const naturalW = inner.offsetWidth;
+    const naturalH = inner.offsetHeight;
+    const scale = Math.min(1, availableW / naturalW, availableH / naturalH);
+    inner.style.transform = 'scale(' + scale + ')';
+  }
+  window.addEventListener('resize', fitMonthToScreen);
 
   function buildMonthCalendar(year, month) {
     document.getElementById('monthLabel').textContent = MONTH_NAMES[month - 1];
@@ -514,6 +646,7 @@
       }
       body.appendChild(tr);
     }
+    fitMonthToScreen();
   }
 
   /* ── WEEK ── */
@@ -563,6 +696,194 @@
     });
   }
 
+  /* ── SUBJECT CHECK ── */
+  const SC_SUBJECT_ROWS = 8;
+
+  function scSelectMood(el) {
+    el.parentElement.querySelectorAll('.mood-opt').forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+  }
+
+  function scMakeSubjectRow() {
+    const tr = document.createElement('tr');
+
+    const subjectTd = document.createElement('td');
+    subjectTd.className = 'subject-cell';
+    subjectTd.innerHTML = '<div class="row-actions"><span class="del-row no-print" onclick="this.closest(\'tr\').remove()">✕</span><span contenteditable="true">&nbsp;</span></div>';
+    tr.appendChild(subjectTd);
+
+    const contentTd = document.createElement('td');
+    contentTd.className = 'content-cell';
+    contentTd.contentEditable = 'true';
+    contentTd.innerHTML = '&nbsp;';
+    tr.appendChild(contentTd);
+
+    const checkTd = document.createElement('td');
+    checkTd.className = 'check-cell';
+    checkTd.innerHTML = '<input type="checkbox">';
+    tr.appendChild(checkTd);
+
+    return tr;
+  }
+
+  function scAddSubjectRow(idx) {
+    document.getElementById('scBody-' + idx).appendChild(scMakeSubjectRow());
+    fitScToScreen();
+  }
+
+  const SC_SUBJECT_KEYWORDS = [
+    ['영어', ['영어', '단어', '파닉스', '리딩', '알파벳', '영단어', '영어책', '영어일기', '영작']],
+    ['수학', ['수학', '연산', '문제집', '구구단', '도형', '사고력']],
+    ['국어', ['국어', '한글책', '받아쓰기', '맞춤법', '일기쓰기', '일기']],
+    ['사회', ['사회']],
+    ['과학', ['과학', '실험']],
+    ['독서', ['독서', '책읽기', '책 읽기']],
+    ['운동', ['태권도', '줄넘기', '운동', '축구', '수영']],
+  ];
+
+  function scClassifySubject(text) {
+    for (const [subject, keywords] of SC_SUBJECT_KEYWORDS) {
+      if (keywords.some(k => text.includes(k))) return subject;
+    }
+    return '';
+  }
+
+  function buildScBlock(container, idx) {
+    container.innerHTML =
+      '<div class="top-row">' +
+        '<div>' +
+          '<div class="date-label">DATE</div>' +
+          '<div class="date-big">' +
+            '<span class="fill" contenteditable="true">&nbsp;</span>월' +
+            '<span class="fill" contenteditable="true">&nbsp;</span>일' +
+          '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="goal-box">' +
+        '<div class="goal-label">🎯 오늘의 목표</div>' +
+        '<div class="goal-line" contenteditable="true">&nbsp;</div>' +
+      '</div>' +
+      '<table class="subj">' +
+        '<colgroup><col class="col-subject"><col><col class="col-check"></colgroup>' +
+        '<thead><tr><th>과목</th><th>내용</th><th>체크</th></tr></thead>' +
+        '<tbody id="scBody-' + idx + '"></tbody>' +
+      '</table>' +
+      '<div class="add-row-line no-print">' +
+        '<span class="add-row-btn" onclick="scAddSubjectRow(' + idx + ')">+ 과목 추가</span>' +
+      '</div>' +
+      '<div class="footer-row">' +
+        '<div class="footer-item">' +
+          '<span class="footer-label">총 공부시간</span>' +
+          '<span class="fill" contenteditable="true">&nbsp;</span>시간' +
+          '<span class="fill" contenteditable="true">&nbsp;</span>분' +
+        '</div>' +
+        '<div class="mood-group">' +
+          '<span class="footer-label">오늘 어땠어?</span>' +
+          '<span class="mood-opt" onclick="scSelectMood(this)">😞</span>' +
+          '<span class="mood-opt" onclick="scSelectMood(this)">😐</span>' +
+          '<span class="mood-opt" onclick="scSelectMood(this)">😊</span>' +
+        '</div>' +
+      '</div>' +
+      '<div class="gratitude-box">' +
+        '<div class="gratitude-label">💛 오늘의 감사일기</div>' +
+        '<div class="gratitude-line" contenteditable="true">&nbsp;</div>' +
+        '<div class="gratitude-line" contenteditable="true">&nbsp;</div>' +
+      '</div>';
+
+    for (let i = 0; i < SC_SUBJECT_ROWS; i++) scAddSubjectRow(idx);
+  }
+
+  function fitScToScreen() {
+    const outer = document.getElementById('scScaleOuter');
+    const inner = document.getElementById('scPageWrap');
+    inner.style.transform = 'scale(1)';
+    const availableW = outer.clientWidth - 4;
+    const availableH = outer.clientHeight;
+    const naturalW = inner.offsetWidth;
+    const naturalH = inner.offsetHeight;
+    const scale = Math.min(1, availableW / naturalW, availableH / naturalH);
+    inner.style.transform = 'scale(' + scale + ')';
+  }
+  window.addEventListener('resize', fitScToScreen);
+
+  function buildSubjectSection() {
+    buildScBlock(document.getElementById('scBlock-0'), 0);
+    buildScBlock(document.getElementById('scBlock-1'), 1);
+    fitScToScreen();
+  }
+
+  /* ── global quick fill (top of page) ── */
+  function isBlankText(el) {
+    if (!el) return true;
+    return el.textContent.replace(/ /g, '').trim() === '';
+  }
+
+  let globalFillNextIdx = 0;
+
+  function updateFillTargetLabel() {
+    const label = document.getElementById('fillTargetLabel');
+    if (label) label.textContent = '다음엔 ' + (globalFillNextIdx === 0 ? '왼쪽' : '오른쪽') + ' 칸에 채워져요';
+  }
+
+  function globalQuickFill() {
+    const input = document.getElementById('globalQuickFillInput');
+    const items = input.value.split(/[,\n、]+/).map(s => s.trim()).filter(Boolean);
+    if (!items.length) return;
+
+    const wantDay = document.querySelector('#cardDay input').checked;
+    const wantMission = document.querySelector('#cardMission input').checked;
+    const wantSubject = document.querySelector('#cardSubject input').checked;
+    const idx = globalFillNextIdx;
+
+    if (wantDay) {
+      document.querySelectorAll('#taskCol-' + idx + ' .task-row').forEach(row => {
+        if (isBlankText(row.querySelector('.task-text'))) row.remove();
+      });
+    }
+    if (wantMission) {
+      document.querySelectorAll('#missionTable tbody tr').forEach(row => {
+        if (isBlankText(row.querySelector('.mission-name span[contenteditable]'))) row.remove();
+      });
+    }
+    if (wantSubject) {
+      document.querySelectorAll('#scBody-' + idx + ' tr').forEach(row => {
+        const subj = row.querySelector('.subject-cell span[contenteditable]');
+        const content = row.querySelector('.content-cell');
+        if (isBlankText(subj) && isBlankText(content)) row.remove();
+      });
+    }
+
+    items.forEach(item => {
+      if (wantDay) {
+        const btn = document.querySelector('#taskCol-' + idx + ' .add-btn');
+        if (btn) {
+          const row = dayMakeTaskRow();
+          row.querySelector('.task-text').textContent = item;
+          btn.parentElement.insertBefore(row, btn);
+        }
+      }
+      if (wantMission) {
+        missionAddRow(item);
+      }
+      if (wantSubject) {
+        const body = document.getElementById('scBody-' + idx);
+        if (body) {
+          const row = scMakeSubjectRow();
+          row.querySelector('.subject-cell span[contenteditable]').textContent = scClassifySubject(item);
+          row.querySelector('.content-cell').textContent = item;
+          body.appendChild(row);
+        }
+      }
+    });
+
+    if (wantDay) fitDayToScreen();
+    if (wantSubject) fitScToScreen();
+
+    input.value = '';
+    globalFillNextIdx = 1 - globalFillNextIdx;
+    updateFillTargetLabel();
+  }
+
   /* ── shared year/month rebuild ── */
   function rebuildDated() {
     const year = parseInt(document.getElementById('yearInput').value, 10);
@@ -575,6 +896,7 @@
   buildDaySection();
   buildWeekHourTable();
   buildWeekSubjTable();
+  buildSubjectSection();
   rebuildDated();
 </script>
 

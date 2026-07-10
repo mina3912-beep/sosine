@@ -17,7 +17,8 @@
     padding: 14px 0 40px;
   }
 
-  .page-wrap { width: 273mm; margin: 0 auto; background: #fff; }
+  .scale-outer { width: 100%; height: 190mm; overflow: hidden; }
+  .page-wrap { width: 273mm; margin: 0 auto; background: #fff; transform-origin: top center; }
 
   .toolbar { width: 273mm; margin: 0 auto 10px; display: flex; align-items: center; justify-content: flex-end; gap: 8px; }
   .btn { font-family: inherit; font-size: 13px; font-weight: 800; cursor: pointer; border: none; border-radius: 20px; padding: 9px 18px; background: linear-gradient(135deg, #FF8C00, #FFB347); color: #fff; box-shadow: 0 3px 10px rgba(200,140,0,.28); }
@@ -76,12 +77,14 @@
   <button class="btn" onclick="window.print()">🖨️ 인쇄하기</button>
 </div>
 
-<div class="page-wrap">
-  <div class="cut-hint">가운데 점선을 잘라 반으로 나눠 쓰세요 ✂️</div>
-  <div class="row-wrap">
-    <div class="half-block" id="block-0"></div>
-    <div class="cut-line-v"><span class="scissors-v">✂️</span></div>
-    <div class="half-block" id="block-1"></div>
+<div class="scale-outer" id="scaleOuter">
+  <div class="page-wrap" id="pageWrap">
+    <div class="cut-hint">가운데 점선을 잘라 반으로 나눠 쓰세요 ✂️</div>
+    <div class="row-wrap">
+      <div class="half-block" id="block-0"></div>
+      <div class="cut-line-v"><span class="scissors-v">✂️</span></div>
+      <div class="half-block" id="block-1"></div>
+    </div>
   </div>
 </div>
 
@@ -143,7 +146,7 @@
     row.innerHTML = '<input type="checkbox"><span class="task-text" contenteditable="true">&nbsp;</span>';
     return row;
   }
-  function addTaskRow(btn) { btn.parentElement.insertBefore(makeTaskRow(), btn); }
+  function addTaskRow(btn) { btn.parentElement.insertBefore(makeTaskRow(), btn); fitToScreen(); }
 
   function buildTimeGrid(idx) {
     const body = document.getElementById('timeGridBody-' + idx);
@@ -164,6 +167,21 @@
 
   buildDayBlock(document.getElementById('block-0'), 0);
   buildDayBlock(document.getElementById('block-1'), 1);
+
+  function fitToScreen() {
+    const outer = document.getElementById('scaleOuter');
+    const inner = document.getElementById('pageWrap');
+    inner.style.transform = 'scale(1)';
+    const availableW = outer.clientWidth - 4;
+    const availableH = outer.clientHeight;
+    const naturalW = inner.offsetWidth;
+    const naturalH = inner.offsetHeight;
+    const scale = Math.min(1, availableW / naturalW, availableH / naturalH);
+    inner.style.transform = 'scale(' + scale + ')';
+  }
+  window.addEventListener('resize', fitToScreen);
+  window.addEventListener('load', fitToScreen);
+  fitToScreen();
 </script>
 
 </body>
