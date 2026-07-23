@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>소시네 엄마표영어 리딩반 — 빠른 아이보다 오래 가는 아이</title>
+    <meta name="description" content="엄마표영어 8년차, 리딩반 12기째 운영중인 소시네와 함께해요. 아이 성향에 맞는 방향을 찾고, 오래 가는 영어 루틴을 만듭니다.">
+    <style>
+        @font-face {
+            font-family: 'yg-jalnan';
+            src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        :root {
+            --pink: #FF9FB6;
+            --pink-light: #FFC1D0;
+            --pink-deep: #F2789A;
+            --cream: #FBF6EF;
+            --cream-dark: #F4EFE2;
+            --ink: #4A3F3A;
+            --ink-soft: #8A7B73;
+            --white: #FFFFFF;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', sans-serif;
+            background: var(--white);
+            color: var(--ink);
+            line-height: 1.7;
+            word-break: keep-all;
+        }
+
+        h1, h2, h3, .jalnan {
+            font-family: 'yg-jalnan', sans-serif;
+            font-weight: normal;
+            line-height: 1.4;
+        }
+
+        .container { max-width: 860px; margin: 0 auto; padding: 0 24px; }
+        section { padding: 64px 0; }
+
+        .section-label {
+            display: inline-block;
+            background: var(--cream);
+            color: var(--pink-deep);
+            font-size: 13px;
+            font-weight: 700;
+            padding: 6px 14px;
+            border-radius: 999px;
+            margin-bottom: 14px;
+            letter-spacing: 0.5px;
+        }
+
+        h2 { font-size: 26px; margin-bottom: 10px; }
+        .section-sub { color: var(--ink-soft); font-size: 15px; margin-bottom: 32px; }
+
+        .cta {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--pink-light), var(--pink));
+            color: var(--white);
+            font-family: 'yg-jalnan', sans-serif;
+            font-size: 15px;
+            padding: 13px 28px;
+            border-radius: 999px;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        /* ── Nav ── */
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(6px);
+            border-bottom: 1px solid var(--cream-dark);
+        }
+
+        .topbar-inner {
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .topbar-logo { font-family: 'yg-jalnan', sans-serif; font-size: 15px; color: var(--ink); }
+
+        .topbar-menu {
+            display: none;
+            gap: 24px;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--ink-soft);
+        }
+
+        .topbar-menu a { color: inherit; text-decoration: none; }
+
+        @media (min-width: 640px) {
+            .topbar-menu { display: flex; }
+        }
+
+        /* ── Hero ── */
+        .hero {
+            background: var(--cream);
+            padding: 72px 0 56px;
+            text-align: center;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: var(--white);
+            color: var(--pink-deep);
+            font-family: 'yg-jalnan', sans-serif;
+            font-size: 13px;
+            padding: 8px 18px;
+            border-radius: 999px;
+            box-shadow: 0 2px 10px rgba(242, 120, 154, 0.15);
+            margin-bottom: 22px;
+        }
+
+        .hero h1 { font-size: 34px; margin-bottom: 16px; }
+        .hero-sub { font-size: 16px; color: var(--ink-soft); max-width: 460px; margin: 0 auto; }
+
+        @media (min-width: 640px) { .hero h1 { font-size: 42px; } }
+
+        /* ── 통계 바 ── */
+        .stats-bar { background: linear-gradient(135deg, var(--pink), var(--pink-deep)); }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            max-width: 860px;
+            margin: 0 auto;
+        }
+
+        .stat-cell {
+            text-align: center;
+            padding: 26px 8px;
+            color: var(--white);
+            border-right: 1px solid rgba(255, 255, 255, 0.25);
+        }
+
+        .stat-cell:last-child { border-right: none; }
+        .stat-cell .num { font-family: 'yg-jalnan', sans-serif; font-size: 25px; display: block; }
+        .stat-cell .num .unit { font-size: 14px; margin-left: 2px; }
+        .stat-cell .label { font-size: 13px; opacity: 0.9; margin-top: 4px; }
+
+        /* ── 프로필 ── */
+        .profile-name { font-family: 'yg-jalnan', sans-serif; font-size: 26px; margin-bottom: 6px; }
+        .profile-handle { font-size: 13px; color: var(--pink-deep); font-weight: 700; margin-bottom: 16px; }
+        .profile-intro { font-size: 15px; color: var(--ink); opacity: 0.9; margin-bottom: 18px; }
+
+        .profile-badges { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 32px; }
+        .profile-badges span {
+            background: var(--cream);
+            border-radius: 999px;
+            padding: 7px 14px;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--ink);
+        }
+
+        .profile-list { list-style: none; }
+        .profile-list li { display: flex; gap: 14px; padding: 16px 0; border-top: 1px solid var(--cream-dark); }
+        .profile-list li:first-child { border-top: none; }
+        .profile-list .idx { font-family: 'yg-jalnan', sans-serif; color: var(--pink-deep); font-size: 13px; flex-shrink: 0; width: 22px; }
+        .profile-list h3 { font-size: 15px; margin-bottom: 3px; }
+        .profile-list p { font-size: 13px; color: var(--ink-soft); }
+
+        /* ── 특징 그리드 (짧은 카드) ── */
+        .feature-section { background: var(--cream); }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 14px;
+        }
+
+        .feature-item {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 22px 20px;
+        }
+
+        .feature-item .idx { font-family: 'yg-jalnan', sans-serif; color: var(--pink-deep); font-size: 13px; margin-bottom: 8px; display: block; }
+        .feature-item h3 { font-size: 16px; margin-bottom: 6px; }
+        .feature-item p { font-size: 13px; color: var(--ink-soft); }
+
+        @media (min-width: 640px) {
+            .feature-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+
+        /* ── 클래스(커리큘럼) 카드 ── */
+        .class-section-head {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 28px;
+        }
+
+        .class-section-head h2 { margin-bottom: 0; }
+
+        .class-grid { display: grid; gap: 14px; grid-template-columns: 1fr; }
+
+        .class-card {
+            background: var(--cream);
+            border-radius: 18px;
+            padding: 22px 20px;
+        }
+
+        .class-card .tag { font-size: 11px; font-weight: 700; color: var(--pink-deep); letter-spacing: 0.5px; margin-bottom: 8px; display: block; }
+        .class-card .step-badge {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 26px; height: 26px; border-radius: 50%;
+            background: var(--white); color: var(--pink-deep);
+            font-family: 'yg-jalnan', sans-serif; font-size: 12px; margin-bottom: 10px;
+        }
+        .class-card h3 { font-size: 16px; margin-bottom: 6px; }
+        .class-card p { font-size: 13px; color: var(--ink-soft); }
+
+        @media (min-width: 640px) { .class-grid { grid-template-columns: repeat(2, 1fr); } }
+
+        /* ── 후기 ── */
+        .review-section { background: var(--cream); }
+
+        .review-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 28px; }
+        .review-head h2 { margin-bottom: 4px; }
+
+        .review-grid { display: grid; gap: 14px; grid-template-columns: 1fr; }
+        .review-card { background: var(--white); border-radius: 16px; padding: 22px 20px; }
+        .review-stars { color: var(--pink-deep); font-size: 13px; margin-bottom: 8px; letter-spacing: 1px; }
+        .review-card p { font-size: 14px; color: var(--ink); margin-bottom: 12px; }
+        .review-tag { font-size: 12px; font-weight: 700; color: var(--ink-soft); }
+
+        @media (min-width: 640px) { .review-grid { grid-template-columns: repeat(3, 1fr); } }
+
+        /* ── 실제 화면 갤러리 ── */
+        .gallery-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+        .gallery-grid figure { margin: 0; }
+        .gallery-grid img { width: 100%; border-radius: 14px; border: 1px solid var(--cream-dark); display: block; }
+        .gallery-grid figcaption { font-size: 12px; color: var(--ink-soft); margin-top: 8px; text-align: center; }
+
+        /* ── Contact us ── */
+        .contact-section { background: var(--cream); }
+        .contact-title { font-family: 'yg-jalnan', sans-serif; font-size: 24px; margin-bottom: 24px; }
+        .contact-grid { display: grid; gap: 14px; grid-template-columns: 1fr; }
+
+        .contact-card {
+            background: linear-gradient(135deg, var(--pink-light), var(--pink));
+            border-radius: 18px;
+            padding: 24px 22px;
+            color: var(--white);
+            text-decoration: none;
+            display: block;
+        }
+
+        .contact-card .kind { font-size: 11px; font-weight: 700; letter-spacing: 0.5px; opacity: 0.85; margin-bottom: 8px; }
+        .contact-card .name { font-family: 'yg-jalnan', sans-serif; font-size: 18px; margin-bottom: 6px; }
+        .contact-card .desc { font-size: 13px; opacity: 0.9; }
+        .contact-card .arrow { margin-top: 12px; font-size: 15px; }
+
+        @media (min-width: 640px) { .contact-grid { grid-template-columns: 1fr 1fr; } }
+
+        /* ── 가격 ── */
+        .price-section { text-align: center; }
+
+        .price-box {
+            background: var(--cream);
+            border-radius: 24px;
+            padding: 40px 28px;
+        }
+
+        .price-box .plan-name { font-family: 'yg-jalnan', sans-serif; font-size: 16px; color: var(--pink-deep); margin-bottom: 10px; }
+        .price-box .amount { font-family: 'yg-jalnan', sans-serif; font-size: 38px; margin-bottom: 4px; }
+        .price-box .amount span { font-size: 16px; color: var(--ink-soft); }
+        .price-box .price-desc { font-size: 13px; color: var(--ink-soft); margin-bottom: 24px; }
+
+        /* ── FAQ ── */
+        details { background: var(--cream); border-radius: 14px; margin-bottom: 10px; overflow: hidden; }
+        summary { cursor: pointer; padding: 16px 20px; font-weight: 700; font-size: 14px; list-style: none; position: relative; padding-right: 40px; }
+        summary::-webkit-details-marker { display: none; }
+        summary::after { content: '+'; position: absolute; right: 18px; top: 13px; font-size: 18px; color: var(--pink-deep); transition: transform 0.2s ease; }
+        details[open] summary::after { transform: rotate(45deg); }
+        details .answer { padding: 0 20px 18px; font-size: 13px; color: var(--ink-soft); }
+
+        /* ── Footer ── */
+        footer { padding: 40px 0 56px; text-align: center; }
+        .footer-slogan { font-family: 'yg-jalnan', sans-serif; font-size: 15px; color: var(--pink-deep); margin-bottom: 10px; }
+        footer p { font-size: 12px; color: var(--ink-soft); }
+    </style>
+</head>
+<body>
+
+    <!-- ═══════════ 상단 고정 바 ═══════════ -->
+    <div class="topbar">
+        <div class="topbar-inner">
+            <span class="topbar-logo">소시네 엄마표영어</span>
+            <nav class="topbar-menu">
+                <a href="#curriculum">커리큘럼</a>
+                <a href="#reviews">후기</a>
+                <a href="#faq">FAQ</a>
+            </nav>
+            <a href="#" class="cta apply-link">신청하기</a>
+        </div>
+    </div>
+
+    <!-- ═══════════ 히어로 ═══════════ -->
+    <header class="hero">
+        <div class="container">
+            <span class="hero-badge">소시네 엄마표영어</span>
+            <h1>빠른 아이보다,<br>오래 가는 아이</h1>
+            <p class="hero-sub">많이가 아니라 끊기지 않게, 빠르게가 아니라 우리 아이 속도로.<br>아이 성향에 맞는 오래 가는 영어 루틴을 만들어요.</p>
+        </div>
+    </header>
+
+    <!-- ═══════════ 통계 바 ═══════════ -->
+    <div class="stats-bar">
+        <div class="stats-grid">
+            <div class="stat-cell"><span class="num">2,000<span class="unit">+</span></span><span class="label">누적 수강생</span></div>
+            <div class="stat-cell"><span class="num">8<span class="unit">년차</span></span><span class="label">엄마표영어 경험</span></div>
+            <div class="stat-cell"><span class="num">12<span class="unit">기째</span></span><span class="label">리딩반 운영중</span></div>
+        </div>
+    </div>
+
+    <!-- ═══════════ 강사 프로필 ═══════════ -->
+    <section>
+        <div class="container">
+            <p class="profile-name">소시네</p>
+            <p class="profile-handle">@sosine._ · 소시네 엄마표영어</p>
+            <p class="profile-intro">
+                영어를 잘 못하던 엄마였습니다. 성격도 학년도 다른 두 아이, 소윤이와 시윤이를
+                그림책에서 시작해 <strong>8년 만에 해리포터와 소설을 읽는 아이</strong>로 키웠어요.
+                그 경험 그대로, 이제는 다른 집 아이들의 속도를 함께 봐드리고 있습니다.
+            </p>
+            <div class="profile-badges">
+                <span>엄마표영어 8년차</span>
+                <span>리딩반 12기 운영</span>
+                <span>매주 1:1 피드백</span>
+                <span>진행표·리포트 시스템</span>
+            </div>
+
+            <ul class="profile-list">
+                <li>
+                    <span class="idx">01</span>
+                    <div><h3>엄마표영어 8년차 실전 경험</h3><p>소윤·시윤 두 아이를 그림책부터 해리포터까지 직접 키운 기록. 이론이 아니라 우리 집에서 통한 방법이에요.</p></div>
+                </li>
+                <li>
+                    <span class="idx">02</span>
+                    <div><h3>리딩반 12기, 반복하며 다듬어온 로드맵</h3><p>매 기수 자료를 만들고 다듬어온 시간이 쌓여 지금의 커리큘럼이 됐어요.</p></div>
+                </li>
+                <li>
+                    <span class="idx">03</span>
+                    <div><h3>누적 수강생 2,000+</h3><p>이미 많은 집이 같은 길을 걸으며 검증한 루틴이에요.</p></div>
+                </li>
+                <li>
+                    <span class="idx">04</span>
+                    <div><h3>매주 1:1 성장 피드백</h3><p>공용 답이 아니라, 진행표를 보고 우리 아이 이야기로 다음 방향을 잡아드려요.</p></div>
+                </li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- ═══════════ 이렇게 함께해요 (6그리드) ═══════════ -->
+    <section class="feature-section">
+        <div class="container">
+            <span class="section-label">그냥 교재 나눔이 아니에요</span>
+            <h2>기록하고, 함께 점검하며, 아이의 성장을 만들어갑니다.</h2>
+            <p class="section-sub">혼자 하는 엄마표영어가 무너지는 이유는 딱 하나 — 아무도 봐주지 않아서예요.</p>
+
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <span class="idx">01</span>
+                    <h3>아이 맞춤 진단</h3>
+                    <p>시작 설문으로 현재 위치와 성향을 함께 확인하고 출발점을 정해요.</p>
+                </div>
+                <div class="feature-item">
+                    <span class="idx">02</span>
+                    <h3>매주 책·영상·워크지</h3>
+                    <p>같은 리딩반이어도 받는 자료는 아이마다 달라요. 우리 아이에게 맞는 것만 골라드려요.</p>
+                </div>
+                <div class="feature-item">
+                    <span class="idx">03</span>
+                    <h3>하루 30분 루틴</h3>
+                    <p>영상 10분 + 영어책 10분 + 집중듣기 10분. 거창하지 않게, 매일 할 수 있게.</p>
+                </div>
+                <div class="feature-item">
+                    <span class="idx">04</span>
+                    <h3>주간 진행표</h3>
+                    <p>읽은 책, 들은 시간, 아이의 반응까지 체크만 하면 되는 쉬운 기록.</p>
+                </div>
+                <div class="feature-item">
+                    <span class="idx">05</span>
+                    <h3>매주 1:1 피드백</h3>
+                    <p>진행표를 보고 소시네가 직접, 다음 주 방향을 막히기 전에 잡아드려요.</p>
+                </div>
+                <div class="feature-item">
+                    <span class="idx">06</span>
+                    <h3>월간 성장 리포트</h3>
+                    <p>한 달의 기록을 그래프로 정리해 매달 한 번 보내드려요. 감이 아니라 기록으로 보는 성장.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════ 커리큘럼 (클래스 카드) ═══════════ -->
+    <section id="curriculum">
+        <div class="container">
+            <div class="class-section-head">
+                <div>
+                    <span class="section-label">아이의 여정</span>
+                    <h2>빠르게가 아니라 꾸준히,<br>여기까지 가요.</h2>
+                </div>
+                <a href="#" class="cta apply-link">신청하기</a>
+            </div>
+            <p class="section-sub">아이마다 출발점이 달라요. 지금 어디에 있든, 우리 아이의 속도로 한 칸씩 올라가요.</p>
+
+            <div class="class-grid">
+                <div class="class-card">
+                    <span class="tag">STEP 1 · WARM-UP</span>
+                    <span class="step-badge">1</span>
+                    <h3>그림책과 친해지기</h3>
+                    <p>영어가 '공부'가 아니라 '재미'가 되는 시간. 거부감 없이 소리에 노출돼요.</p>
+                </div>
+                <div class="class-card">
+                    <span class="tag">STEP 2 · SIGHT WORDS</span>
+                    <span class="step-badge">2</span>
+                    <h3>사이트워드</h3>
+                    <p>자주 나오는 단어를 눈에 익혀서 읽기의 기초를 다져요.</p>
+                </div>
+                <div class="class-card">
+                    <span class="tag">STEP 3 · FIRST READERS</span>
+                    <span class="step-badge">3</span>
+                    <h3>짧은 리더스 읽기</h3>
+                    <p>"엄마, 나 이거 읽었어!" 처음으로 혼자 읽는 성취감을 맛봐요.</p>
+                </div>
+                <div class="class-card">
+                    <span class="tag">STEP 4 · AR 1~2</span>
+                    <span class="step-badge">4</span>
+                    <h3>AR 1~2점대 리더스</h3>
+                    <p>집중듣기와 함께 읽기 체력을 차곡차곡 쌓아가요.</p>
+                </div>
+                <div class="class-card" style="grid-column: 1 / -1;">
+                    <span class="tag">STEP 5 · CHAPTER BOOKS</span>
+                    <span class="step-badge">5</span>
+                    <h3>챕터북 진입 🎉</h3>
+                    <p>그림 없이도 이야기에 빠져드는 진짜 리더가 돼요. 여기부터는 아이가 스스로 가요.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════ 수강생 후기 ═══════════ -->
+    <section class="review-section" id="reviews">
+        <div class="container">
+            <div class="review-head">
+                <div>
+                    <span class="section-label">학부모 후기</span>
+                    <h2>리딩반 학부모님들의 이야기</h2>
+                </div>
+            </div>
+
+            <div class="review-grid">
+                <div class="review-card">
+                    <div class="review-stars">★★★★★</div>
+                    <p>영어책만 보면 숨기던 아이였어요. 재미있고 짧은 책으로 시작해서 한 권 두 권 쌓이니, 스스로 읽을 수 있다는 자신감이 생겨서 이제 혼자 낭독하려고 애써요.</p>
+                    <div class="review-tag">리딩반 학부모님</div>
+                </div>
+                <div class="review-card">
+                    <div class="review-stars">★★★★★</div>
+                    <p>영어책 읽기를 답답해하며 한국말로 설명해달라던 초2 아이가, 이제는 "왜 재밌지?" 하면서 스스로 읽어봐요. 두 달 차에 이 정도면 2년 후가 기대돼요.</p>
+                    <div class="review-tag">초2 학부모님</div>
+                </div>
+                <div class="review-card">
+                    <div class="review-stars">★★★★★</div>
+                    <p>엄마표 시작한 지 3개월. 소시네가 없었으면 포기했을지도 몰라요. 아이 진도에 맞는 책 추천과 힘 빠질 때마다의 조언 덕분에 꾸준히 해나가고 있어요.</p>
+                    <div class="review-tag">시작 3개월차</div>
+                </div>
+                <div class="review-card">
+                    <div class="review-stars">★★★★★</div>
+                    <p>알파벳만 조금 알던 아이가 어느새 6개월 만에, 일상 속 영어 표기를 혼자 읽어내고 있더라고요. 조금 더 일찍 시작해줄 걸 아쉬울 정도예요.</p>
+                    <div class="review-tag">시작 6개월차</div>
+                </div>
+                <div class="review-card">
+                    <div class="review-stars">★★★★★</div>
+                    <p>꾸준히 책 읽기를 했더니 리딩 지수가 두 달 만에 눈에 띄게 올랐어요. 혼자였으면 못 했을 텐데, 같이 함께한 덕분이에요. 감사합니다!</p>
+                    <div class="review-tag">리딩반 학부모님</div>
+                </div>
+                <div class="review-card">
+                    <div class="review-stars">★★★★★</div>
+                    <p>시작한 지 5개월, 알파벳만 알던 아이가 이제 리더스북을 읽어요. 저희 아이가 해리포터를 읽을 때까지 계속 함께하려고요.</p>
+                    <div class="review-tag">시작 5개월차</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════ 실제 화면 ═══════════ -->
+    <section>
+        <div class="container">
+            <span class="section-label">실제 화면이에요</span>
+            <h2>말이 아니라 기록으로 보여드려요</h2>
+            <p class="section-sub">매주 진행표에 체크하고, 매달 리포트로 정리돼요. (예시 데이터)</p>
+
+            <div class="gallery-grid">
+                <figure>
+                    <img src="tracker-preview.png" alt="소시네 진행표 앱 — 하루 활동 기록 화면">
+                    <figcaption>📱 주간 진행표 앱 화면</figcaption>
+                </figure>
+                <figure>
+                    <img src="report-bars.png" alt="일별 활동 기록 그래프">
+                    <figcaption>📊 월간 성장 리포트 그래프</figcaption>
+                </figure>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════ Contact us ═══════════ -->
+    <section class="contact-section">
+        <div class="container">
+            <span class="section-label">채널 바로가기</span>
+            <p class="contact-title">Contact us.</p>
+
+            <div class="contact-grid">
+                <a href="#" class="contact-card apply-link">
+                    <span class="kind">신청 · 문의</span>
+                    <span class="name">리딩반 신청하기</span>
+                    <span class="desc">5분이면 끝나는 신청 폼 작성</span>
+                    <div class="arrow">→</div>
+                </a>
+                <a href="https://instagram.com/sosine._" target="_blank" rel="noopener" class="contact-card">
+                    <span class="kind">INSTAGRAM</span>
+                    <span class="name">@sosine._</span>
+                    <span class="desc">엄마표영어 기록과 소식을 매일 올려요</span>
+                    <div class="arrow">→</div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════ 가격 ═══════════ -->
+    <section class="price-section">
+        <div class="container">
+            <div class="price-box">
+                <p class="plan-name">소시네 엄마표영어 리딩반</p>
+                <p class="amount">50,000원 <span>/ 월</span></p>
+                <p class="price-desc">부담 없이 시작하고, 오래 함께해요</p>
+                <a href="#" class="cta apply-link">리딩반 신청하기</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════ FAQ ═══════════ -->
+    <section id="faq">
+        <div class="container">
+            <span class="section-label">자주 묻는 질문</span>
+            <h2>궁금한 것들, 미리 답해드릴게요.</h2>
+
+            <details>
+                <summary>엄마가 영어를 잘 못해도 할 수 있나요?</summary>
+                <div class="answer">전혀 문제없어요. 엄마가 가르치는 게 아니라, 아이가 책과 소리에 노출되는 환경을 만드는 거예요. 뭘 읽을지, 어떻게 할지는 소시네가 매주 알려드려요.</div>
+            </details>
+            <details>
+                <summary>우리 아이는 아직 알파벳도 몰라요. 너무 이른가요?</summary>
+                <div class="answer">이르지 않아요. 그림책과 소리로 친해지는 단계부터 시작하면 돼요. 시작 설문으로 아이의 현재 위치를 확인하고, 딱 그 자리에서 출발해요.</div>
+            </details>
+            <details>
+                <summary>하루에 시간이 얼마나 필요한가요?</summary>
+                <div class="answer">하루 30분으로 시작해요. 영상 10분 + 영어책 10분 + 집중듣기 10분. 아이가 익숙해지면 조금씩 늘려가요.</div>
+            </details>
+            <details>
+                <summary>교재는 따로 사야 하나요?</summary>
+                <div class="answer">워크지는 매주 아이 레벨에 맞게 보내드려요. 영어책은 추천해드리면 도서관 대여나 e북 등 부담을 줄이는 방법도 함께 안내해드려요.</div>
+            </details>
+            <details>
+                <summary>피드백은 어떻게 받나요?</summary>
+                <div class="answer">매주 작성하신 진행표를 보고 소시네가 직접 피드백을 드려요. 잘 되고 있는 것, 다음 주에 바꿔볼 것을 콕 짚어드려요.</div>
+            </details>
+            <details>
+                <summary>중간에 그만둘 수 있나요?</summary>
+                <div class="answer">네, 월 단위라 부담 없이 시작하고 언제든 쉬어갈 수 있어요. 다만 영어는 꾸준함이 전부라서, 최소 3개월은 함께해보시길 권해드려요.</div>
+            </details>
+        </div>
+    </section>
+
+    <!-- ═══════════ 푸터 ═══════════ -->
+    <footer>
+        <div class="container">
+            <p class="footer-slogan">빠른 아이보다 오래 가는 아이가 목표입니다 😊</p>
+            <p>소시네 엄마표영어 리딩반</p>
+        </div>
+    </footer>
+
+    <script>
+        const FORM_URL = 'https://naver.me/GVV4x8xB';
+        document.querySelectorAll('.apply-link').forEach(a => { a.href = FORM_URL; });
+    </script>
+</body>
+</html>
