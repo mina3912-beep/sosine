@@ -151,6 +151,28 @@
             margin-right: 4px;
         }
 
+        /* ── 스크롤 유도 화살표 ── */
+        .scroll-hint {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            margin-top: 36px;
+            color: var(--ink-soft);
+            font-size: 12px;
+            animation: scroll-bounce 1.6s ease-in-out infinite;
+        }
+
+        .scroll-hint svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        @keyframes scroll-bounce {
+            0%, 100% { transform: translateY(0); opacity: 0.6; }
+            50% { transform: translateY(8px); opacity: 1; }
+        }
+
         /* ── CTA button ── */
         .cta {
             display: inline-block;
@@ -559,9 +581,13 @@
                 <span>💬 매주 1:1 피드백</span>
                 <span>🌱 월간 성장 리포트</span>
             </div>
-            <p class="hero-price"><strong>월 50,000원</strong>으로 시작해요</p>
+            <p class="hero-price"><strong>월 70,000원</strong>으로 시작해요</p>
             <a href="#" class="cta apply-link">리딩반 신청하기</a>
             <p class="cta-note">신청 폼 작성은 5분이면 충분해요</p>
+            <div class="scroll-hint">
+                <span>더 알아보기</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </div>
         </div>
     </header>
 
@@ -762,7 +788,7 @@
     <section>
         <div class="container">
             <span class="section-label">리딩반에 포함돼요</span>
-            <h2>월 5만원에 이만큼요.</h2>
+            <h2>월 7만원에 이만큼요.</h2>
             <p class="section-sub"></p>
 
             <ul class="includes">
@@ -815,7 +841,7 @@
         <div class="container">
             <div class="price-box">
                 <p class="plan-name">소시네 엄마표영어 리딩반</p>
-                <p class="amount">50,000원 <span>/ 월</span></p>
+                <p class="amount">70,000원 <span>/ 월</span></p>
                 <p class="price-desc">부담 없이 시작하고, 오래 함께해요</p>
                 <a href="#" class="cta apply-link">리딩반 신청하기</a>
                 <p class="cta-note">신청 폼을 남겨주시면 시작 안내를 보내드려요</p>
@@ -833,7 +859,7 @@
 
     <script>
         // 신청 폼 주소 (네이버 폼)
-        const FORM_URL = 'https://naver.me/5eDgjNbj';
+        const FORM_URL = 'https://naver.me/54KfyZIZ';
         document.querySelectorAll('.apply-link').forEach(a => { a.href = FORM_URL; });
     </script>
 </body>
