@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>소시네 엄마표영어 리딩반 — 빠른 아이보다 오래 가는 아이</title>
+    <meta name="description" content="6~11세 아이의 엄마표영어를 매주 소시네가 같이 봐드리는 곳. 맞춤 자료, 주간 진행표와 1:1 피드백, 월간 성장 리포트, 쉐도잉과 단어·사이트워드·문장 만들기 게임.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --white: #FFFFFF;
+            --gray: #F3F5F7;
+            --accent: #2F4A6D;
+            --accent-dark: #223954;
+            --tint: #E8EEF5;
+            --ink: #1F2A37;
+            --ink-soft: #526071;
+            --line: #DDE3EA;
+            --box: #2E3B4B;
+            --on-dark: #C9D2DD;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+        body {
+            font-family: 'Noto Sans KR', -apple-system, sans-serif; font-size: 16px; line-height: 1.8;
+            color: var(--ink); background: var(--white); word-break: keep-all; -webkit-font-smoothing: antialiased;
+        }
+        a:focus-visible, summary:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+        .wrap { max-width: 1040px; margin: 0 auto; padding: 0 24px; }
+        section { padding: 88px 0; }
+        .band { background: var(--gray); }
+        h2 { font-size: 34px; font-weight: 700; line-height: 1.4; letter-spacing: -.02em; margin-bottom: 16px; }
+        .lede { color: var(--ink-soft); max-width: 600px; margin-bottom: 40px; }
+        .btn {
+            display: inline-block; background: var(--accent); color: #fff; font-weight: 700; padding: 15px 30px;
+            border-radius: 6px; text-decoration: none; transition: background .15s;
+        }
+        .btn:hover { background: var(--accent-dark); }
+        .btn.line { background: transparent; color: var(--ink); border: 1.5px solid var(--ink); }
+        .btn.line:hover { background: var(--ink); color: #fff; }
+
+        .topbar { position: sticky; top: 0; z-index: 10; background: rgba(255,255,255,.96); border-bottom: 1px solid var(--line); backdrop-filter: blur(6px); }
+        .topbar .wrap { display: flex; align-items: center; justify-content: space-between; height: 62px; }
+        .logo { font-weight: 900; font-size: 19px; letter-spacing: -.02em; }
+        .logo span { font-weight: 400; color: var(--ink-soft); font-size: 15px; margin-left: 6px; }
+        .topnav { display: flex; gap: 28px; font-size: 15px; }
+        .topnav a { color: var(--ink); text-decoration: none; }
+        .topnav a:hover { color: var(--accent-dark); }
+        .topbar .btn { padding: 9px 20px; font-size: 14px; }
+
+        /* 히어로 */
+        .hero { padding: 80px 0 72px; }
+        .hero .wrap { display: grid; grid-template-columns: 1.15fr 1fr; gap: 56px; align-items: center; }
+        .hero h1 { font-size: 54px; font-weight: 900; line-height: 1.3; letter-spacing: -.035em; margin-bottom: 24px; }
+        .hero .define { font-size: 19px; font-weight: 500; margin-bottom: 6px; }
+        .hero .sub { color: var(--ink-soft); margin-bottom: 32px; }
+        .hero .actions { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+        .hero .price { font-size: 14px; color: var(--ink-soft); margin-top: 16px; }
+        .frame { background: var(--gray); border-radius: 18px; padding: 22px; max-height: 500px; overflow: hidden; position: relative; }
+        .frame img { width: 100%; display: block; border-radius: 10px; }
+        .frame::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 80px; background: linear-gradient(transparent, var(--gray)); }
+
+        .facts { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+        .facts .wrap { display: grid; grid-template-columns: repeat(4, 1fr); }
+        .facts div { padding: 22px 0 22px 24px; border-left: 1px solid var(--line); }
+        .facts div:first-child { border-left: none; padding-left: 0; }
+        .facts dt { font-size: 14px; color: var(--ink-soft); }
+        .facts dd { font-size: 20px; font-weight: 700; }
+
+        /* 한 주 기록판 (핵심) */
+        .record { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
+        .rec-card { background: var(--white); border: 1px solid var(--line); border-radius: 16px; padding: 22px 24px 26px; max-width: 420px; }
+        .rec-head { font-weight: 700; margin-bottom: 14px; }
+        .rec-tag, .rec-today { font-size: 12px; font-weight: 700; border-radius: 999px; padding: 2px 10px; margin-right: 6px; background: var(--tint); color: var(--accent-dark); }
+        .rec-today { margin: 0 0 0 6px; background: var(--accent); color: #fff; }
+        .rec-label { font-size: 15px; font-weight: 700; margin: 14px 0 6px; }
+        .rec-box { border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; min-height: 58px; font-size: 15px; }
+        .week-note { font-size: 14px; color: var(--ink-soft); margin-top: 10px; }
+        .rec-text h3 { font-size: 20px; font-weight: 700; margin-bottom: 6px; }
+        .rec-text p { color: var(--ink-soft); margin-bottom: 26px; }
+        .reply { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-top: 44px; align-items: stretch; }
+        .reply h3 { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+        .reply p { color: var(--ink-soft); }
+        .quote { border-left: 4px solid var(--accent); background: var(--tint); padding: 22px 26px; border-radius: 0 12px 12px 0; }
+        .quote p { color: var(--ink); font-size: 18px; font-weight: 500; line-height: 1.75; }
+        .quote small { display: block; margin-top: 10px; color: var(--ink-soft); font-size: 14px; }
+
+        /* 구성 */
+        .rows { border-top: 2px solid var(--ink); }
+        .rows .r { display: grid; grid-template-columns: 220px 1fr; gap: 24px; padding: 28px 0; border-bottom: 1px solid var(--line); }
+        .rows h3 { font-size: 19px; font-weight: 700; line-height: 1.5; }
+        .rows h3 small { display: block; font-size: 14px; font-weight: 400; color: var(--ink-soft); }
+        .rows ul { display: grid; grid-template-columns: 1fr 1fr; gap: 18px 36px; }
+        .rows li { list-style: none; }
+        .rows li b { display: block; font-size: 16px; }
+        .rows li span { font-size: 15px; color: var(--ink-soft); line-height: 1.7; display: block; }
+        .report { margin-top: 56px; display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
+        .report img { width: 100%; border-radius: 14px; border: 1px solid var(--line); display: block; }
+        .report h3 { font-size: 26px; font-weight: 700; line-height: 1.45; margin-bottom: 10px; }
+        .report p { color: var(--ink-soft); }
+
+        /* 하루 30분 */
+        .daily { display: grid; grid-template-columns: 1fr 1fr 1fr; border: 1px solid var(--line); border-radius: 14px; overflow: hidden; background: var(--white); }
+        .daily div { padding: 26px 26px 28px; border-left: 1px solid var(--line); }
+        .daily div:first-child { border-left: none; }
+        .daily b { display: block; font-size: 30px; font-weight: 900; color: var(--accent); line-height: 1.2; }
+        .daily strong { display: block; font-size: 17px; margin: 4px 0 6px; }
+        .daily p { font-size: 15px; color: var(--ink-soft); line-height: 1.75; }
+
+        /* 단계 표 */
+        .steps { width: 100%; border-collapse: collapse; }
+        .steps th { text-align: left; font-size: 14px; font-weight: 500; color: var(--ink-soft); padding: 0 16px 12px 0; border-bottom: 2px solid var(--ink); }
+        .steps td { padding: 20px 16px 20px 0; border-bottom: 1px solid var(--line); vertical-align: top; font-size: 15px; }
+        .steps td:first-child { font-weight: 700; font-size: 17px; white-space: nowrap; }
+        .steps td:first-child small { display: block; font-size: 13px; color: var(--accent-dark); font-weight: 700; }
+        .steps td:nth-child(2) { color: var(--ink-soft); max-width: 360px; }
+        .steps td:last-child { color: var(--ink); }
+        .steps-note { margin-top: 22px; font-weight: 500; }
+
+        /* 한눈에 */
+        .board { border-top: 2px solid var(--ink); }
+        .board div { display: grid; grid-template-columns: 180px 1fr; padding: 18px 0; border-bottom: 1px solid var(--line); gap: 16px; }
+        .board dt { font-weight: 700; }
+        .board dd { color: var(--ink-soft); }
+
+        details { border-bottom: 1px solid var(--line); }
+        details:first-of-type { border-top: 2px solid var(--ink); }
+        summary { list-style: none; cursor: pointer; padding: 22px 44px 22px 0; font-size: 17px; font-weight: 500; position: relative; }
+        summary::-webkit-details-marker { display: none; }
+        summary::after { content: "+"; position: absolute; right: 6px; top: 14px; font-size: 28px; color: var(--accent); }
+        details[open] summary::after { content: "–"; }
+        details .a { padding: 0 44px 24px 0; color: var(--ink-soft); }
+
+        .apply { background: var(--ink); color: #fff; }
+        .apply .wrap { display: grid; grid-template-columns: 1.2fr 1fr; gap: 40px; align-items: center; }
+        .apply h2 { color: #fff; margin-bottom: 10px; }
+        .apply p { color: var(--on-dark); }
+        .apply .box { background: var(--box); border-radius: 16px; padding: 30px; text-align: center; }
+        .apply .price { font-size: 46px; font-weight: 900; line-height: 1.2; color: #fff; }
+        .apply .price small { font-size: 16px; font-weight: 400; color: var(--on-dark); margin-left: 4px; }
+        .apply .btn { margin-top: 18px; width: 100%; background: #fff; color: var(--ink); }
+        .apply .btn:hover { background: var(--tint); }
+
+        footer { padding: 36px 0 52px; font-size: 14px; color: var(--ink-soft); }
+        footer .wrap { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+        footer a { color: var(--ink); text-underline-offset: 3px; }
+
+        @media (max-width: 860px) {
+            .wrap { padding: 0 20px; }
+            section { padding: 56px 0; }
+            h2 { font-size: 26px; }
+            .topnav { display: none; }
+            .hero { padding: 40px 0 44px; }
+            .hero .wrap, .reply, .report, .record, .apply .wrap { grid-template-columns: 1fr; }
+            .hero .wrap { gap: 32px; }
+            .hero h1 { font-size: 36px; }
+            .frame { max-height: 360px; }
+            .facts .wrap { grid-template-columns: 1fr 1fr; }
+            .facts div:nth-child(3) { border-left: none; padding-left: 0; }
+            .facts div:nth-child(n+3) { border-top: 1px solid var(--line); }
+                        .rows .r { grid-template-columns: 1fr; gap: 12px; }
+            .rows ul { grid-template-columns: 1fr; }
+            .daily { grid-template-columns: 1fr; }
+            .daily div { border-left: none; border-top: 1px solid var(--line); }
+            .daily div:first-child { border-top: none; }
+            .steps thead { display: none; }
+            .steps, .steps tbody, .steps tr, .steps td { display: block; width: 100%; }
+            .steps tr { padding: 18px 0; border-bottom: 1px solid var(--line); }
+            .steps td { border: none; padding: 2px 0; max-width: none !important; }
+            .board div { grid-template-columns: 1fr; gap: 2px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="topbar">
+        <div class="wrap">
+            <div class="logo">소시네<span>엄마표영어</span></div>
+            <nav class="topnav">
+                <a href="#week">한 주 흐름</a>
+                <a href="#include">구성</a>
+                <a href="#steps">단계</a>
+                <a href="#faq">질문</a>
+            </nav>
+            <a href="#" class="btn apply-link">신청하기</a>
+        </div>
+    </div>
+
+    <header class="hero">
+        <div class="wrap">
+            <div>
+                <h1>빠른 아이보다<br>오래 가는 아이가<br>목표입니다</h1>
+                <p class="define">6~11세 아이의 엄마표영어를 매주 소시네가 같이 봐드려요.</p>
+                <p class="sub">수업이 아니라, 집에서 하는 영어를 함께 설계하고 점검해요.</p>
+                <div class="actions">
+                    <a href="#" class="btn apply-link">리딩반 신청하기</a>
+                    <a href="#week" class="btn line">한 주 흐름 보기</a>
+                </div>
+                <p class="price">월 70,000원 · 신청 폼은 5분이면 돼요</p>
+            </div>
+            <div class="frame"><img src="tracker-preview.png" alt="소시네 진행표 앱의 하루 기록 화면"></div>
+        </div>
+    </header>
+
+    <div class="facts">
+        <dl class="wrap">
+            <div><dt>대상</dt><dd>6~11세</dd></div>
+            <div><dt>하루</dt><dd>30분 루틴</dd></div>
+            <div><dt>피드백</dt><dd>매주 1:1</dd></div>
+            <div><dt>리포트</dt><dd>월 1회</dd></div>
+        </dl>
+    </div>
+
+    <section class="band" id="week">
+        <div class="wrap">
+            <h2>한 주는 이렇게 기록하고,<br>이렇게 답을 받아요</h2>
+            <p class="lede">아이와 한 활동을 진행표에 적으면, 소시네가 한 주의 기록을 보고 다음 주 방향을 잡아드려요.</p>
+            <div class="record">
+                <div>
+                    <div class="rec-card">
+                        <p class="rec-head"><span class="rec-tag">2주차</span> 7/9(목) <span class="rec-today">오늘</span></p>
+                        <p class="rec-label">📖 그림책 읽어주기</p>
+                        <div class="rec-box">Don't Let the Pigeon Drive the Bus!</div>
+                        <p class="rec-label">🎧 집중듣기</p>
+                        <div class="rec-box">Fly Guy 1권</div>
+                        <p class="rec-label">🗣️ 낭독</p>
+                        <div class="rec-box">사이트워드 10개 읽기</div>
+                        <p class="rec-label">🔊 흘려듣기 (영상, 소리노출)</p>
+                        <div class="rec-box">Bluey 2편</div>
+                    </div>
+                    <p class="week-note">실제 진행표와 같은 구성이에요 (예시 기록)</p>
+                </div>
+                <div class="rec-text">
+                    <h3>하루에 네 가지만 적어요</h3>
+                    <p>그림책 읽어주기, 집중듣기, 낭독, 흘려듣기 중 오늘 한 것만 채우면 돼요. 입력한 내용은 자동으로 저장돼요.</p>
+                    <h3>한 주 끝에는 한 주 정리를 남겨요</h3>
+                    <p>이번 주를 돌아보며 느낀 점을 자유롭게 적어주세요. 소시네가 피드백과 리포트를 쓸 때 함께 참고해요.</p>
+                </div>
+            </div>
+            <div class="reply">
+                <div class="quote">
+                    <p>이번 주는 아이가 좋아하는 시리즈를 찾은 게 제일 커요. 다음 주엔 같은 작가 책으로 한 권 더 가볼게요.</p>
+                    <small>이런 피드백을 매주 받아요 (예시 문구)</small>
+                </div>
+                <div>
+                    <h3>매주 1:1 피드백</h3>
+                    <p>혼자 하는 엄마표영어가 무너지는 이유는 아무도 봐주지 않아서예요. 잘 되고 있는 것, 다음 주에 바꿔볼 것을 콕 짚어드려요. 막히기 전에 방향을 잡아요.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="include">
+        <div class="wrap">
+            <h2>월 7만원에 이렇게 담겨 있어요</h2>
+            <p class="lede">같은 엄마표영어인데 왜 우리 집만 제자리일까, 하는 고민을 책 고르기, 꾸준히 하기, 변화 확인하기로 나눠서 풀어요.</p>
+            <div class="rows">
+                <div class="r">
+                    <h3>매주 받는 것<small>아이 단계에 맞춰 골라드려요</small></h3>
+                    <ul>
+                        <li><b>영어책 · 영상 추천</b><span>지금 우리 아이에게 딱 맞는 책과 영상을 매주 골라요</span></li>
+                        <li><b>맞춤 워크지</b><span>문장 만들기부터 영어 글쓰기까지, 아이 단계에 맞춰요</span></li>
+                    </ul>
+                </div>
+                <div class="r">
+                    <h3>함께 하는 것<small>소시네가 직접 봐드려요</small></h3>
+                    <ul>
+                        <li><b>아이 맞춤 진단</b><span>시작 설문으로 현재 위치와 성향을 확인해요</span></li>
+                        <li><b>주간 진행표</b><span>체크만 하면 되는 쉬운 기록이에요</span></li>
+                        <li><b>매주 1:1 피드백</b><span>진행표를 보고 다음 주 방향을 잡아드려요</span></li>
+                        <li><b>월간 성장 리포트</b><span>한 달의 기록을 그래프로 정리해 보내드려요</span></li>
+                    </ul>
+                </div>
+                <div class="r">
+                    <h3>아이가 노는 것<small>공부 느낌 없이 하는 시간</small></h3>
+                    <ul>
+                        <li><b>쉐도잉 프로그램</b><span>애니 영상의 문장을 따라 말해요. 새 영상은 매주 한 편이에요</span></li>
+                        <li><b>사이트워드 게임</b><span>220개 단어를 카드와 퀴즈로 익혀요. 10개씩 22단계예요</span></li>
+                        <li><b>단어 게임</b><span>아이 교재 단어로 빈칸 채우기를 해요. 코인과 뱃지 보상도 있어요</span></li>
+                        <li><b>문장 만들기 게임</b><span>흩어진 단어를 순서대로 눌러 문장을 완성해요. 초급·중급·고급으로 나뉘어 있어요</span></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="report">
+                <img src="report-bars.png" alt="일별 활동 기록 그래프">
+                <div>
+                    <h3>한 달에 한 번,<br>기록이 그래프로 돌아와요</h3>
+                    <p>읽은 권수와 들은 시간이 자동으로 정리돼요. 감이 아니라 기록으로 아이의 성장이 보여요. (예시 데이터)</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="band">
+        <div class="wrap">
+            <h2>하루 30분이면 충분해요</h2>
+            <p class="lede">거창한 계획은 오래 못 가요. 10분씩 세 가지로 가볍게 시작하고, 아이가 익숙해지면 조금씩 늘려가요.</p>
+            <div class="daily">
+                <div><b>10분</b><strong>영상</strong><p>아이가 좋아하는 영어 영상으로 재미있게 소리에 노출돼요.</p></div>
+                <div><b>10분</b><strong>영어책</strong><p>아이 레벨에 맞게 골라드린 그림책·리더스를 함께 읽어요.</p></div>
+                <div><b>10분</b><strong>집중듣기</strong><p>소리를 따라 글자를 짚으며 들어요. 읽기 체력이 여기서 자라요.</p></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="steps">
+        <div class="wrap">
+            <h2>빠르게가 아니라 꾸준히,<br>다섯 단계로 올라가요</h2>
+            <p class="lede">단계마다 필요한 자료와 활동이 정해져 있고, 우리 아이 단계에 맞는 것만 골라드려요.</p>
+            <table class="steps">
+                <thead><tr><th>단계</th><th>이 단계에서 하는 일</th><th>쓰는 자료</th></tr></thead>
+                <tbody>
+                    <tr><td><small>1단계</small>그림책과 친해지기</td><td>영어를 '공부'가 아니라 '소리'로 먼저 만나요. 거부감부터 없애는 게 먼저예요.</td><td>그림책 낭독, 영어 영상, 흘려듣기</td></tr>
+                    <tr><td><small>2단계</small>사이트워드</td><td>소리와 글자를 연결하고, 자주 나오는 단어를 눈에 익혀서 읽기의 기초를 다져요.</td><td>파닉스 리더스, 사이트워드 카드·게임, 디코더블 리더스</td></tr>
+                    <tr><td><small>3단계</small>짧은 리더스 읽기</td><td>"엄마, 나 이거 읽었어!" 처음으로 혼자 읽는 성취감을 맛봐요.</td><td>얼리 리더스, 집중듣기, 문장 만들기 워크지</td></tr>
+                    <tr><td><small>4단계</small>AR 1~2점대 리더스</td><td>집중듣기와 낭독을 함께 쌓으며 읽기 체력을 키우고, 짧은 글쓰기를 시작해요.</td><td>AR 리더스 시리즈, 집중듣기+낭독, 영어 글쓰기 워크지</td></tr>
+                    <tr><td><small>5단계</small>챕터북 진입</td><td>그림 없이도 이야기에 빠져드는 진짜 리더가 돼요. 여기부터는 아이가 스스로 가요.</td><td>챕터북, 자유 글쓰기, 흘려듣기 유지</td></tr>
+                </tbody>
+            </table>
+            <p class="steps-note">단계는 정해져 있지만, 속도는 우리 아이 것이에요.</p>
+        </div>
+    </section>
+
+    <section class="band">
+        <div class="wrap">
+            <h2>우리 집에 맞는지<br>한눈에 확인해 보세요</h2>
+            <dl class="board">
+                <div><dt>이런 집에 잘 맞아요</dt><dd>영어 환경은 만들고 싶은데 뭘 읽히고 들려줘야 할지 막막한 집, 혼자 하다 흐지부지됐던 집, 매주 누가 봐주면 꾸준히 할 수 있는 집</dd></div>
+                <div><dt>소시네가 맡는 것</dt><dd>아이 단계 진단, 매주 책·영상 고르기, 워크지, 진행표 보고 방향 잡기, 월간 리포트, 쉐도잉 영상, 사이트워드·단어·문장 만들기 게임</dd></div>
+                <div><dt>집에서 하는 것</dt><dd>하루 30분 루틴(영상 10분, 영어책 10분, 집중듣기 10분)과 진행표 체크</dd></div>
+                <div><dt>진행 기준</dt><dd>매주 피드백, 월 1회 리포트, 월 단위 진행(최소 3개월 권장)</dd></div>
+                <div><dt>하지 않는 것</dt><dd>파닉스 수업, 레벨업 속도 경쟁 (사이트워드는 함께 익혀요)</dd></div>
+            </dl>
+        </div>
+    </section>
+
+    <section id="faq">
+        <div class="wrap" style="max-width:780px">
+            <h2>궁금한 것들,<br>미리 답해드릴게요</h2>
+            <details>
+                <summary>엄마가 영어를 잘 못해도 할 수 있나요?</summary>
+                <div class="a">전혀 문제없어요. 엄마가 가르치는 게 아니라, 아이가 책과 소리에 노출되는 환경을 만드는 거예요. 뭘 읽을지, 어떻게 할지는 소시네가 매주 알려드려요.</div>
+            </details>
+            <details>
+                <summary>우리 아이는 아직 알파벳도 몰라요. 너무 이른가요?</summary>
+                <div class="a">이르지 않아요. 그림책과 소리로 친해지는 단계부터 시작하면 돼요. 시작 설문으로 아이의 현재 위치를 확인하고, 딱 그 자리에서 출발해요.</div>
+            </details>
+            <details>
+                <summary>하루에 시간이 얼마나 필요한가요?</summary>
+                <div class="a">하루 30분으로 시작해요. 영상 10분 + 영어책 10분 + 집중듣기 10분. 아이가 익숙해지면 조금씩 늘려가요. 길게 하는 것보다 매일 하는 게 훨씬 중요해요.</div>
+            </details>
+            <details>
+                <summary>교재는 따로 사야 하나요?</summary>
+                <div class="a">워크지는 매주 아이 레벨에 맞게 보내드려요. 영어책은 추천해드리면 도서관 대여나 e북 등 부담을 줄이는 방법도 함께 안내해드려요. 한꺼번에 전집을 사실 필요 없어요.</div>
+            </details>
+            <details>
+                <summary>피드백은 어떻게 받나요?</summary>
+                <div class="a">매주 작성하신 진행표를 보고 소시네가 직접 피드백을 드려요. 잘 되고 있는 것, 다음 주에 바꿔볼 것을 콕 짚어드려요.</div>
+            </details>
+            <details>
+                <summary>중간에 그만둘 수 있나요?</summary>
+                <div class="a">네, 월 단위라 부담 없이 시작하고 언제든 쉬어갈 수 있어요. 다만 영어는 꾸준함이 전부라서, 최소 3개월은 함께해보시길 권해드려요.</div>
+            </details>
+        </div>
+    </section>
+
+    <section class="apply">
+        <div class="wrap">
+            <div>
+                <h2>부담 없이 시작하고,<br>오래 함께해요</h2>
+                <p>신청 폼을 남겨주시면 시작 안내를 보내드려요.</p>
+            </div>
+            <div class="box">
+                <p class="price">70,000<small>원 / 월</small></p>
+                <a href="#" class="btn apply-link">리딩반 신청하기</a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="wrap">
+            <span>빠른 아이보다 오래 가는 아이가 목표입니다</span>
+            <a href="https://www.instagram.com/sosine._/" target="_blank" rel="noopener">인스타그램 @sosine._</a>
+        </div>
+    </footer>
+
+    <script>
+
+        // 신청 폼 주소 (네이버 폼)
+        const FORM_URL = 'https://naver.me/54KfyZIZ';
+        document.querySelectorAll('.apply-link').forEach(a => { a.href = FORM_URL; });
+    </script>
+</body>
+</html>

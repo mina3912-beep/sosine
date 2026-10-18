@@ -1,7 +1,7 @@
 {
   "outputDirectory": ".",
   "rewrites": [
-    { "source": "/reading", "destination": "/reading.html" },
+    { "source": "/reading", "destination": "/reading-v5.html" },
     { "source": "/planner", "destination": "/여름방학플래너.html" },
     { "source": "/sosinemap", "destination": "/roadmap.html" },
     { "source": "/(.*)", "destination": "/index.html" }
